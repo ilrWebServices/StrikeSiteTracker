@@ -1,3 +1,4 @@
+
 const dummyData = [
     {
       "Employer": "11 Infinity Healthcare Management of Illinois Facilities",
@@ -164,36 +165,61 @@ const dummyData = [
 
 // Initialize and add the map
 function initMap() {
+  let infowindow = null
+  let currWindow =false; 
+  const listDiv = document.getElementById('list-box');
+  function createInfoWindow(strike, marker){
+    if(infowindow){
+      infowindow.close();
+    }
+    infowindow = new google.maps.InfoWindow({
+      content: createContentString(strike),
+    });
+    infowindow.open(map, marker);
+  }
+  function createCard(strike, marker){
+    const card = document.createElement('div');
+    card.setAttribute("class", "card");
+    const cardBody = document.createElement('div');
+    cardBody.setAttribute("class", "card-body");
+    cardBody.innerHTML = `${strike.Employer} - ${strike.Union}`;
+    card.append(cardBody);
+    card.addEventListener('click',() => {
+      createInfoWindow(strike,marker)
+    })
+    return card
+  }
+  function createContentString(strike) {
+    let htmlString = ''
+    Object.keys(strike).forEach((keyName) => {
+      if(strike[keyName]){
+        htmlString += `<strong>${keyName}</strong> : ${strike[keyName]} </br>`
+      }
+     
+  })
+  return htmlString
+  }
   // The location of Uluru
-  const uluru = { lat: -25.344, lng: 131.036 };
   // The map, centered at Uluru
   const map = new google.maps.Map(document.getElementById("map"), {
-      zoom:4,
+      zoom:4.3,
       center: { lat: dummyData[0].Lat, lng: dummyData[0].Lng }
   });
   // The marker, positioned at Uluru
-  const marker = new google.maps.Marker({
-    position: uluru,
-    map: map,
-  });
-  let infowindow = null
   dummyData.forEach((strike,index) => {
 
-    let contentString = ''
-    Object.keys(strike).forEach((keyName) => {
-        contentString += `${keyName} : ${strike[keyName]} </br>`
-    })
     
-      infowindow = new google.maps.InfoWindow({
-        content: contentString,
-      });
+    
       const marker = new google.maps.Marker({
         position: { lat: strike.Lat, lng: strike.Lng },
         map: map,
         title: strike.City
       });
+      
+    const card = createCard(strike, marker)
+    listDiv.append(card);
       marker.addListener("click", () => {
-        infowindow.open(map, marker);
+        createInfoWindow(strike,marker)
       });
 
   })

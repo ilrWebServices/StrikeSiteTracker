@@ -19,6 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - name: Build Website
+        uses: actions/core
         run: npm run build --if-present
         env:
         SHEETS_CRED: ${{ secrets.SHEETS_CRED }}

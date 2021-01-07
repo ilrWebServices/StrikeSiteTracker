@@ -3,7 +3,7 @@ const readline = require('readline');
 const core = require('@actions/core');
 const {google} = require('googleapis');
 const convertRowsToJson = require('./convertRowsToJson')
-core.debug('Any Output at all?');
+core.info('Any Output at all?');
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 // The file token.json stores the user's access and refresh tokens, and is
@@ -16,12 +16,12 @@ fs.readFile('credentials.json', (err, content) => {
   if (err) {
       try{
         content = JSON.parse(process.env.SHEETS_CRED)
-        core.debug('Inside try block',content);
+        core.info('Inside try block',content);
       }catch(error){
         console.error(error)
       }
   }
-  core.debug('Gonna Authorize');
+  core.info('Gonna Authorize');
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize(JSON.parse(content), listMajors);
 });
@@ -37,7 +37,7 @@ function authorize(credentials, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
-      core.debug('Inside Authorize');
+      core.info('Inside Authorize');
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);

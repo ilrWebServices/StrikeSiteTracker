@@ -14,8 +14,8 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      name: Build Website
-      -run: npm run build 
+      - name: Build Website
+      run: npm run build 
        env:
         SHEETS_CRED: ${{ secrets.SHEETS_CRED }}
       - name: Deploy

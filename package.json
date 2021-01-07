@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "npm run test.js"
+    "build": "npm run build.js"
   },
   "repository": {
     "type": "git",

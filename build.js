@@ -3,7 +3,7 @@ const readline = require('readline');
 const core = require('@actions/core');
 const {google} = require('googleapis');
 const convertRowsToJson = require('./convertRowsToJson')
-
+core.debug('Any Output at all?');
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 // The file token.json stores the user's access and refresh tokens, and is

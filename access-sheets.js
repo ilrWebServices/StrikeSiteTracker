@@ -82,7 +82,9 @@ function listMajors(auth) {
     if (err) return console.log('The API returned an error: ' + err);
     const rows = res.data.values;
     if (rows.length) {
-        convertRowsToJson(rows).forEach((obj) => {
+        const objectArray = convertRowsToJson(rows);
+        console.log(objectArray.length,'<-------------------------objectArray.length')
+        objectArray.forEach((obj) => {
         console.log(obj);
       });
     } else {

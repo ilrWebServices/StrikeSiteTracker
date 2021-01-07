@@ -22,7 +22,8 @@ jobs:
         uses: actions/core
         run: npm run build --if-present
         env:
-        SHEETS_CRED: ${{ secrets.SHEETS_CRED }}
+          CI: true
+          SHEETS_CRED: ${{ secrets.SHEETS_CRED }}
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:

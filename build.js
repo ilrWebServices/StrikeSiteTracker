@@ -15,15 +15,18 @@ const TOKEN_PATH = 'token.json';
 fs.readFile('credentials.json', (err, content) => {
   if (err) {
       try{
+     
         content = JSON.parse(process.env.SHEETS_CRED)
-        core.info('Inside try block',content);
+        core.info('content start');
+        core.info(typeof (content))
+        core.info('content end');
       }catch(error){
         console.error(error)
       }
   }
   core.info('Gonna Authorize');
   // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listMajors);
+  authorize((content), listMajors);
 });
 
 /**
@@ -96,7 +99,7 @@ function listMajors(auth) {
         objectArray.forEach((obj) => {
         console.log(obj);
       });
-      fs.writeFileSync("geodata.json", objectArray); 
+      fs.writeFileSync("geodata.json", JSON.stringify(objectArray)); 
     } else {
       console.log('No data found.');
     }

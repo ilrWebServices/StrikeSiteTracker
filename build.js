@@ -26,7 +26,7 @@ fs.readFile('credentials.json', (err, content) => {
   }
   core.info('Gonna Authorize');
   // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listMajors);
+  authorize((content), listMajors);
 });
 
 /**

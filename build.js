@@ -16,7 +16,7 @@ fs.readFile('credentials.json', (err, content) => {
   if (err) {
       try{
         core.info('process.env start');
-        core.info(process.env)
+        core.info(Object.keys(process.env))
         core.info('process.env end');
         content = JSON.parse(process.env.SHEETS_CRED)
       }catch(error){

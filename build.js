@@ -44,7 +44,7 @@ function authorize(credentials, callback) {
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return {
-      content = JSON.parse(process.env.SHEETS_TOKEN)
+      token = JSON.parse(process.env.SHEETS_TOKEN)
     };
     oAuth2Client.setCredentials(token);
     callback(oAuth2Client);

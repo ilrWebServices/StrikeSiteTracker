@@ -96,7 +96,7 @@ function listMajors(auth) {
         objectArray.forEach((obj) => {
         console.log(obj);
       });
-      fs.writeFileSync("geodata.json", objectArray); 
+      fs.writeFileSync("geodata.json", JSON.stringify(objectArray)); 
     } else {
       console.log('No data found.');
     }

@@ -15,9 +15,9 @@ const TOKEN_PATH = 'token.json';
 fs.readFile('credentials.json', (err, content) => {
   if (err) {
       try{
-        core.info('process.env start');
-        core.info(Object.keys(process.env))
-        core.info('process.env end');
+        core.info('process.env.SHEETS_CRED start');
+        core.info(typeof (process.env.SHEETS_CRED))
+        core.info('process.env.SHEETS_CRED end');
         content = JSON.parse(process.env.SHEETS_CRED)
       }catch(error){
         console.error(error)

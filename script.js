@@ -49,6 +49,7 @@ function initMap() {
       zoom:4.3,
       center: { lat: 39.9492309, lng: -76.7440666 }
   });
+  const markerArray = []
   // The marker, positioned at Uluru
   geodata.forEach((strike,index) => {
 
@@ -59,14 +60,17 @@ function initMap() {
         map: map,
         title: strike.City
       });
-      
+      markerArray.push(marker)
       const card = createCard(strike, marker)
       listDiv.append(card);
         marker.addListener("click", () => {
           createInfoWindow(strike,marker)
         });
     }
-    
+    new MarkerClusterer(map, markerArray, {
+      imagePath:
+        "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+    });
 
   })
 }

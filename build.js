@@ -4,27 +4,30 @@ const core = require('@actions/core');
 const {google} = require('googleapis');
 const convertRowsToJson = require('./convertRowsToJson')
 core.info('Any Output at all?');
+const findLatLng = require('./findLatLng')
+const updateLatLngInSheets = require('./updateLatLngInSheets')
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/drive.file'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = 'token.json';
-
+const spreadsheetId = '1TGsSe4oxPWSB8DuqB6Xy07nxAoWldCFfwBu2nfeSNWo';
 // Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
+fs.readFile('credentials.json',"utf8", (err, content) => {
   if (err) {
       try{
-     
         content = JSON.parse(process.env.SHEETS_CRED)
-        core.info('content start');
-        core.info(typeof (content))
-        core.info('content end');
       }catch(error){
         console.error(error)
       }
   }
+  console.log(typeof content)
   core.info('Gonna Authorize');
+  if(typeof content === 'string'){
+    content = JSON.parse(content)
+  }
+
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize((content), listMajors);
 });
@@ -42,10 +45,14 @@ function authorize(credentials, callback) {
       client_id, client_secret, redirect_uris[0]);
       core.info('Inside Authorize');
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
+  fs.readFile(TOKEN_PATH,"utf8", (err, token) => {
+    console.log(token)
     if (err) {
       token = JSON.parse(process.env.SHEETS_TOKEN)
     };
+    if(typeof token === 'string'){
+      token = JSON.parse(token)
+    }
     oAuth2Client.setCredentials(token);
     callback(oAuth2Client);
   });
@@ -82,29 +89,27 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-/**
- * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- */
 function listMajors(auth) {
   const sheets = google.sheets({version: 'v4', auth});
   sheets.spreadsheets.values.get({
-    spreadsheetId: '1TGsSe4oxPWSB8DuqB6Xy07nxAoWldCFfwBu2nfeSNWo',
-    range: 'A1:N31',
-  }, (err, res) => {
+    spreadsheetId: spreadsheetId,
+    range: 'A1:Z1000',
+  }, async(err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
+    // console.log(res,'<---------------res')
     const rows = res.data.values;
     if (rows.length) {
         const objectArray = convertRowsToJson(rows);
-        console.log(objectArray.length,'<-------------------------objectArray.length')
+        // console.log(objectArray.length,'<-------------------------objectArray.length')
         objectArray.forEach((obj) => {
         console.log(obj);
       });
-      fs.writeFileSync("geodata.json", JSON.stringify(objectArray)); 
+      const geoCodeArray = await findLatLng(objectArray);
+      await updateLatLngInSheets(geoCodeArray,spreadsheetId, auth)
     } else {
       console.log('No data found.');
     }
   });
 }
+
 

@@ -6,6 +6,123 @@ function convertLatLngStringToObj(LatLngString) {
     lat: Number(array[0]),lng:Number(array[1])
   }
 }
+const tableDict = {
+  "Employer": {
+    "name": "Employer",
+    "type": "string"
+  },
+  "Union": {
+    "name": "Union",
+    "type": "string"
+  },
+  "Union Local": {
+    "name": "Union_Local",
+    "type": "string"
+  },
+  "Bargaining Unit Size": {
+    "name": "Bargaining_Unit_Size",
+    "type": "string"
+  },
+  "Latitude, Longitude": {
+    "name": "Latitude,_Longitude",
+    "type": "string"
+  },
+  "Address": {
+    "name": "Address",
+    "type": "string"
+  },
+  "City": {
+    "name": "City",
+    "type": "string"
+  },
+  "State": {
+    "name": "State",
+    "type": "string"
+  },
+  "Zip Code": {
+    "name": "Zip_Code",
+    "type": "string"
+  },
+  "Strike or lockout?": {
+    "name": "Strike_or_lockout?",
+    "type": "string"
+  },
+  "approx # Ees on stoppage": {
+    "name": "approx_#_Ees_on_stoppage",
+    "type": "string"
+  },
+  "Start Date": {
+    "name": "Start_Date",
+    "type": "date"
+  },
+  "End Date": {
+    "name": "End_Date",
+    "type": "date"
+  },
+  "Duration": {
+    "name": "Duration",
+    "type": "string"
+  },
+  "Authorized?": {
+    "name": "Authorized?",
+    "type": "string"
+  },
+  "Threat?": {
+    "name": "Threat?",
+    "type": "string"
+  },
+  "Issues": {
+    "name": "Issues",
+    "type": "string"
+  },
+  "Source": {
+    "name": "Source",
+    "type": "string"
+  },
+  "positionId": {
+    "name": "positionId",
+    "type": "string"
+  }
+}
+window.addEventListener('load',()=> {
+  console.log(window)
+  const fromDate = document.getElementById('fromDate') 
+  const endDate = document.getElementById('endDate') 
+  const filterButton = document.getElementById('filterButton') 
+  filterButton.onclick  = (event) => {
+    console.log(fromDate.value,'<-----------------fromDate.value')
+    console.log(endDate.value,'<-----------------endDate.value')
+  }
+  let createTableColStringAndType = ''
+  let createTableColString = ''
+  const tableDictArray = Object.keys(tableDict);
+  const tableDictArrayLength = tableDictArray.length
+  tableDictArray.forEach((key, index) => {
+    createTableColString += `${tableDict[key].name} `
+    createTableColStringAndType += `${tableDict[key].name} ${tableDict[key].type}`
+    if(index !== tableDictArrayLength-1){
+      createTableColString += `, `
+      createTableColStringAndType+= ', '
+    }
+  })
+  let valuesString = '';
+  // alasql(`CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`);
+  window.geodata.forEach((obj) => {
+    // valuesString += `(${})`
+    let singleValueString = '(';
+    tableDictArray.forEach((key, index) => {
+      singleValueString += `${obj[key]}, `
+      if(index !== tableDictArrayLength-1){
+        singleValueString += `),`
+      }
+    })
+    valuesString += singleValueString
+  })
+  // console.log(valuesString)
+})
+
+
+
 // Initialize and add the map
 function initMap() {
   const geodata = window.geodata

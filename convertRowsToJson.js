@@ -3,7 +3,7 @@ module.exports = (rows) => {
     jsonArray = [];
     rows.forEach((rowArray) => {
         const rowObject = {};
-        console.log(rowArray, '<--------------------rowArray')
+        // console.log(rowArray, '<--------------------rowArray')
         rowArray.forEach((rowElement, index) => {
             rowObject[headerRow[index]] = rowElement;
         })

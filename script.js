@@ -6,13 +6,25 @@ function convertLatLngStringToObj(LatLngString) {
     lat: Number(array[0]),lng:Number(array[1])
   }
 }
+function formatDate(d) {
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
 const tableDict = {
   "Employer": {
     "name": "Employer",
     "type": "string"
   },
   "Union": {
-    "name": "Union",
+    "name": "Union_Name",
     "type": "string"
   },
   "Union Local": {
@@ -24,7 +36,7 @@ const tableDict = {
     "type": "string"
   },
   "Latitude, Longitude": {
-    "name": "Latitude,_Longitude",
+    "name": "Latitude_Longitude",
     "type": "string"
   },
   "Address": {
@@ -44,11 +56,11 @@ const tableDict = {
     "type": "string"
   },
   "Strike or lockout?": {
-    "name": "Strike_or_lockout?",
+    "name": "Strike_or_lockout",
     "type": "string"
   },
   "approx # Ees on stoppage": {
-    "name": "approx_#_Ees_on_stoppage",
+    "name": "Approx_Size",
     "type": "string"
   },
   "Start Date": {
@@ -64,11 +76,11 @@ const tableDict = {
     "type": "string"
   },
   "Authorized?": {
-    "name": "Authorized?",
+    "name": "Authorized",
     "type": "string"
   },
   "Threat?": {
-    "name": "Threat?",
+    "name": "Threat",
     "type": "string"
   },
   "Issues": {
@@ -84,15 +96,7 @@ const tableDict = {
     "type": "string"
   }
 }
-window.addEventListener('load',()=> {
-  console.log(window)
-  const fromDate = document.getElementById('fromDate') 
-  const endDate = document.getElementById('endDate') 
-  const filterButton = document.getElementById('filterButton') 
-  filterButton.onclick  = (event) => {
-    console.log(fromDate.value,'<-----------------fromDate.value')
-    console.log(endDate.value,'<-----------------endDate.value')
-  }
+function createTableAndInsertValues(){
   let createTableColStringAndType = ''
   let createTableColString = ''
   const tableDictArray = Object.keys(tableDict);
@@ -106,29 +110,56 @@ window.addEventListener('load',()=> {
     }
   })
   let valuesString = '';
-  // alasql(`CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`);
-  window.geodata.forEach((obj) => {
-    // valuesString += `(${})`
-    let singleValueString = '(';
+  alasql(`CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`);
+  const geodatalen = window.geodata.length;
+  // [window.geodata[0],window.geodata[1],window.geodata[2]].forEach((obj, geoindex) => {
+  window.geodata.forEach((obj, geoindex) => {
+    let singleValueString = '';
     tableDictArray.forEach((key, index) => {
-      singleValueString += `${obj[key]}, `
+      singleValueString += `'${obj[key]}'`
       if(index !== tableDictArrayLength-1){
-        singleValueString += `),`
+        singleValueString += `,  `
       }
     })
-    valuesString += singleValueString
+    valuesString += `(${singleValueString})`
+    if(geoindex !== geodatalen-1){
+      valuesString += `,`
+    }
   })
-  // console.log(valuesString)
+  alasql(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
+  const res = alasql(`SELECT * from geodata`)
+  initMap(res)
+}
+window.addEventListener('load',()=> {
+  console.log(window)
+  createTableAndInsertValues()
+  const fromDate = document.getElementById('fromDate') 
+  const endDate = document.getElementById('endDate') 
+  const filterButton = document.getElementById('filterButton') 
+  var d = new Date();
+  d.setMonth(d.getMonth() - 3);
+  fromDate.value = formatDate(d)
+  endDate.value = formatDate(new Date());
+  filterButton.onclick  = (event) => {
+    console.log(fromDate.value,'<-----------------fromDate.value')
+    console.log(endDate.value,'<-----------------endDate.value')
+    const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}'`
+    console.log(queryString)
+    const res = alasql(queryString);
+    console.log(res)
+    initMap(res)
+  }
+
 })
 
 
 
 // Initialize and add the map
-function initMap() {
-  const geodata = window.geodata
+function initMap(geodata) {
   let infowindow = null
   let currWindow =false; 
   const listDiv = document.getElementById('list-box');
+  listDiv.innerHTML = '';
   function createInfoWindow(strike, marker){
     if(infowindow){
       infowindow.close();
@@ -143,7 +174,7 @@ function initMap() {
     card.setAttribute("class", "card");
     const cardBody = document.createElement('div');
     cardBody.setAttribute("class", "card-body");
-    cardBody.innerHTML = `${strike.Employer} - ${strike.Union}`;
+    cardBody.innerHTML = `${strike.Employer} - ${strike.Union_Name}`;
     card.append(cardBody);
     card.addEventListener('click',() => {
       createInfoWindow(strike,marker)
@@ -170,8 +201,8 @@ function initMap() {
   // The marker, positioned at Uluru
   geodata.forEach((strike,index) => {
 
-    if(strike['Latitude, Longitude']){
-      const strikePosition = convertLatLngStringToObj(strike['Latitude, Longitude'])
+    if(strike['Latitude_Longitude']){
+      const strikePosition = convertLatLngStringToObj(strike['Latitude_Longitude'])
       const marker = new google.maps.Marker({
         position: strikePosition,
         map: map,

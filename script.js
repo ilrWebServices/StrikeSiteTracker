@@ -3,7 +3,7 @@
 function convertLatLngStringToObj(LatLngString) {
   const array = LatLngString.split(',');
   return {
-    lat: array[0],lng:array[1]
+    lat: Number(array[0]),lng:Number(array[1])
   }
 }
 // Initialize and add the map

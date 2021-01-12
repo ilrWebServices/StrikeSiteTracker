@@ -67,10 +67,10 @@ function initMap() {
           createInfoWindow(strike,marker)
         });
     }
-    new MarkerClusterer(map, markerArray, {
-      imagePath:
-        "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-    });
 
   })
+  new MarkerClusterer(map, markerArray, {
+    imagePath:
+      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+  });
 }

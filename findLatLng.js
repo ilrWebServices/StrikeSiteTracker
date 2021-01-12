@@ -1,6 +1,7 @@
 const fs  = require('fs');
 const axios = require('axios')
-var _get = require('lodash.get');
+const _get = require('lodash.get');
+const convertDateFormat = require('./convertDateFormat.js')
 const GEOCODING_API = process.env.GEOCODING_API
 const convertLatLngObjectToString = (latlngObj) => {
     if(latlngObj)
@@ -24,6 +25,8 @@ module.exports  = async (content) => {
             // console.log(latlngObj)
             element['Latitude, Longitude'] = convertLatLngObjectToString(latlngObj)
         }
+        element['Start Date'] = convertDateFormat(element['Start Date']);
+        element['End Date'] = convertDateFormat(element['End Date']);
         element.positionId = index+1;
         newGeoCodeArray.push(element)
         index++;

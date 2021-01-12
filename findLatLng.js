@@ -28,6 +28,6 @@ module.exports  = async (content) => {
         newGeoCodeArray.push(element)
         index++;
     }
-    fs.writeFileSync("geodata.json", JSON.stringify(newGeoCodeArray)); 
+    fs.writeFileSync("geodata.js", `window.geodata=${JSON.stringify(newGeoCodeArray)}`); 
     return newGeoCodeArray
 }

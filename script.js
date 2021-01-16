@@ -6,6 +6,7 @@ function convertLatLngStringToObj(LatLngString) {
     lat: Number(array[0]),lng:Number(array[1])
   }
 }
+const STATE_LIST = ['All',"Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District Of Columbia", "Federated States Of Micronesia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Marshall Islands", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virgin Islands", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
 function formatDate(d) {
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -132,18 +133,38 @@ function createTableAndInsertValues(){
 }
 window.addEventListener('load',()=> {
   console.log(window)
-  createTableAndInsertValues()
+  createTableAndInsertValues();
+  // DATES
   const fromDate = document.getElementById('fromDate') 
   const endDate = document.getElementById('endDate') 
+  const approvedCheckBox = document.getElementById('approved') 
+  const stateSelect = document.getElementById('states') 
   const filterButton = document.getElementById('filterButton') 
   var d = new Date();
   d.setMonth(d.getMonth() - 3);
   fromDate.value = formatDate(d)
   endDate.value = formatDate(new Date());
+  // STATES
+  STATE_LIST.forEach((val) => {
+    var option = document.createElement("option");
+    option.value = val;
+    option.text = val
+    stateSelect.appendChild(option);
+  });
   filterButton.onclick  = (event) => {
     console.log(fromDate.value,'<-----------------fromDate.value')
     console.log(endDate.value,'<-----------------endDate.value')
-    const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}'`
+    console.log(approvedCheckBox.value,'<-----------------endDate.value')
+    console.log(stateSelect.value,'<-----------------endDate.value')
+    let statesQueryString = '';
+    if(stateSelect.value !== 'All'){
+      statesQueryString = `AND State LIKE '%${stateSelect.value}%'`
+    }
+    let approvedQueryString = '';
+    if(approvedCheckBox.value === 'on'){
+      approvedQueryString = `AND Authorized='Y'`
+    }
+    const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${approvedQueryString}`
     console.log(queryString)
     const res = alasql(queryString);
     console.log(res)

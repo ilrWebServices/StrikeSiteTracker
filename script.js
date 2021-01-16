@@ -207,7 +207,7 @@ function initMap(geodata) {
     card.append(chkinput);
     card.append(chklabel);
     card.append(cardBody);
-    card.addEventListener('click',() => {
+    chklabel.addEventListener('click',() => {
       createInfoWindow(strike,marker)
     })
     console.log(card)

@@ -29,8 +29,16 @@
             <input type="date" aria-label="end" id="endDate" name="endDate" />
           </div>
         </div>
-        <div class="state-box"></div>
-        <div class="yn-box"></div>
+        <div class="state-box">
+          <label for="states">Select State</label>
+          <select name="states" id="states"></select>
+        </div>
+        <div class="yn-box">
+          <div class="approved-box">
+            <label for="approved">Authorized?</label>
+            <input type="checkbox" name="approved" id="approved" >
+          </div>
+        </div>
         <!-- <h1 class="filter-placeholder">Filter Placeholder (Date, Place, Union)</h1> -->
         <div class="button-box">
           <button id="filterButton">Filter Button</button>

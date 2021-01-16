@@ -192,14 +192,25 @@ function initMap(geodata) {
   }
   function createCard(strike, marker){
     const card = document.createElement('div');
-    card.setAttribute("class", "card");
+    const chkinput = document.createElement('input');
+    const chklabel = document.createElement('label');
+    card.setAttribute("class", "tab");
+    chklabel.setAttribute("class", "tab-label");
+    chklabel.setAttribute("for", strike.positionId);
+    chkinput.setAttribute("type", "checkbox");
+    chkinput.setAttribute("id", strike.positionId);
+    chkinput.setAttribute("class", 'hidechk');
     const cardBody = document.createElement('div');
-    cardBody.setAttribute("class", "card-body");
-    cardBody.innerHTML = `${strike.Employer} - ${strike.Union_Name}`;
+    cardBody.setAttribute("class", "tab-content");
+    cardBody.innerHTML = createContentString(strike)
+    chklabel.innerHTML = `${strike.Employer} - ${strike.Union_Name}`;
+    card.append(chkinput);
+    card.append(chklabel);
     card.append(cardBody);
     card.addEventListener('click',() => {
       createInfoWindow(strike,marker)
     })
+    console.log(card)
     return card
   }
   function createContentString(strike) {

@@ -210,7 +210,7 @@ function initMap(geodata) {
     chklabel.addEventListener('click',() => {
       console.log('Inside OnCLick')
       const strikePosition = convertLatLngStringToObj(strike['Latitude_Longitude']);
-      map.setZoom(10);
+      map.setZoom(15);
       map.panTo(strikePosition);
       createInfoWindow(strike,marker)
     })

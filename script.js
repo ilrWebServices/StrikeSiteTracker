@@ -154,14 +154,14 @@ window.addEventListener('load',()=> {
   filterButton.onclick  = (event) => {
     console.log(fromDate.value,'<-----------------fromDate.value')
     console.log(endDate.value,'<-----------------endDate.value')
-    console.log(approvedCheckBox.value,'<-----------------endDate.value')
-    console.log(stateSelect.value,'<-----------------endDate.value')
+    console.log(approvedCheckBox.checked,'<-----------------approvedCheckBox.value')
+    console.log(stateSelect.value,'<-----------------stateSelect.value')
     let statesQueryString = '';
     if(stateSelect.value !== 'All'){
       statesQueryString = `AND State LIKE '%${stateSelect.value}%'`
     }
     let approvedQueryString = '';
-    if(approvedCheckBox.value === 'on'){
+    if(approvedCheckBox.checked){
       approvedQueryString = `AND Authorized='Y'`
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${approvedQueryString}`

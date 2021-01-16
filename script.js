@@ -208,9 +208,10 @@ function initMap(geodata) {
     card.append(chklabel);
     card.append(cardBody);
     chklabel.addEventListener('click',() => {
+      console.log('Inside OnCLick')
       createInfoWindow(strike,marker)
     })
-    console.log(card)
+ 
     return card
   }
   function createContentString(strike) {

@@ -209,6 +209,8 @@ function initMap(geodata) {
     card.append(cardBody);
     chklabel.addEventListener('click',() => {
       console.log('Inside OnCLick')
+      const strikePosition = convertLatLngStringToObj(strike['Latitude_Longitude']);
+      map.panTo(strikePosition);
       createInfoWindow(strike,marker)
     })
  

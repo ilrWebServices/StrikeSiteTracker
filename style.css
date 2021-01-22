@@ -6,8 +6,9 @@
   }
   body{
     margin: 0%!important;
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
   }
   .height-100cent{
     height: 100%;
@@ -47,7 +48,7 @@
   .date-box{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
   }
   .state-box{
     display: flex;

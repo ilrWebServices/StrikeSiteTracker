@@ -56,7 +56,7 @@ const tableDict = {
     "name": "Zip_Code",
     "type": "string"
   },
-  "Strike or protest or lockout": {
+  "Strike or protest or lockout?": {
     "name": "Strike_or_protest_or_lockout",
     "type": "string"
   },

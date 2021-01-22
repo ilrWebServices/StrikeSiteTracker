@@ -56,8 +56,8 @@ const tableDict = {
     "name": "Zip_Code",
     "type": "string"
   },
-  "Strike or lockout?": {
-    "name": "Strike_or_lockout",
+  "Strike or protest or lockout": {
+    "name": "Strike_or_protest_or_lockout",
     "type": "string"
   },
   "approx # Ees on stoppage": {
@@ -128,7 +128,7 @@ async function createTableAndInsertValues(){
     }
   })
   await alasql.promise(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
-  const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_lockout LIKE '%Strike%' ORDER BY Start_Date  `)
+  const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_protest_or_lockout LIKE '%Strike%' ORDER BY Start_Date  `)
   console.log(res)
   initMap(res)
 }
@@ -166,9 +166,9 @@ window.addEventListener('load',async ()=> {
     if(approvedCheckBox.checked){
       approvedQueryString = `AND Authorized='N'`
     }
-    strikeOrProtestQueryString = `AND Strike_or_lockout LIKE '%Strike%'`
+    strikeOrProtestQueryString = `AND Strike_or_protest_or_lockout LIKE '%Strike%'`
     if(toggleProtestCheckBox.checked){
-      strikeOrProtestQueryString =`AND Strike_or_lockout LIKE '%Protest%'`
+      strikeOrProtestQueryString =`AND Strike_or_protest_or_lockout LIKE '%Protest%'`
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${strikeOrProtestQueryString} ${approvedQueryString} ORDER BY Start_Date`
     console.log(queryString)

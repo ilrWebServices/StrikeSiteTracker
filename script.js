@@ -117,7 +117,7 @@ function createTableAndInsertValues(){
   window.geodata.forEach((obj, geoindex) => {
     let singleValueString = '';
     tableDictArray.forEach((key, index) => {
-      singleValueString += `'${obj[key]}'`
+      singleValueString += `'${obj[key]?obj[key]:''}'`
       if(index !== tableDictArrayLength-1){
         singleValueString += `,  `
       }
@@ -128,7 +128,8 @@ function createTableAndInsertValues(){
     }
   })
   alasql(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
-  const res = alasql(`SELECT * from geodata`)
+  const res = alasql(`SELECT * from geodata WHERE Start_Date != '' ORDER BY Start_Date `)
+  console.log(res)
   initMap(res)
 }
 window.addEventListener('load',()=> {
@@ -140,10 +141,9 @@ window.addEventListener('load',()=> {
   const approvedCheckBox = document.getElementById('approved') 
   const stateSelect = document.getElementById('states') 
   const filterButton = document.getElementById('filterButton') 
-  var d = new Date();
-  d.setMonth(d.getMonth() - 3);
-  fromDate.value = formatDate(d)
-  endDate.value = formatDate(new Date());
+  const minMaxDateObj = alasql(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`)[0];
+  fromDate.value = minMaxDateObj.fromDate
+  endDate.value = minMaxDateObj.endDate
   // STATES
   STATE_LIST.forEach((val) => {
     var option = document.createElement("option");
@@ -162,7 +162,7 @@ window.addEventListener('load',()=> {
     }
     let approvedQueryString = '';
     if(approvedCheckBox.checked){
-      approvedQueryString = `AND Authorized='Y'`
+      approvedQueryString = `AND Authorized='N'`
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${approvedQueryString}`
     console.log(queryString)
@@ -220,7 +220,8 @@ function initMap(geodata) {
   function createContentString(strike) {
     let htmlString = ''
     Object.keys(strike).forEach((keyName) => {
-      if(strike[keyName]){
+      // console.log(strike[keyName])
+      if(strike[keyName] && keyName!=='positionId'){
         htmlString += `<strong>${keyName}</strong> : ${strike[keyName]} </br>`
       }
      
@@ -230,8 +231,9 @@ function initMap(geodata) {
   // The location of Uluru
   // The map, centered at Uluru
   const map = new google.maps.Map(document.getElementById("map"), {
-      zoom:4.3,
-      center: { lat: 39.9492309, lng: -76.7440666 }
+      zoom:4,
+      // center: convertLatLngStringToObj(geodata[0]['Latitude_Longitude'])
+      center: {lat: 39.7427825897816, lng: -101.69676383031963}
   });
   const markerArray = []
   // The marker, positioned at Uluru

@@ -144,8 +144,8 @@ window.addEventListener('load',async ()=> {
   const filterButton = document.getElementById('filterButton') 
   const minMaxDateObj = await alasql.promise(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`);
   console.log(minMaxDateObj)
-  fromDate.value = minMaxDateObj.fromDate
-  endDate.value = minMaxDateObj.endDate
+  fromDate.value = minMaxDateObj[0].fromDate
+  endDate.value = minMaxDateObj[0].endDate
   // STATES
   STATE_LIST.forEach((val) => {
     var option = document.createElement("option");
@@ -153,6 +153,8 @@ window.addEventListener('load',async ()=> {
     option.text = val
     stateSelect.appendChild(option);
   });
+  console.log(fromDate.value,'<-----------------fromDate.value')
+  console.log(endDate.value,'<-----------------endDate.value')
   filterButton.onclick  = async (event) => {
     console.log(fromDate.value,'<-----------------fromDate.value')
     console.log(endDate.value,'<-----------------endDate.value')

@@ -50,6 +50,24 @@
     flex-direction: row;
     justify-content: center;
   }
+  .toggle-box{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .toggle-label{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .strike-label{
+    margin-top: 5px;
+    margin-right: 5px;
+  }
+  .protest-label{
+    margin-top: 5px;
+    margin-left: 5px;
+  }
   .state-box{
     display: flex;
     flex-direction: row;
@@ -141,4 +159,54 @@
 .hidechk:checked ~ .tab-content {
   max-height: 100vh;
   padding: 1em;
+}
+
+/* TOGGLE BUTTON CSS */
+.switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.switch input#togglechk {
+  display:none;
+}
+
+.slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+}
+
+input#togglechk:checked + .slider {
+  background-color: #ccc;;
+}
+
+input#togglechk:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

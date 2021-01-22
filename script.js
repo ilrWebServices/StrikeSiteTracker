@@ -128,7 +128,7 @@ function createTableAndInsertValues(){
     }
   })
   alasql(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
-  const res = alasql(`SELECT * from geodata WHERE Start_Date != '' ORDER BY Start_Date `)
+  const res = alasql(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_lockout LIKE '%Strike%' ORDER BY Start_Date  `)
   console.log(res)
   initMap(res)
 }
@@ -139,6 +139,7 @@ window.addEventListener('load',()=> {
   const fromDate = document.getElementById('fromDate') 
   const endDate = document.getElementById('endDate') 
   const approvedCheckBox = document.getElementById('approved') 
+  const toggleProtestCheckBox = document.getElementById('togglechk') 
   const stateSelect = document.getElementById('states') 
   const filterButton = document.getElementById('filterButton') 
   const minMaxDateObj = alasql(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`)[0];
@@ -164,7 +165,11 @@ window.addEventListener('load',()=> {
     if(approvedCheckBox.checked){
       approvedQueryString = `AND Authorized='N'`
     }
-    const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${approvedQueryString}`
+    strikeOrProtestQueryString = `AND Strike_or_lockout LIKE '%Strike%'`
+    if(toggleProtestCheckBox.checked){
+      strikeOrProtestQueryString =`AND Strike_or_lockout LIKE '%Protest%'`
+    }
+    const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${strikeOrProtestQueryString} ${approvedQueryString} ORDER BY Start_Date`
     console.log(queryString)
     const res = alasql(queryString);
     console.log(res)

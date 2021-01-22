@@ -97,7 +97,7 @@ const tableDict = {
     "type": "string"
   }
 }
-function createTableAndInsertValues(){
+async function createTableAndInsertValues(){
   let createTableColStringAndType = ''
   let createTableColString = ''
   const tableDictArray = Object.keys(tableDict);
@@ -111,9 +111,9 @@ function createTableAndInsertValues(){
     }
   })
   let valuesString = '';
-  alasql(`CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`);
+  await alasql.promise(`CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`);
   const geodatalen = window.geodata.length;
-  // [window.geodata[0],window.geodata[1],window.geodata[2]].forEach((obj, geoindex) => {
+  console.log(geodatalen)
   window.geodata.forEach((obj, geoindex) => {
     let singleValueString = '';
     tableDictArray.forEach((key, index) => {
@@ -127,14 +127,14 @@ function createTableAndInsertValues(){
       valuesString += `,`
     }
   })
-  alasql(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
-  const res = alasql(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_lockout LIKE '%Strike%' ORDER BY Start_Date  `)
+  await alasql.promise(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
+  const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_lockout LIKE '%Strike%' ORDER BY Start_Date  `)
   console.log(res)
   initMap(res)
 }
-window.addEventListener('load',()=> {
+window.addEventListener('load',async ()=> {
   console.log(window)
-  createTableAndInsertValues();
+  await createTableAndInsertValues();
   // DATES
   const fromDate = document.getElementById('fromDate') 
   const endDate = document.getElementById('endDate') 
@@ -142,7 +142,8 @@ window.addEventListener('load',()=> {
   const toggleProtestCheckBox = document.getElementById('togglechk') 
   const stateSelect = document.getElementById('states') 
   const filterButton = document.getElementById('filterButton') 
-  const minMaxDateObj = alasql(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`)[0];
+  const minMaxDateObj = await alasql.promise(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`);
+  console.log(minMaxDateObj)
   fromDate.value = minMaxDateObj.fromDate
   endDate.value = minMaxDateObj.endDate
   // STATES
@@ -152,7 +153,7 @@ window.addEventListener('load',()=> {
     option.text = val
     stateSelect.appendChild(option);
   });
-  filterButton.onclick  = (event) => {
+  filterButton.onclick  = async (event) => {
     console.log(fromDate.value,'<-----------------fromDate.value')
     console.log(endDate.value,'<-----------------endDate.value')
     console.log(approvedCheckBox.checked,'<-----------------approvedCheckBox.value')
@@ -171,7 +172,7 @@ window.addEventListener('load',()=> {
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${strikeOrProtestQueryString} ${approvedQueryString} ORDER BY Start_Date`
     console.log(queryString)
-    const res = alasql(queryString);
+    const res = await alasql.promise(queryString);
     console.log(res)
     initMap(res)
   }

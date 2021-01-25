@@ -6,6 +6,32 @@ function convertLatLngStringToObj(LatLngString) {
     lat: Number(array[0]),lng:Number(array[1])
   }
 }
+function mysql_real_escape_string (str) {
+  return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+      switch (char) {
+          case "\0":
+              return "\\0";
+          case "\x08":
+              return "\\b";
+          case "\x09":
+              return "\\t";
+          case "\x1a":
+              return "\\z";
+          case "\n":
+              return "\\n";
+          case "\r":
+              return "\\r";
+          case "\"":
+          case "'":
+          case "\\":
+          case "%":
+              return "\\"+char; // prepends a backslash to backslash, percent,
+                                // and double/single quotes
+          default:
+              return char;
+      }
+  });
+}
 const STATE_LIST = ['All',"Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District Of Columbia", "Federated States Of Micronesia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Marshall Islands", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virgin Islands", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
 function formatDate(d) {
       month = '' + (d.getMonth() + 1),
@@ -117,7 +143,7 @@ async function createTableAndInsertValues(){
   window.geodata.forEach((obj, geoindex) => {
     let singleValueString = '';
     tableDictArray.forEach((key, index) => {
-      singleValueString += `'${obj[key]?obj[key]:''}'`
+      singleValueString += `'${obj[key]?mysql_real_escape_string(String(obj[key])):''}'`
       if(index !== tableDictArrayLength-1){
         singleValueString += `,  `
       }

@@ -211,7 +211,7 @@ function initMap(geodata) {
     const cardBody = document.createElement('div');
     cardBody.setAttribute("class", "tab-content");
     cardBody.innerHTML = createContentString(strike)
-    chklabel.innerHTML = `${strike.Employer} - ${strike.Union_Name}`;
+    chklabel.innerHTML = `${strike.Employer} - ${strike.Union_Name} -  ${strike.Start_Date}`;
     card.append(chkinput);
     card.append(chklabel);
     card.append(cardBody);

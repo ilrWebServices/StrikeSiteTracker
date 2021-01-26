@@ -115,7 +115,7 @@ const tableDict = {
     "type": "string"
   },
   "Source": {
-    "name": "Source",
+    "name": "source",
     "type": "string"
   },
   "positionId": {
@@ -241,22 +241,25 @@ function initMap(geodata) {
     card.append(chkinput);
     card.append(chklabel);
     card.append(cardBody);
-    chklabel.addEventListener('click',() => {
-      console.log('Inside OnCLick')
-      const strikePosition = convertLatLngStringToObj(strike['Latitude_Longitude']);
-      map.setZoom(15);
-      map.panTo(strikePosition);
-      createInfoWindow(strike,marker)
+    chkinput.addEventListener('change',(e) => {
+      if(e.target.checked){
+        const strikePosition = convertLatLngStringToObj(strike['Latitude_Longitude']);
+        map.setZoom(15);
+        map.panTo(strikePosition);
+        createInfoWindow(strike,marker)
+      }
+
     })
  
     return card
   }
   function createContentString(strike) {
     let htmlString = ''
-    Object.keys(strike).forEach((keyName) => {
+    Object.keys(tableDict).forEach((keyName) => {
       // console.log(strike[keyName])
-      if(strike[keyName] && keyName!=='positionId'){
-        htmlString += `<strong>${keyName}</strong> : ${strike[keyName]} </br>`
+      const colObj = tableDict[keyName];
+      if(strike[colObj.name] && colObj.name!=='positionId'){
+        htmlString += `<strong>${keyName}</strong> : ${strike[colObj.name]} </br>`
       }
      
   })

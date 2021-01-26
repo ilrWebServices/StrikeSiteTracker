@@ -4,15 +4,20 @@
     width: 100%;
     /* The width is the width of the web page */
   }
-  
   #ilr-logo{
     max-height: 100%;
   }
-  body{
-    margin: 0%!important;
+  .page-wrap{
+    position: fixed;
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    top: 0px;
+    left: 0px;
+  }
+  body{
+    margin: 0%!important;
+    width: 100vw;
+    overflow: scroll;
   }
   .height-100cent{
     height: 100%;
@@ -20,13 +25,15 @@
   .padding-0{
     padding: 0%!important;
   }
-
+.strikes-box{
+  width: 100%;
+  height: 70%;
+  border: black 1px solid;
+  padding: 2.5%;
+  }
   #list-box{
-    width: 100%;
-    height: 70%;
-    border: black 1px solid;
-    overflow-y: scroll;
-    padding: 2.5%;
+   height: 100%;
+   overflow-y: scroll;
   }
   .filter-box{
     width: 100%;

@@ -3,7 +3,7 @@
   <head>
     <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClrrWD_zZ7jabwN0MoasWk8-hpUiaAtvI&libraries=&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxTbQr8QmSeFfsyTxm2zY8TKHYRMrSWOo&libraries=&v=weekly"
       defer
     ></script>
     <link
@@ -22,6 +22,7 @@
     <script src="./geodata.js"></script>
   </head>
   <body>
+    <div class="page-wrap">
     <div class="navbar navbar-light bg-light nav-height">
       <img
         src="https://www.ilr.cornell.edu/sites/all/themes/ilr_theme/images/logos/ilr-cornell-lockup.svg"
@@ -72,14 +73,15 @@
             <button id="filterButton">Filter Button</button>
           </div>
         </div>
-        <div id="list-box">
-          
+        <div class="strikes-box">
+          <div id="list-box"></div>
         </div>
       </div>
 
       <div class="col-md-8 padding-0">
         <div id="map"></div>
       </div>
+    </div>
     </div>
   </body>
 </html>

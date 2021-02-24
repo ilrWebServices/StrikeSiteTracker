@@ -22,7 +22,7 @@ module.exports = async (array, spreadsheetId, authClient) => {
     if (!element["Latitude, Longitude"] && element.Address) {
       const dataObject = {
         majorDimension: "DIMENSION_UNSPECIFIED",
-        range: getRange("E", element.positionId),
+        range: getRange("F", element.positionId),
         values: [[element["latlngObj"]]],
       };
       element["Latitude, Longitude"] = element["latlngObj"];

@@ -50,12 +50,16 @@ const tableDict = {
     "name": "Employer",
     "type": "string"
   },
-  "Union": {
-    "name": "Union_Name",
+  "Labor Organization": {
+    "name": "Labor_Organization",
     "type": "string"
   },
   "Union Local": {
     "name": "Union_Local",
+    "type": "string"
+  },
+  "Industry ": {
+    "name": "Industry",
     "type": "string"
   },
   "Bargaining Unit Size": {

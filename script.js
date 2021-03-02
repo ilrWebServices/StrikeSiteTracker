@@ -175,7 +175,7 @@ window.addEventListener('load',async ()=> {
   const minMaxDateObj = await alasql.promise(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`);
   console.log(minMaxDateObj)
   fromDate.value = minMaxDateObj[0].fromDate
-  endDate.value = '2021-02-24'//minMaxDateObj[0].endDate
+  endDate.value = '2021-10-24'//minMaxDateObj[0].endDate
   // STATES
   STATE_LIST.forEach((val) => {
     var option = document.createElement("option");

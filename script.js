@@ -262,7 +262,19 @@ function initMap(geodata) {
     Object.keys(tableDict).forEach((keyName) => {
       // console.log(strike[keyName])
       const colObj = tableDict[keyName];
-      if(strike[colObj.name] && colObj.name!=='positionId'){
+      if(colObj.name =='source'){
+        let sourceString = strike[colObj.name];
+        if(sourceString.indexOf('1. ') === -1){
+          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}">Source</a> </br>`
+        }else{
+          let finalString = ''
+          let sourceStringArray = sourceString.split('\n')
+          sourceStringArray.forEach((string,index)=> {
+            finalString += ` <a href="${string.replace(`${index+1}. `,'')}">Source ${index+1}</a> `
+          })
+          htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`
+        }
+      }else if(strike[colObj.name] && colObj.name!=='positionId'){
         htmlString += `<strong>${keyName}</strong> : ${strike[colObj.name]} </br>`
       }
      

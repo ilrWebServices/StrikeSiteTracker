@@ -204,7 +204,7 @@ window.addEventListener('load',async ()=> {
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${strikeOrProtestQueryString} ${approvedQueryString} ORDER BY Start_Date`
     console.log(queryString)
-    const res = await alasql.promise(queryString);
+    const res  = await alasql.promise(queryString);
     console.log(res)
     initMap(res)
   }
@@ -268,9 +268,10 @@ function initMap(geodata) {
           htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}">Source</a> </br>`
         }else{
           let finalString = ''
-          let sourceStringArray = sourceString.split('\n')
+          let sourceStringArray = sourceString.split('\\n')
+          console.log(sourceStringArray)
           sourceStringArray.forEach((string,index)=> {
-            finalString += ` <a href="${string.replace(`${index+1}. `,'')}">Source ${index+1}</a> `
+            finalString += ` <a href="${string.replace(`${index+1}.`,'').trim()}">Source ${index+1}</a> `
           })
           htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`
         }

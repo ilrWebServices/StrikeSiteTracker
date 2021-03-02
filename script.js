@@ -175,7 +175,7 @@ window.addEventListener('load',async ()=> {
   const minMaxDateObj = await alasql.promise(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`);
   console.log(minMaxDateObj)
   fromDate.value = minMaxDateObj[0].fromDate
-  endDate.value = minMaxDateObj[0].endDate
+  endDate.value = '2021-02-24'//minMaxDateObj[0].endDate
   // STATES
   STATE_LIST.forEach((val) => {
     var option = document.createElement("option");
@@ -203,7 +203,6 @@ window.addEventListener('load',async ()=> {
       strikeOrProtestQueryString =`AND Strike_or_protest_or_lockout LIKE '%Protest%'`
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${strikeOrProtestQueryString} ${approvedQueryString} ORDER BY Start_Date`
-    console.log(queryString)
     const res  = await alasql.promise(queryString);
     console.log(res)
     initMap(res)

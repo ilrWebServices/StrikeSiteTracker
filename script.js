@@ -264,13 +264,13 @@ function initMap(geodata) {
       if(colObj.name =='source'){
         let sourceString = strike[colObj.name];
         if(sourceString.indexOf('1. ') === -1){
-          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}">Source</a> </br>`
+          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString} target="_blank" rel="noopener noreferrer" ">Source</a> </br>`
         }else{
           let finalString = ''
           let sourceStringArray = sourceString.split('\\n')
           console.log(sourceStringArray)
           sourceStringArray.forEach((string,index)=> {
-            finalString += ` <a href="${string.replace(`${index+1}.`,'').trim()}">Source ${index+1}</a> `
+            finalString += ` <a href="${string.replace(`${index+1}.`,'').trim()}" target="_blank" rel="noopener noreferrer">Source ${index+1}</a> `
           })
           htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`
         }

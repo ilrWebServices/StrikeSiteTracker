@@ -269,8 +269,14 @@ function initMap(geodata) {
           let finalString = ''
           let sourceStringArray = sourceString.split('\\n')
           console.log(sourceStringArray)
+          let count = 0;
           sourceStringArray.forEach((string,index)=> {
-            finalString += ` <a href="${string.replace(`${index+1}.`,'').trim()}" target="_blank" rel="noopener noreferrer">Source ${index+1}</a> `
+            if(string){
+              count = count+1;
+              const arr = string.split('.')
+              finalString += ` <a href="${arr[1].trim()}" target="_blank" rel="noopener noreferrer">Source ${count}</a> `
+            }
+            
           })
           htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`
         }

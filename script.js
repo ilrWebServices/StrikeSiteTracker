@@ -269,12 +269,11 @@ function initMap(geodata) {
           let finalString = ''
           let sourceStringArray = sourceString.split('\\n')
           console.log(sourceStringArray)
-          let count = 0;
+          let count = 0
           sourceStringArray.forEach((string,index)=> {
             if(string){
-              count = count+1;
-              const arr = string.split('.')
-              finalString += ` <a href="${arr[1].trim()}" target="_blank" rel="noopener noreferrer">Source ${count}</a> `
+              count = count+1
+              finalString += ` <a href="${string.replace(`${count}.`,'').trim()}" target="_blank" rel="noopener noreferrer">Source ${count}</a> `
             }
             
           })

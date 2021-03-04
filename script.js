@@ -259,7 +259,7 @@ function initMap(geodata) {
   function createContentString(strike) {
     let htmlString = ''
     Object.keys(tableDict).forEach((keyName) => {
-      // console.log(strike[keyName])
+      // console.log(strike[keyName]) 
       const colObj = tableDict[keyName];
       if(colObj.name =='source'){
         let sourceString = strike[colObj.name];

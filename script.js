@@ -66,13 +66,17 @@ const tableDict = {
     "name": "Bargaining_Unit_Size",
     "type": "string"
   },
+  "Number of Strike Location": {
+    "name": "Number_of_Strike_Location",
+    "type": "number"
+  },
   "Latitude, Longitude": {
     "name": "Latitude_Longitude",
     "type": "string"
   },
   "Address": {
     "name": "Address",
-    "type": "string"
+    "type": "string",
   },
   "City": {
     "name": "City",
@@ -86,12 +90,12 @@ const tableDict = {
     "name": "Zip_Code",
     "type": "string"
   },
-  "Strike or protest or lockout?": {
-    "name": "Strike_or_protest_or_lockout",
+  "Strike or Protest or Lockout": {
+    "name": "Strike_or_Protest_or_Lockout",
     "type": "string"
   },
-  "approx # Ees on stoppage": {
-    "name": "Approx_Size",
+  "Approximate Number of Employees": {
+    "name": "Approximate_Number_of_Employees",
     "type": "string"
   },
   "Start Date": {
@@ -102,20 +106,24 @@ const tableDict = {
     "name": "End_Date",
     "type": "date"
   },
-  "Duration": {
-    "name": "Duration",
-    "type": "string"
+  "Duration Amount": {
+    "name": "Duration_Amount",
+    "type": "number"
   },
-  "Authorized?": {
+  "Duration Unit": {
+    "name": "Duration_Unit",
+    "type": "number"
+  },
+  "Authorized": {
     "name": "Authorized",
     "type": "string"
   },
-  "Threat?": {
+  "Threat": {
     "name": "Threat",
     "type": "string"
   },
-  "Issues": {
-    "name": "Issues",
+  "Worker Demands": {
+    "name": "Worker_Demands",
     "type": "string"
   },
   "Source": {
@@ -158,12 +166,10 @@ async function createTableAndInsertValues(){
     }
   })
   await alasql.promise(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
-  const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_protest_or_lockout LIKE '%Strike%' ORDER BY Start_Date  `)
-  console.log(res)
+  const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest_or_Lockout LIKE '%Strike%' ORDER BY Start_Date  `)
   initMap(res)
 }
 window.addEventListener('load',async ()=> {
-  console.log(window)
   await createTableAndInsertValues();
   // DATES
   const fromDate = document.getElementById('fromDate') 
@@ -175,7 +181,7 @@ window.addEventListener('load',async ()=> {
   const minMaxDateObj = await alasql.promise(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`);
   console.log(minMaxDateObj)
   fromDate.value = minMaxDateObj[0].fromDate
-  endDate.value = '2021-10-24'//minMaxDateObj[0].endDate
+  endDate.value = minMaxDateObj[0].endDate
   // STATES
   STATE_LIST.forEach((val) => {
     var option = document.createElement("option");
@@ -198,9 +204,9 @@ window.addEventListener('load',async ()=> {
     if(approvedCheckBox.checked){
       approvedQueryString = `AND Authorized='N'`
     }
-    strikeOrProtestQueryString = `AND Strike_or_protest_or_lockout LIKE '%Strike%'`
+    strikeOrProtestQueryString = `AND Strike_or_Protest_or_Lockout LIKE '%Strike%'`
     if(toggleProtestCheckBox.checked){
-      strikeOrProtestQueryString =`AND Strike_or_protest_or_lockout LIKE '%Protest%'`
+      strikeOrProtestQueryString =`AND Strike_or_Protest_or_Lockout LIKE '%Protest%'`
     }
     const queryString = `SELECT * from geodata WHERE Start_Date >= '${fromDate.value}' and Start_Date <= '${endDate.value}' ${statesQueryString} ${strikeOrProtestQueryString} ${approvedQueryString} ORDER BY Start_Date`
     const res  = await alasql.promise(queryString);
@@ -268,7 +274,6 @@ function initMap(geodata) {
         }else{
           let finalString = ''
           let sourceStringArray = sourceString.split('\\n')
-          console.log(sourceStringArray)
           let count = 0
           sourceStringArray.forEach((string,index)=> {
             if(string){

@@ -58,7 +58,7 @@ const tableDict = {
     "name": "Union_Local",
     "type": "string"
   },
-  "Industry ": {
+  "Industry": {
     "name": "Industry",
     "type": "string"
   },
@@ -155,16 +155,24 @@ async function createTableAndInsertValues(){
   window.geodata.forEach((obj, geoindex) => {
     let singleValueString = '';
     tableDictArray.forEach((key, index) => {
-      singleValueString += `'${obj[key]?mysql_real_escape_string(String(obj[key])):''}'`
+      if(tableDict[key].type==='string' || tableDict[key].type==='date'){
+        singleValueString += `'${obj[key]?mysql_real_escape_string(String(obj[key])):''}'`
+      }
+      else if(tableDict[key].type==='number'){
+        singleValueString += `'${Number(obj[key]) && !isNaN(Number(obj[key]))?(Number(obj[key])):0}'`
+      }
       if(index !== tableDictArrayLength-1){
         singleValueString += `,  `
       }
     })
+
     valuesString += `(${singleValueString})`
     if(geoindex !== geodatalen-1){
       valuesString += `,`
     }
+    console.log(singleValueString, '----------------',obj['positionId'])
   })
+  // console.log(valuesString)
   await alasql.promise(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
   const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest_or_Lockout LIKE '%Strike%' ORDER BY Start_Date  `)
   initMap(res)

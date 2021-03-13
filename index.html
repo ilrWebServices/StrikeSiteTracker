@@ -34,44 +34,98 @@
     <div class="row padding-0 main-container">
       <div class="col-md-4 height-100cent padding-0">
         <div class="filter-box border">
-          <div class="toggle-box">
-            <div class="toggle-label">
-              <div class="strike-label">Strikes</div>
-              <label class="switch" for="togglechk">
-                <input type="checkbox" id="togglechk" />
-                <div class="slider round"></div>
+          <table>
+            <tr>
+              <th class="first"><div>Type</div></th>
+              <td colspan="2"> <div class="from-box">
+                <div class="xstrike-label">Strikes</div>
+                <label class="xswitch" for="strikeValue">
+                  <input type="checkbox" id="strikeValue" />
               </label>
-              <div class="protest-label">Protest</div>
-            </div>
-          </div>
-          <div class="date-box">
-            <div class="from-box">
-              <label>From Date</label>
+              </div></td>
+              <td colspan="2"> <div class="from-box">
+                <div class="xstrike-label">Protests</div>
+                <label class="xswitch" for="protestValue">
+                  <input type="checkbox" id="protestValue" />
+                </label>
+              </div></td>
+              <td colspan="2"> <div class="from-box">
+                <div class="xstrike-label">Lockout</div>
+                <label class="xswitch" for="lockoutValue">
+                  <input type="checkbox" id="lockoutValue" />
+                </label>
+              </div></td>
+            </tr>
+            <tr>
+              <th class="first"><div>Labor Organization</div></th>
+              <td colspan="6">  
+                <input type="text" id="labOrgSearch">
+              </td>
+            </tr>
+            <tr>
+              <th class="first"><div>Start Date Range</div></th>
+              <td colspan="3"> <div class="from-box">
+                <!-- <label>From Date</label> -->
               <input
                 type="date"
                 aria-label="from"
                 id="fromDate"
                 name="fromDate"
               />
-            </div>
-            <div class="from-box">
-              <label>End Date</label>
+              </div></td>
+              <td></td>
+              <td colspan="3"> <div class="from-box">
+                <!-- <label>End Date</label> -->
               <input type="date" aria-label="end" id="endDate" name="endDate" />
             </div>
-          </div>
-          <div class="state-box">
-            <label for="states">Select State</label>
-            <select name="states" id="states"></select>
-          </div>
-          <div class="yn-box">
-            <div class="approved-box">
-              <label for="approved">Not Authorized?</label>
+            </div></td>
+            </tr>
+            <tr>
+              <th class="first"><div>State</div></th>
+              <td colspan="6">  
+                <select name="states" id="states" ></select>
+              </td>
+            </tr>
+            <tr>
+              <th class="first"><div>Industry</div></th>
+              <td colspan="6">  
+                <select name="industry" id="industry" ></select>
+              </td>
+            </tr>
+            <tr>
+              <th class="first"><div>Work Demands</div></th>
+              <td colspan="6">  
+                <select name="workerDemand" id="workerDemand" ></select>
+              </td>
+            </tr>
+            <tr>
+              <th class="first"><div>Unit Size</div></th>
+              <td><div id="minUnitSizeLabel"></div></td>
+              <td>  
+              <input type="range" class="rangeInput" id="unitSize" name="unitSize" >
+              </td>
+              <td><div id="maxUnitSizeLabel"></div></td>
+            </tr>
+            <tr>
+              <th class="first"><div>Number of Employees</div></th>
+              <td><div id="minNoOfEmpLabel"></div></td>
+              <td>  
+                <input type="range" class="rangeInput" id="NoOfEmp" name="NoOfEmp" >
+              </td>
+              <td><div id="maxNoOfEmpLabel"></div></td>
+            </tr>
+            <tr>
+              <th class="first"><div>Not Authorized?</div></th>
+              <td colspan="6">  
               <input type="checkbox" name="approved" id="approved" />
-            </div>
-          </div>
-          <div class="button-box">
+              </td>
+            </tr>
+            <tr> <td><div class="button-box">
             <button id="filterButton">Filter Button</button>
           </div>
+          </td></tr>
+          </table>
+         
         </div>
         <div class="strikes-box">
           <div id="list-box"></div>

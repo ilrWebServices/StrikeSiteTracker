@@ -33,6 +33,31 @@ function mysql_real_escape_string (str) {
   });
 }
 const STATE_LIST = ['All',"Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District Of Columbia", "Federated States Of Micronesia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Marshall Islands", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virgin Islands", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+const INDUSTRY_LIST = ['All',
+'Agriculture, Forestry, Fishing & Hunting',
+'Mining',
+'Utilities',
+'Construction',
+'Manufacturing',
+'Wholesale Trade',
+'Retail Trade',
+'Transportation and Warehousing',
+'Real Estate and Rental and Leasing',
+'Professional, Scientific and Technical Services',
+'Management of Companies and Enterprises',
+'Administrative and Support and Waste Management',
+'Educational Services',
+'Information',
+'Finance and Insurance',
+'Health Care and Social Assistance',
+'Arts, Entertainment and Recreation',
+'Accommodation and Food Services',
+'Other Services (except Public Administration)',
+'Central Administrative Office Activity',
+'Public Administration']
+const WORKER_DEMAND = ['All','Pay','Healthcare','COVID-19 protocols','Health and safety','First contract','Racial justice','$15 minimum wage','Staffing']
+
+
 function formatDate(d) {
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -60,11 +85,12 @@ const tableDict = {
   },
   "Industry": {
     "name": "Industry",
-    "type": "string"
+    "type": "string",
+    "filter": filterIndustry
   },
   "Bargaining Unit Size": {
     "name": "Bargaining_Unit_Size",
-    "type": "string"
+    "type": "number"
   },
   "Number of Strike Location": {
     "name": "Number_of_Strike_Location",
@@ -84,7 +110,8 @@ const tableDict = {
   },
   "State": {
     "name": "State",
-    "type": "string"
+    "type": "string",
+    "filter": filterStates
   },
   "Zip Code": {
     "name": "Zip_Code",
@@ -92,15 +119,17 @@ const tableDict = {
   },
   "Strike or Protest or Lockout": {
     "name": "Strike_or_Protest_or_Lockout",
-    "type": "string"
+    "type": "string",
+    "filter": filterType
   },
-  "Approximate Number of Employees": {
+  "Approximate  Number of Employees": {
     "name": "Approximate_Number_of_Employees",
-    "type": "string"
+    "type": "number"
   },
   "Start Date": {
     "name": "Start_Date",
-    "type": "date"
+    "type": "date",
+    "filter": filterDate
   },
   "End Date": {
     "name": "End_Date",
@@ -112,11 +141,12 @@ const tableDict = {
   },
   "Duration Unit": {
     "name": "Duration_Unit",
-    "type": "number"
+    "type": "string"
   },
   "Authorized": {
     "name": "Authorized",
-    "type": "string"
+    "type": "string",
+    "filter": filterAuthorized
   },
   "Threat": {
     "name": "Threat",
@@ -124,7 +154,8 @@ const tableDict = {
   },
   "Worker Demands": {
     "name": "Worker_Demands",
-    "type": "string"
+    "type": "string",
+    "filter": filterWorkerDemands
   },
   "Source": {
     "name": "source",
@@ -134,6 +165,40 @@ const tableDict = {
     "name": "positionId",
     "type": "string"
   }
+}
+function filterDate(params) {
+  
+}
+function filterType(params) {
+  
+}
+function filterIndustry(params) {
+  let filterString = '';
+  if(params.industryValue !== 'All'){
+    filterString = `AND Industry LIKE '%${params.industryValue}%'`
+  }
+  return filterString
+}
+function filterStates(params) {
+  let filterString = '';
+  if(params.stateValue !== 'All'){
+    filterString = `AND State LIKE '%${params.stateValue}%'`
+  }
+  return filterString
+}
+function filterWorkerDemands(params) {
+  let filterString = '';
+  if(params.workerDemandsValue !== 'All'){
+    filterString = `AND Worker_Demands LIKE '%${params.workerDemandsValue}%'`
+  }
+  return filterString
+}
+function filterAuthorized(params) {
+  let filterString = '';
+  if(params.Authorized !== 'on'){
+    filterString = `AND State LIKE '%${params.industryValue}%'`
+  }
+  return filterStrin
 }
 async function createTableAndInsertValues(){
   let createTableColStringAndType = ''
@@ -188,7 +253,8 @@ async function createTableAndInsertValues(){
               singleValueString += `'${singleEvent[key]?mysql_real_escape_string(String(singleEvent[key])):''}'`
             }
             else if(tableDict[key].type==='number'){
-              singleValueString += `'${Number(singleEvent[key]) && !isNaN(Number(singleEvent[key]))?(Number(singleEvent[key])):0}'`
+              console.log(singleEvent[key],key)
+              singleValueString += Number(singleEvent[key]) && !isNaN(Number(singleEvent[key]))?(Number(singleEvent[key])):0
             }
             if(index !== tableDictArrayLength-1){
               singleValueString += `,  `
@@ -218,7 +284,7 @@ async function createTableAndInsertValues(){
           singleValueString += `'${obj[key]?mysql_real_escape_string(String(obj[key])):''}'`
         }
         else if(tableDict[key].type==='number'){
-          singleValueString += `'${Number(obj[key]) && !isNaN(Number(obj[key]))?(Number(obj[key])):0}'`
+          singleValueString += Number(obj[key]) && !isNaN(Number(obj[key]))?(Number(obj[key])):0
         }
         if(index !== tableDictArrayLength-1){
           singleValueString += `,  `
@@ -234,7 +300,11 @@ async function createTableAndInsertValues(){
   await alasql.promise(`INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`)
   const res = await alasql.promise(`SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest_or_Lockout LIKE '%Strike%' ORDER BY Start_Date  `)
   initMap(res)
-  console.log(res.length)
+  res.forEach((e,i) => {
+    if(e.Employer === 'Reith Riley Construction Company'){
+      console.log(e)
+    }
+  })
 }
 window.addEventListener('load',async ()=> {
   await createTableAndInsertValues();
@@ -244,9 +314,15 @@ window.addEventListener('load',async ()=> {
   const approvedCheckBox = document.getElementById('approved') 
   const toggleProtestCheckBox = document.getElementById('togglechk') 
   const stateSelect = document.getElementById('states') 
+  const industrySelect = document.getElementById('industry') 
+  const workerDemandSelect = document.getElementById('workerDemand') 
+  const unitSizeRange = document.getElementById('unitSize') 
+  const NoOfEmpRange = document.getElementById('NoOfEmp') 
   const filterButton = document.getElementById('filterButton') 
   const minMaxDateObj = await alasql.promise(`SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`);
-  console.log(minMaxDateObj)
+  const minMaxUnitSizeObj = await alasql.promise(`SELECT MAX(Bargaining_Unit_Size) as maxUnitSize, MIN(Bargaining_Unit_Size) as minUnitSize from geodata`);
+  const minMaxNoOfEmpObj = await alasql.promise(`SELECT MAX(Approximate_Number_of_Employees) as maxNoOfEmpRange, MIN(Approximate_Number_of_Employees) as minNoOfEmpRange from geodata`);
+  console.log(JSON.stringify(minMaxNoOfEmpObj))
   fromDate.value = minMaxDateObj[0].fromDate
   endDate.value = minMaxDateObj[0].endDate
   // STATES
@@ -256,6 +332,32 @@ window.addEventListener('load',async ()=> {
     option.text = val
     stateSelect.appendChild(option);
   });
+  // INDUSTRY
+  INDUSTRY_LIST.forEach((val) => {
+    var option = document.createElement("option");
+    option.value = val;
+    option.text = val
+    industrySelect.appendChild(option);
+  });
+  // WORKER DEMAND
+  WORKER_DEMAND.forEach((val) => {
+    var option = document.createElement("option");
+    option.value = val;
+    option.text = val
+    workerDemandSelect.appendChild(option);
+  });
+  // UNIT SIZE RANGE
+  unitSizeRange.setAttribute('min',minMaxUnitSizeObj[0].minUnitSize)
+  unitSizeRange.setAttribute('max',minMaxUnitSizeObj[0].maxUnitSize)
+  unitSizeRange.value = minMaxUnitSizeObj[0].maxUnitSize
+  document.getElementById('maxUnitSizeLabel').innerHTML = minMaxUnitSizeObj[0].maxUnitSize
+  document.getElementById('minUnitSizeLabel').innerHTML = minMaxUnitSizeObj[0].minUnitSize
+  // NO OF EMPLYEES
+  NoOfEmpRange.setAttribute('min',minMaxNoOfEmpObj[0].minNoOfEmpRange)
+  NoOfEmpRange.setAttribute('max',minMaxNoOfEmpObj[0].maxNoOfEmpRange)
+  NoOfEmpRange.value = minMaxNoOfEmpObj[0].maxNoOfEmpRange
+  document.getElementById('maxNoOfEmpLabel').innerHTML = minMaxNoOfEmpObj[0].maxNoOfEmpRange
+  document.getElementById('minNoOfEmpLabel').innerHTML = minMaxNoOfEmpObj[0].minNoOfEmpRange
   console.log(fromDate.value,'<-----------------fromDate.value')
   console.log(endDate.value,'<-----------------endDate.value')
   filterButton.onclick  = async (event) => {

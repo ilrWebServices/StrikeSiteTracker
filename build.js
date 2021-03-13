@@ -3,7 +3,8 @@ const readline = require("readline");
 const core = require("@actions/core");
 const { google } = require("googleapis");
 const convertRowsToJson = require("./convertRowsToJson");
-core.info("Any Output at all?");
+const console = {}
+console.log = () => {}
 const findLatLng = require("./findLatLng");
 const updateLatLngInSheets = require("./updateLatLngInSheets");
 // If modifying these scopes, delete token.json.
@@ -16,7 +17,7 @@ const SCOPES = [
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = "token.json";
-const spreadsheetId = "1TGsSe4oxPWSB8DuqB6Xy07nxAoWldCFfwBu2nfeSNWo";
+const spreadsheetId = "1NuTrust5-tFaslvbiqoL4Xvr8Wvq4nyXYta3vo4-B4Y";
 // Load client secrets from a local file.
 fs.readFile("credentials.json", "utf8", (err, content) => {
   if (err) {
@@ -26,8 +27,6 @@ fs.readFile("credentials.json", "utf8", (err, content) => {
       console.error(error);
     }
   }
-  console.log(typeof content);
-  core.info("Gonna Authorize");
   if (typeof content === "string") {
     content = JSON.parse(content);
   }
@@ -43,17 +42,14 @@ fs.readFile("credentials.json", "utf8", (err, content) => {
  * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials, callback) {
-  console.log(credentials);
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
     client_secret,
     redirect_uris[0]
   );
-  core.info("Inside Authorize");
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, "utf8", (err, token) => {
-    console.log(token);
     if (err) {
       token = JSON.parse(process.env.SHEETS_TOKEN);
     }
@@ -115,14 +111,14 @@ function listMajors(auth) {
         const objectArray = convertRowsToJson(rows);
         // console.log(objectArray.length,'<-------------------------objectArray.length')
         const geoCodeArray = await findLatLng(objectArray);
-        const updatedGeocodeArray = await updateLatLngInSheets(
-          geoCodeArray,
-          spreadsheetId,
-          auth
-        );
+        // const updatedGeocodeArray = await updateLatLngInSheets(
+        //   geoCodeArray,
+        //   spreadsheetId,
+        //   auth
+        // );
         fs.writeFileSync(
           "geodata.js",
-          `window.geodata=${JSON.stringify(updatedGeocodeArray)}`
+          `window.geodata=${JSON.stringify(geoCodeArray)}`
         );
       } else {
         console.log("No data found.");

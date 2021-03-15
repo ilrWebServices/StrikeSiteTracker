@@ -1,3 +1,40 @@
+html, body {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100vw; 
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+}
+#main {
+  display: flex;
+  min-height: calc(100vh - 10vh);
+}
+#main > article {
+  flex: 1;
+}
+#main > nav, 
+#main > aside {
+  flex: 0 0 10vw;
+}
+#main > nav {
+  order: -1;
+}
+nav{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+header {
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 #map {
     height: 100%;
     /* The height is 400 pixels */
@@ -6,28 +43,62 @@
   }
   #ilr-logo{
     max-height: 100%;
+    margin: 1em;
   }
-  .page-wrap{
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    top: 0px;
-    left: 0px;
+  .header-right{
+    margin-right: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
-  body{
+  .rangeCell{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  #labOrgSearch{
+    width: 100%;
+  }
+  .first{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    text-align: center;
+  }
+  #maxNoOfEmpLabel{
+    min-width: 3em;
+    text-align: center;
+  }
+  #maxUnitSizeLabel{
+    min-width: 3em;
+    text-align: center;
+  }
+  #minUnitSizeLabel{
+    float: right;
+  }
+  #minNoOfEmpLabel{
+    float: right;
+  }
+  .rangeInput{
+    width: 100%;
+  }
+  /* body{
     margin: 0%!important;
     width: 100vw;
     overflow: scroll;
-  }
+  } */
   .height-100cent{
     height: 100%;
   }
   .padding-0{
     padding: 0%!important;
   }
+  table { table-layout: fixed; }
+  td { width: 33%; }
 .strikes-box{
   width: 100%;
-  height: 70%;
+  height: 47vh;
   border: black 1px solid;
   padding: 2.5%;
   }
@@ -37,7 +108,6 @@
   }
   .filter-box{
     width: 100%;
-    height: 30%;
     border: black 1px solid;
     display: flex;
     flex-direction: column;
@@ -46,7 +116,8 @@
   }
   .from-box{
     display: flex;
-    flex-direction: column;
+    flex-flow: row;
+    justify-content: space-evenly;
   }
   #approved{
     margin-top: 5px;

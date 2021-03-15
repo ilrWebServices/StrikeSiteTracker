@@ -445,6 +445,10 @@ window.addEventListener("load", async () => {
   const NoOfEmpRange = document.getElementById("NoOfEmp");
   const searchLabourOrganization = document.getElementById("labOrgSearch");
   const filterButton = document.getElementById("filterButton");
+  const filterForm = document.getElementById("filterForm");
+  filterForm.onsubmit = () => {
+    return false;
+  }
   const minMaxDateObj = await alasql.promise(
     `SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`
   );

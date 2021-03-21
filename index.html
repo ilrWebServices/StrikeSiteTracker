@@ -37,7 +37,7 @@
         loading="lazy"
         id="ilr-logo"
       />
-      <div class="header-right"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform" target="_blank" >Report</a></div>
+      <div class="header-right"><a class="linkButton" href="https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform" target="_blank" >Report a labor strike or protest</a></div>
       
     </header>
     <div id="main">
@@ -128,31 +128,13 @@
             <tr>
               <th colspan="1" class="first"><div>Unit Size</div></th>
               <td colspan="11" >
-                <div class="rangeCell">
-                <div id="minUnitSizeLabel"></div>
-                <input
-                  type="range"
-                  class="rangeInput"
-                  id="unitSize"
-                  name="unitSize"
-                />
-                <div id="maxUnitSizeLabel"></div>
-              </div>
+                <select name="unitSize" id="unitSize" multiple></select>
               </td>
             </tr>
             <tr>
               <th colspan="1" class="first"><div>Number of Employees</div></th>
               <td colspan="11">
-                <div class="rangeCell">
-                <div id="minNoOfEmpLabel"></div>
-                <input
-                  type="range"
-                  class="rangeInput"
-                  id="NoOfEmp"
-                  name="NoOfEmp"
-                />
-                <div id="maxNoOfEmpLabel"></div>
-                </div>
+                <select name="NoOfEmp" id="NoOfEmp" multiple></select>
               </td>
              
             </tr>

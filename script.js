@@ -1,9 +1,18 @@
+//UTILS
 function convertLatLngStringToObj(LatLngString) {
   const array = LatLngString.split(",");
   return {
     lat: Number(array[0]),
     lng: Number(array[1]),
   };
+}
+function selectCreator(ArrayOfOptions, element){
+  ArrayOfOptions.forEach((val) => {
+    var option = document.createElement("option");
+    option.value = val;
+    option.text = val;
+    element.appendChild(option);
+  });
 }
 function mysql_real_escape_string(str) {
   return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
@@ -31,6 +40,8 @@ function mysql_real_escape_string(str) {
     }
   });
 }
+// CONSTANTS
+// OPTION LISTS
 const STATE_LIST = [
   "Alabama",
   "Alaska",
@@ -125,17 +136,24 @@ const WORKER_DEMAND = [
   "$15 minimum wage",
   "Staffing",
 ];
-
-function formatDate(d) {
-  (month = "" + (d.getMonth() + 1)),
-    (day = "" + d.getDate()),
-    (year = d.getFullYear());
-
-  if (month.length < 2) month = "0" + month;
-  if (day.length < 2) day = "0" + day;
-
-  return [year, month, day].join("-");
+// Bargaining Unit Size
+const UNIT_SIZE = {
+  'LESS THAN 100':'Bargaining_Unit_Size < 100',
+  'BETWEEN 100 AND 199':'Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200',
+  'BETWEEN 200 AND 299':'Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299',
+  'BETWEEN 300 AND 499':'Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499',
+  'BETWEEN 500 AND 1999':'Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999',
+  'GREATER THAN 2000':'Bargaining_Unit_Size >= 2000',
 }
+const NO_OF_EMPLOEES = {
+  'LESS THAN 100':'Approximate_Number_of_Employees < 100',
+  'BETWEEN 100 AND 199':'Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200',
+  'BETWEEN 200 AND 299':'Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299',
+  'BETWEEN 300 AND 499':'Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499',
+  'BETWEEN 500 AND 1999':'Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999',
+  'GREATER THAN 2000':'Approximate_Number_of_Employees >= 2000',
+}
+// TABLE COLUMN NAMES
 const tableDict = {
   Employer: {
     name: "Employer",
@@ -236,6 +254,8 @@ const tableDict = {
   },
 };
 const OR = " OR ";
+
+//FILTER FUNCTIONS
 function filterDate(params) {
   if (params.fromDate && params.endDate)
     return `Start_Date >= '${params.fromDate}' and Start_Date <= '${params.endDate}'`;
@@ -248,14 +268,24 @@ function filterLabourOrganization(params) {
   else return ''
 }
 function filterUnitSize(params) {
-  if (params.unitSize != params.maxUnitSize)
-    return `Bargaining_Unit_Size <= ${params.unitSize}`;
-  else return "";
+  let filterString = "";
+  params.unitSize.forEach((unitSizeKey, index) => {
+    if (index !== 0) {
+      filterString += OR;
+    }
+    filterString += `(${UNIT_SIZE[unitSizeKey]})`;
+  });
+  return filterString?`(${filterString})`:'';
 }
 function filterNoOfEmp(params) {
-  if (params.NoOfEmp != params.maxNoOfEmp)
-    return `Approximate_Number_of_Employees <= ${params.NoOfEmp}`;
-  else return "";
+  let filterString = "";
+  params.NoOfEmp.forEach((empKey, index) => {
+    if (index !== 0) {
+      filterString += OR;
+    }
+    filterString += `(${NO_OF_EMPLOEES[empKey]})`;
+  });
+  return filterString?`(${filterString})`:'';
 }
 function filterType(params) {
   let filterString = "";
@@ -306,6 +336,7 @@ function filterAuthorized(params) {
   }
   return filterString;
 }
+// CONVERT JSON INTO SQL DATABASE (PREPROCESSING DATA)
 async function createTableAndInsertValues() {
   let createTableColStringAndType = "";
   let createTableColString = "";
@@ -423,6 +454,7 @@ async function createTableAndInsertValues() {
   );
   initMap(res);
 }
+// ON LOAD EVENT (INITIALIZATION)
 window.addEventListener("load", async () => {
   await createTableAndInsertValues();
   // DATES
@@ -432,15 +464,6 @@ window.addEventListener("load", async () => {
   const strikeValueCheckBox = document.getElementById("strikeValue");
   const protestValueCheckBox = document.getElementById("protestValue");
   const lockoutValueCheckBox = document.getElementById("lockoutValue");
-  const stateSelect = (new SlimSelect({
-    select: '#states'
-  }))
-  const industrySelect = (new SlimSelect({
-    select: '#industry'
-  }))
-  const workerDemandSelect = (new SlimSelect({
-    select: '#workerDemand'
-  }))
   const unitSizeRange = document.getElementById("unitSize");
   const NoOfEmpRange = document.getElementById("NoOfEmp");
   const searchLabourOrganization = document.getElementById("labOrgSearch");
@@ -452,68 +475,46 @@ window.addEventListener("load", async () => {
   const minMaxDateObj = await alasql.promise(
     `SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`
   );
-  const minMaxUnitSizeObj = await alasql.promise(
-    `SELECT MAX(Bargaining_Unit_Size) as maxUnitSize, MIN(Bargaining_Unit_Size) as minUnitSize from geodata`
-  );
-  const minMaxNoOfEmpObj = await alasql.promise(
-    `SELECT MAX(Approximate_Number_of_Employees) as maxNoOfEmpRange, MIN(Approximate_Number_of_Employees) as minNoOfEmpRange from geodata`
-  );
-  console.log(JSON.stringify(minMaxNoOfEmpObj));
   // TYPE
-  lockoutValueCheckBox.checked = true;
-  protestValueCheckBox.checked = true;
+  // lockoutValueCheckBox.checked = true;
+  // protestValueCheckBox.checked = true;
   strikeValueCheckBox.checked = true;
   // DATE
   fromDate.value = minMaxDateObj[0].fromDate;
   endDate.value = minMaxDateObj[0].endDate;
   // STATES
   const stateElement = document.getElementById("states")
-  STATE_LIST.forEach((val) => {
-    var option = document.createElement("option");
-    option.value = val;
-    option.text = val;
-    stateElement.appendChild(option);
-  });
   // INDUSTRY
   const industryElement = document.getElementById("industry")
-  INDUSTRY_LIST.forEach((val) => {
-    var option = document.createElement("option");
-    option.value = val;
-    option.text = val;
-    industryElement.appendChild(option);
-  });
   // WORKER DEMAND
   const wDElement = document.getElementById("workerDemand")
-  WORKER_DEMAND.forEach((val) => {
-    var option = document.createElement("option");
-    option.value = val;
-    option.text = val;
-    wDElement.appendChild(option);
-  });
+  // NO OF EMPLOYEES
+  const NoOfEmp = document.getElementById("NoOfEmp")
   // UNIT SIZE RANGE
-  unitSizeRange.setAttribute("min", minMaxUnitSizeObj[0].minUnitSize);
-  unitSizeRange.setAttribute("max", minMaxUnitSizeObj[0].maxUnitSize);
-  unitSizeRange.value = minMaxUnitSizeObj[0].maxUnitSize;
-  const maxUnitSizeLabel = document.getElementById("maxUnitSizeLabel")
-  maxUnitSizeLabel.innerHTML = minMaxUnitSizeObj[0].maxUnitSize;
-  document.getElementById("minUnitSizeLabel").innerHTML =
-    minMaxUnitSizeObj[0].minUnitSize;
-  unitSizeRange.onchange = (e) => {
-    maxUnitSizeLabel.innerHTML = unitSizeRange.value
-  }
-  // NO OF EMPLYEES
-  NoOfEmpRange.setAttribute("min", minMaxNoOfEmpObj[0].minNoOfEmpRange);
-  NoOfEmpRange.setAttribute("max", minMaxNoOfEmpObj[0].maxNoOfEmpRange);
-  NoOfEmpRange.value = minMaxNoOfEmpObj[0].maxNoOfEmpRange;
-  const maxNoOfEmpLabel = document.getElementById("maxNoOfEmpLabel")
-  maxNoOfEmpLabel.innerHTML = minMaxNoOfEmpObj[0].maxNoOfEmpRange;
-  document.getElementById("minNoOfEmpLabel").innerHTML =
-    minMaxNoOfEmpObj[0].minNoOfEmpRange;
-  NoOfEmpRange.onchange = (e) => {
-    maxNoOfEmpLabel.innerHTML = NoOfEmpRange.value
-  }
-  console.log(fromDate.value, "<-----------------fromDate.value");
-  console.log(endDate.value, "<-----------------endDate.value");
+  const unitSize = document.getElementById("unitSize");
+  // ADD OPTIONS FROM OPTIONS LIST
+  selectCreator(Object.keys(UNIT_SIZE),unitSize)
+  selectCreator(Object.keys(NO_OF_EMPLOEES),NoOfEmp)
+  selectCreator(WORKER_DEMAND,wDElement)
+  selectCreator(INDUSTRY_LIST,industryElement)
+  selectCreator(STATE_LIST,stateElement)
+  // SET SLIM SELECT
+  const stateSelect = (new SlimSelect({
+    select: '#states'
+  }))
+  const industrySelect = (new SlimSelect({
+    select: '#industry'
+  }))
+  const workerDemandSelect = (new SlimSelect({
+    select: '#workerDemand'
+  }))
+  const unitSizeSelect = (new SlimSelect({
+    select: '#unitSize'
+  }))
+  const NoOfEmpSelect = (new SlimSelect({
+    select: '#NoOfEmp'
+  }))
+  // ON SUMBIT OF FILTER FORM
   filterButton.onclick = async (event) => {
     console.log(fromDate.value, "<-----------------fromDate.value");
     console.log(endDate.value, "<-----------------endDate.value");
@@ -533,20 +534,20 @@ window.addEventListener("load", async () => {
     if (lockoutValueCheckBox.checked) {
       typeArray.push("Lockout");
     }
-    const paramValue = createParamObject(
-      fromDate.value,
-      endDate.value,
-      typeArray,
-      approvedCheckBox.checked,
-      workerDemandSelect.selected(),
-      stateSelect.selected(),
-      industrySelect.selected(),
-      NoOfEmpRange.value,
-      unitSizeRange.value,
-      minMaxUnitSizeObj[0].maxUnitSize,
-      minMaxNoOfEmpObj[0].maxNoOfEmpRange,
-      searchLabourOrganization.value,
-    );
+
+    const paramValue = {
+      fromDate:fromDate.value,
+      endDate: endDate.value,
+      typeArray:typeArray,
+      Authorized: approvedCheckBox.checked,
+      workerDemandsValue:  workerDemandSelect.selected(),
+      stateValue: stateSelect.selected(),
+      industryValue:industrySelect.selected(),
+      NoOfEmp: NoOfEmpSelect.selected(),
+      unitSize:unitSizeSelect.selected(),
+      searchTextLO:searchLabourOrganization.value,
+    }
+    
     console.log(paramValue);
     let cString = "";
     let filterCount = 0;
@@ -571,35 +572,6 @@ window.addEventListener("load", async () => {
   };
 });
 
-function createParamObject(
-  fromDate,
-  endDate,
-  typeArray,
-  Authorized,
-  workerDemandsValue,
-  stateValue,
-  industryValue,
-  NoOfEmp,
-  unitSize,
-  maxUnitSize,
-  maxNoOfEmp,
-  searchTextLO
-) {
-  return {
-    fromDate,
-    endDate,
-    typeArray,
-    Authorized,
-    workerDemandsValue,
-    stateValue,
-    industryValue,
-    NoOfEmp,
-    unitSize,
-    maxUnitSize,
-    maxNoOfEmp,
-    searchTextLO
-  };
-}
 
 // Initialize and add the map
 function initMap(geodata) {
@@ -654,7 +626,8 @@ function initMap(geodata) {
       if (colObj.name == "source") {
         let sourceString = strike[colObj.name];
         if (sourceString.indexOf("1. ") === -1) {
-          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString} target="_blank" rel="noopener noreferrer" ">Source</a> </br>`;
+          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}" target="_blank" rel="noopener noreferrer" ">Source</a> </br>`;
+          console.log(strike['Employer'],htmlString)
         } else {
           let finalString = "";
           let sourceStringArray = sourceString.split("\\n");

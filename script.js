@@ -564,7 +564,7 @@ window.addEventListener("load", async () => {
       }
     });
     console.log(cString);
-    const queryString = `SELECT * from geodata WHERE ${cString}`;
+    const queryString = `SELECT * from geodata WHERE ${cString} ORDER BY Start_Date`;
     console.log(queryString);
     const res = await alasql.promise(queryString);
     initMap(res);
@@ -578,6 +578,8 @@ function initMap(geodata) {
   let infowindow = null;
   let currWindow = false;
   const listDiv = document.getElementById("list-box");
+  const resultCountDiv = document.getElementById("resultCount");
+  resultCountDiv.innerHTML = `${geodata.length} Results Found`
   listDiv.innerHTML = "";
   function createInfoWindow(strike, marker) {
     if (infowindow) {
@@ -592,16 +594,36 @@ function initMap(geodata) {
     const card = document.createElement("div");
     const chkinput = document.createElement("input");
     const chklabel = document.createElement("label");
+    const labelDiv = document.createElement("div");
+    const dateDiv = document.createElement("div");
+    const infoDiv = document.createElement("div");
+    const employerDiv = document.createElement("div");
+    const loDiv = document.createElement("div");
     card.setAttribute("class", "tab");
     chklabel.setAttribute("class", "tab-label");
     chklabel.setAttribute("for", strike.positionId);
+    labelDiv.setAttribute("class", "labelDiv");
+    chklabel.append(labelDiv)
     chkinput.setAttribute("type", "checkbox");
     chkinput.setAttribute("id", strike.positionId);
     chkinput.setAttribute("class", "hidechk");
     const cardBody = document.createElement("div");
     cardBody.setAttribute("class", "tab-content");
+    dateDiv.setAttribute("class", "date-card");
+    infoDiv.setAttribute("class", "info-card");
     cardBody.innerHTML = createContentString(strike);
-    chklabel.innerHTML = `${strike.Employer} - ${strike.Labor_Organization} -  ${strike.Start_Date}`;
+    const startDate = document.createElement("div");
+    const endDate = document.createElement("div");
+    startDate.innerHTML = `From: ${strike.Start_Date}`;
+    endDate.innerHTML = strike.End_Date?`To: ${strike.End_Date}`:'';
+    employerDiv.innerHTML = strike.Employer?`Employer: ${strike.Employer}`:'';
+    loDiv.innerHTML = strike.Labor_Organization?`Labor Organization: ${strike.Labor_Organization}`:'';
+    infoDiv.append(employerDiv)
+    infoDiv.append(loDiv)
+    dateDiv.append(startDate)
+    dateDiv.append(endDate)
+    labelDiv.append(dateDiv)
+    labelDiv.append(infoDiv)
     card.append(chkinput);
     card.append(chklabel);
     card.append(cardBody);

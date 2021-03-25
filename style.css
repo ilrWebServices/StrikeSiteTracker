@@ -93,6 +93,9 @@ header {
   .rangeInput{
     width: 100%;
   }
+  #resultCount{
+    text-align: center;
+  }
   /* body{
     margin: 0%!important;
     width: 100vw;
@@ -201,6 +204,9 @@ header {
 .tab {
   width: 100%;
   overflow: hidden;
+  margin-bottom: 3px;
+  box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+  border-radius: .25rem;
 }
 
 .tab-label {
@@ -280,7 +286,20 @@ header {
   top: 0;
   transition: .4s;
 }
+.labelDiv{
+  width: 100%;
+    font-style: oblique;
+    font-weight: lighter;
+    font-size: small;
+}
+.date-card{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.info-card{
 
+}
 .slider:before {
   background-color: #fff;
   bottom: 4px;

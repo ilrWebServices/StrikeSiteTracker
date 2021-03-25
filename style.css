@@ -19,6 +19,16 @@ html, body {
     border-color: #007bff;
     border-radius: 4px;
 }
+.linkButton:hover{
+  color: white;
+  text-decoration: none;
+
+}
+.linkButton:visited{
+  color: white;
+  text-decoration: none;
+
+}
 #main {
   display: flex;
   min-height: calc(100vh - 10vh);

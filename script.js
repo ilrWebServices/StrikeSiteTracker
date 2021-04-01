@@ -6,6 +6,10 @@ function convertLatLngStringToObj(LatLngString) {
     lng: Number(array[1]),
   };
 }
+function formatDateToDDMMYYYY(dateString){
+  const dateArray = dateString.split('-');
+  return `${dateArray[2]}/${dateArray[1]}/${dateArray[0]}`
+}
 function selectCreator(ArrayOfOptions, element){
   ArrayOfOptions.forEach((val) => {
     var option = document.createElement("option");
@@ -614,8 +618,8 @@ function initMap(geodata) {
     cardBody.innerHTML = createContentString(strike);
     const startDate = document.createElement("div");
     const endDate = document.createElement("div");
-    startDate.innerHTML = `From: ${strike.Start_Date}`;
-    endDate.innerHTML = strike.End_Date?`To: ${strike.End_Date}`:'';
+    startDate.innerHTML = `From: ${formatDateToDDMMYYYY(strike.Start_Date)}`;
+    endDate.innerHTML = strike.End_Date?`To: ${formatDateToDDMMYYYY(strike.End_Date)}`:'';
     employerDiv.innerHTML = strike.Employer?`Employer: ${strike.Employer}`:'';
     loDiv.innerHTML = strike.Labor_Organization?`Labor Organization: ${strike.Labor_Organization}`:'';
     infoDiv.append(employerDiv)
@@ -664,7 +668,12 @@ function initMap(geodata) {
           });
           htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`;
         }
-      } else if (strike[colObj.name] && colObj.name !== "positionId") {
+      }else if(strike[colObj.name] && (colObj.name === "Start_Date" || colObj.name === "End_Date")){
+        htmlString += `<strong>${keyName}</strong> : ${
+          formatDateToDDMMYYYY(strike[colObj.name])
+        } </br>`;
+      }
+      else if (strike[colObj.name] && colObj.name !== "positionId") {
         htmlString += `<strong>${keyName}</strong> : ${
           strike[colObj.name]
         } </br>`;

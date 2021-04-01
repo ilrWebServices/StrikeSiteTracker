@@ -24,7 +24,7 @@ module.exports = async (content) => {
   let newGeoCodeArray = []
   try {
     newGeoCodeArray = contentArray.filter((element,index) => {
-      const condition1 = true//element.Display === 'True'
+      const condition1 = element.Display === 'Y'
       const condition2 = Number(element['Number of Strike Location'])
       if(condition1 && condition2){
         return element

@@ -129,7 +129,7 @@ header {
   border: black 1px solid;
   padding: 2.5%;
   }
-  #list-box{
+  #list-box{ 
    height: 100%;
    overflow-y: scroll;
   }

@@ -168,8 +168,8 @@ const tableDict = {
     type: "string",
     "filter": filterLabourOrganization
   },
-  "Union Local": {
-    name: "Union_Local",
+  "Local": {
+    name: "Local",
     type: "string",
   },
   Industry: {
@@ -182,8 +182,8 @@ const tableDict = {
     type: "number",
     filter: filterUnitSize,
   },
-  "Number of Strike Location": {
-    name: "Number_of_Strike_Location",
+  "Number of Locations": {
+    name: "Number_of_Locations",
     type: "number",
   },
   "Latitude, Longitude": {
@@ -207,8 +207,8 @@ const tableDict = {
     name: "Zip_Code",
     type: "string",
   },
-  "Strike or Protest or Lockout": {
-    name: "Strike_or_Protest_or_Lockout",
+  "Strike or Protest": {
+    name: "Strike_or_Protest",
     type: "string",
     filter: filterType,
   },
@@ -302,7 +302,7 @@ function filterType(params) {
     if (index !== 0) {
       filterString += OR;
     }
-    filterString += `Strike_or_Protest_or_Lockout LIKE '%${type}%'`;
+    filterString += `Strike_or_Protest LIKE '%${type}%'`;
   });
   return filterString?`(${filterString})`:'';
 }
@@ -430,7 +430,7 @@ async function createTableAndInsertValues() {
           }
         });
       } else {
-        console.log("Length", obj["positionId"]);
+        console.log("Length", obj);
         console.error("Mismatch");
       }
     }
@@ -464,7 +464,7 @@ async function createTableAndInsertValues() {
     `INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`
   );
   const res = await alasql.promise(
-    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest_or_Lockout LIKE '%Strike%' ORDER BY Start_Date  `
+    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  `
   );
   initMap(res);
 }

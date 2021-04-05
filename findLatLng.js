@@ -1,13 +1,5 @@
-const fs = require("fs");
-const axios = require("axios");
+
 const core = require("@actions/core");
-const _get = require("lodash.get");
-const convertDateFormat = require("./convertDateFormat.js");
-const GEOCODING_API = process.env.GEOCODING_API;
-const convertLatLngObjectToString = (latlngObj) => {
-  if (latlngObj) return `${latlngObj.lat},${latlngObj.lng}`;
-  else return ``;
-};
 function formatDate(dateString){
   let dateValue = '';
   if(dateString){
@@ -24,8 +16,9 @@ module.exports = async (content) => {
   let newGeoCodeArray = []
   try {
     newGeoCodeArray = contentArray.filter((element,index) => {
+      
       const condition1 = element.Display === 'Y'
-      const condition2 = Number(element['Number of Strike Location'])
+      const condition2 = Number(element['Number of Locations'])
       if(condition1 && condition2){
         return element
       }

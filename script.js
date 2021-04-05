@@ -256,6 +256,10 @@ const tableDict = {
     name: "positionId",
     type: "string",
   },
+  connectedRow:{
+    name: "connectedRow",
+    type: "string",
+  }
 };
 const OR = " OR ";
 
@@ -342,6 +346,8 @@ function filterAuthorized(params) {
 }
 // CONVERT JSON INTO SQL DATABASE (PREPROCESSING DATA)
 async function createTableAndInsertValues() {
+
+  //  TABLE CREATION STING
   let createTableColStringAndType = "";
   let createTableColString = "";
   const tableDictArray = Object.keys(tableDict);
@@ -357,10 +363,12 @@ async function createTableAndInsertValues() {
   let valuesString = "";
   let queryString = `CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`;
   await alasql.promise(queryString);
+  // SANATIZING VALUES ADDING VALUES TO TABLE
   const geodatalen = window.geodata.length;
   console.log(geodatalen);
   window.geodata.forEach((obj, geoindex) => {
     const strikeNumber = Number(obj["Number of Strike Location"]) || 1;
+    // IF MULTIPLE LOCATION STRIKE
     if (strikeNumber > 1) {
       const latlngArray = obj["Latitude, Longitude"].split(";");
       const addressArray = obj["Address"].split(";");
@@ -425,7 +433,9 @@ async function createTableAndInsertValues() {
         console.log("Length", obj["positionId"]);
         console.error("Mismatch");
       }
-    } else if (strikeNumber === 1) {
+    }
+    // IF SINGLE LOCATION STRIKE 
+    else if (strikeNumber === 1) {
       let singleValueString = "";
       tableDictArray.forEach((key, index) => {
         if (
@@ -636,9 +646,10 @@ function initMap(geodata) {
         const strikePosition = convertLatLngStringToObj(
           strike["Latitude_Longitude"]
         );
-        map.setZoom(15);
-        map.panTo(strikePosition);
+        // map.setZoom(15);
+        // map.panTo(strikePosition);
         createInfoWindow(strike, marker);
+        addBounceToMarkers(strike)
       }
     });
 
@@ -653,7 +664,6 @@ function initMap(geodata) {
         let sourceString = strike[colObj.name];
         if (sourceString.indexOf("1. ") === -1) {
           htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}" target="_blank" rel="noopener noreferrer" ">Source</a> </br>`;
-          console.log(strike['Employer'],htmlString)
         } else {
           let finalString = "";
           let sourceStringArray = sourceString.split("\\n");
@@ -688,7 +698,40 @@ function initMap(geodata) {
     // center: convertLatLngStringToObj(geodata[0]['Latitude_Longitude'])
     center: { lat: 39.7427825897816, lng: -101.69676383031963 },
   });
-  const markerArray = [];
+  window.markerArray = [];
+  window.sameLocationDictionary = {}
+  geodata.forEach((datum) => {
+    const { connectedRow,positionId } = datum;
+    if(connectedRow){
+      console.log(connectedRow)
+      if(window.sameLocationDictionary[connectedRow]){
+        window.sameLocationDictionary[connectedRow].array.push(positionId)
+      }else{
+        window.sameLocationDictionary[connectedRow] = {toggle:false,array:[positionId]}
+      }
+    }
+  })
+  function addBounceToMarkers(strike){
+    if(window.sameLocationDictionary[strike['connectedRow']]){
+      const bounds = new google.maps.LatLngBounds();
+      window.sameLocationDictionary[strike['connectedRow']].array.forEach((loc, locIndex) => {
+        window.markerArray.forEach((m,i) => {
+          if(m.get('id') === loc){
+            if(window.sameLocationDictionary[strike['connectedRow']].toggle){
+              m.setAnimation(null);
+            }else{
+              m.setAnimation(google.maps.Animation.BOUNCE);
+              bounds.extend(m.getPosition());
+            }
+              
+          }
+        })
+      })
+      map.fitBounds(bounds);
+      window.sameLocationDictionary[strike['connectedRow']].toggle = !window.sameLocationDictionary[strike['connectedRow']].toggle
+    }
+  }
+  console.log(window.sameLocationDictionary['23'])
   // The marker, positioned at Uluru
   geodata.forEach((strike, index) => {
     if (strike["Latitude_Longitude"]) {
@@ -700,15 +743,20 @@ function initMap(geodata) {
         map: map,
         title: strike.City,
       });
-      markerArray.push(marker);
+      marker.set("id", strike['positionId']);
+      window.markerArray.push(marker);
       const card = createCard(strike, marker);
       listDiv.append(card);
+      
       marker.addListener("click", () => {
         createInfoWindow(strike, marker);
+        // console.log(next,'<-----------------next')
+        console.log('In',window.sameLocationDictionary[strike['connectedRow']],strike['connectedRow'])
+        addBounceToMarkers(strike)
       });
     }
   });
-  new MarkerClusterer(map, markerArray, {
+  new MarkerClusterer(map, window.markerArray, {
     imagePath:
       "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
   });

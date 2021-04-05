@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ILR Work Stoppage Tracker</title>
     <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClrrWD_zZ7jabwN0MoasWk8-hpUiaAtvI&libraries=&v=weekly"
-      defer  
+      defer
     ></script>
     <link
       rel="stylesheet"
@@ -27,7 +27,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.js"></script>
     <script src="./script.js"></script>
     <script src="./geodata.js"></script>
-    
   </head>
   <body>
     <header>
@@ -37,8 +36,14 @@
         loading="lazy"
         id="ilr-logo"
       />
-      <div class="header-right"><a class="linkButton" href="https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform" target="_blank" >Report a labor strike or protest</a></div>
-      
+      <div class="header-right">
+        <a
+          class="linkButton"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform"
+          target="_blank"
+          >REPORT A STRIKE OR PROTEST</a
+        >
+      </div>
     </header>
     <div id="main">
       <article>
@@ -48,110 +53,117 @@
         <div class="filter-box border">
           <table style="height: -webkit-fill-available">
             <form id="filterForm">
-            <tr>
-              <th colspan="3" class="first"><div>Type</div></th>
-              <td colspan="3">
-                <div class="from-box">
-                <div class="xstrike-label">Strikes</div>
-                <label class="xswitch" for="strikeValue">
-                  <input  type="checkbox" id="strikeValue" />
-              </label>
-                </div>
-              </td>
-              <td colspan="3">
-                <div class="from-box">
-                <div class="xstrike-label">Protests</div>
-                <label class="xswitch" for="protestValue">
-                  <input type="checkbox" id="protestValue" />
-                </label>
-                </div>
-              </td>
-              <td colspan="3">
-                <div class="from-box">
-                <div class="xstrike-label">Lockout</div>
-                <label class="xswitch" for="lockoutValue">
-                  <input type="checkbox" id="lockoutValue" />
-                </label>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Labor Organization</div></th>
-              <td colspan="11">
-                <input type="text"  class="form-control" id="labOrgSearch" />
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Start Date Range</div></th>
-              <td colspan="6">
-                <div class="from-box">
-                <!-- <label>From Date</label> -->
-              <input
-                type="date"
-                aria-label="from"
-                id="fromDate"
-                name="fromDate"
-              />
-                </div>
-              </td>
-              <td></td>
-              <td colspan="6">
-                <div class="from-box">
-                <!-- <label>End Date</label> -->
-                  <input
-                    type="date"
-                    aria-label="end"
-                    id="endDate"
-                    name="endDate"
-                  />
-            </div>
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>State</div></th>
-              <td colspan="11">
-                <select name="states" id="states" multiple></select>
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Industry</div></th>
-              <td colspan="11">
-                <select name="industry" id="industry" multiple></select>
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Work Demands</div></th>
-              <td colspan="11">
-                <select name="workerDemand" id="workerDemand" multiple></select>
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Unit Size</div></th>
-              <td colspan="11" >
-                <select name="unitSize" id="unitSize" multiple></select>
-              </td>
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Number of Employees</div></th>
-              <td colspan="11">
-                <select name="NoOfEmp" id="NoOfEmp" multiple></select>
-              </td>
-             
-            </tr>
-            <tr>
-              <th colspan="1" class="first"><div>Not Authorized?</div></th>
-              <td colspan="11">
-              <input type="checkbox" name="approved" id="approved" />
-              </td>
-            </tr>
-            <tr>
-              <td colspan="12">
-                <div class="button-box">
-            <button class="btn btn-primary btn-block" id="filterButton">Filter</button>
-          </div>
-              </td>
-            </tr>
-          </form>
+              <tr>
+                <th colspan="3" class="first"><div>Type</div></th>
+                <td colspan="3">
+                  <div class="from-box">
+                    <div class="xstrike-label">Strikes</div>
+                    <label class="xswitch" for="strikeValue">
+                      <input type="checkbox" id="strikeValue" />
+                    </label>
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="from-box">
+                    <div class="xstrike-label">Protests</div>
+                    <label class="xswitch" for="protestValue">
+                      <input type="checkbox" id="protestValue" />
+                    </label>
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="from-box">
+                    <div class="xstrike-label">Lockout</div>
+                    <label class="xswitch" for="lockoutValue">
+                      <input type="checkbox" id="lockoutValue" />
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>Labor Organization</div></th>
+                <td colspan="11">
+                  <input type="text" class="form-control" id="labOrgSearch" />
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>Start Date Range</div></th>
+                <td colspan="6">
+                  <div class="from-box">
+                    <!-- <label>From Date</label> -->
+                    <input
+                      type="date"
+                      aria-label="from"
+                      id="fromDate"
+                      name="fromDate"
+                    />
+                  </div>
+                </td>
+                <td></td>
+                <td colspan="6">
+                  <div class="from-box">
+                    <!-- <label>End Date</label> -->
+                    <input
+                      type="date"
+                      aria-label="end"
+                      id="endDate"
+                      name="endDate"
+                    />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>State</div></th>
+                <td colspan="11">
+                  <select name="states" id="states" multiple></select>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>Industry</div></th>
+                <td colspan="11">
+                  <select name="industry" id="industry" multiple></select>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>Work Demands</div></th>
+                <td colspan="11">
+                  <select
+                    name="workerDemand"
+                    id="workerDemand"
+                    multiple
+                  ></select>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>Unit Size</div></th>
+                <td colspan="11">
+                  <select name="unitSize" id="unitSize" multiple></select>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first">
+                  <div>Number of Employees</div>
+                </th>
+                <td colspan="11">
+                  <select name="NoOfEmp" id="NoOfEmp" multiple></select>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="1" class="first"><div>Not Authorized?</div></th>
+                <td colspan="11">
+                  <input type="checkbox" name="approved" id="approved" />
+                </td>
+              </tr>
+              <tr>
+                <td colspan="12">
+                  <div class="button-box">
+                    <button class="btn btn-primary btn-block" id="filterButton">
+                      Filter
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </form>
           </table>
         </div>
         <div class="strikes-box">

@@ -6,9 +6,9 @@ function convertLatLngStringToObj(LatLngString) {
     lng: Number(array[1]),
   };
 }
-function formatDateToDDMMYYYY(dateString){
+function formatDateToMMDDYYYY(dateString){
   const dateArray = dateString.split('-');
-  return `${dateArray[2]}/${dateArray[1]}/${dateArray[0]}`
+  return `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`
 }
 function selectCreator(ArrayOfOptions, element){
   ArrayOfOptions.forEach((val) => {
@@ -618,8 +618,8 @@ function initMap(geodata) {
     cardBody.innerHTML = createContentString(strike);
     const startDate = document.createElement("div");
     const endDate = document.createElement("div");
-    startDate.innerHTML = `From: ${formatDateToDDMMYYYY(strike.Start_Date)}`;
-    endDate.innerHTML = strike.End_Date?`To: ${formatDateToDDMMYYYY(strike.End_Date)}`:'';
+    startDate.innerHTML = `From: ${formatDateToMMDDYYYY(strike.Start_Date)}`;
+    endDate.innerHTML = strike.End_Date?`To: ${formatDateToMMDDYYYY(strike.End_Date)}`:'';
     employerDiv.innerHTML = strike.Employer?`Employer: ${strike.Employer}`:'';
     loDiv.innerHTML = strike.Labor_Organization?`Labor Organization: ${strike.Labor_Organization}`:'';
     infoDiv.append(employerDiv)
@@ -670,7 +670,7 @@ function initMap(geodata) {
         }
       }else if(strike[colObj.name] && (colObj.name === "Start_Date" || colObj.name === "End_Date")){
         htmlString += `<strong>${keyName}</strong> : ${
-          formatDateToDDMMYYYY(strike[colObj.name])
+          formatDateToMMDDYYYY(strike[colObj.name])
         } </br>`;
       }
       else if (strike[colObj.name] && colObj.name !== "positionId") {

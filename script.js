@@ -535,9 +535,7 @@ window.addEventListener("load", async () => {
     if (protestValueCheckBox.checked) {
       typeArray.push("Protest");
     }
-    if (lockoutValueCheckBox.checked) {
-      typeArray.push("Lockout");
-    }
+
 
     const paramValue = {
       fromDate:fromDate.value,

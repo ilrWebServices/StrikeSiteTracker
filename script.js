@@ -360,7 +360,7 @@ async function createTableAndInsertValues() {
   const geodatalen = window.geodata.length;
   console.log(geodatalen);
   window.geodata.forEach((obj, geoindex) => {
-    const strikeNumber = Number(obj["Number of Strike Location"]) || 1;
+    const strikeNumber = Number(obj["Number of Locations"]) || 1;
     if (strikeNumber > 1) {
       const latlngArray = obj["Latitude, Longitude"].split(";");
       const addressArray = obj["Address"].split(";");

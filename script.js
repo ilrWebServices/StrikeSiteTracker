@@ -142,20 +142,27 @@ const WORKER_DEMAND = [
 ];
 // Bargaining Unit Size
 const UNIT_SIZE = {
-  'LESS THAN 100':'Bargaining_Unit_Size < 100',
-  'BETWEEN 100 AND 199':'Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200',
-  'BETWEEN 200 AND 299':'Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299',
-  'BETWEEN 300 AND 499':'Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499',
-  'BETWEEN 500 AND 1999':'Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999',
-  'GREATER THAN 2000':'Bargaining_Unit_Size >= 2000',
+  'Less than 100':'Bargaining_Unit_Size < 100',
+'Between 100 and 199':'Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200',
+'Between 200 and 299':'Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299',
+'Between 300 and 499':'Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499',
+'Between 500 and 1999':'Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999',
+'Greater than 2000':'Bargaining_Unit_Size >= 2000',
+}
+const DURATION_UNIT_DAY_CONDITION =  ` AND Duration_Unit LIKE '%Days%'`
+const DURATION_ARRAY = {
+'1 day or less':'Duration_Amount <= 1'+DURATION_UNIT_DAY_CONDITION,
+'2-7 days':'Duration_Amount >= 2 AND Duration_Amount < 8'+DURATION_UNIT_DAY_CONDITION,
+'8-30 days':'Duration_Amount >= 8 AND Duration_Amount <= 30'+DURATION_UNIT_DAY_CONDITION,
+'31+ days':'Duration_Amount >= 31'+DURATION_UNIT_DAY_CONDITION,
 }
 const NO_OF_EMPLOEES = {
-  'LESS THAN 100':'Approximate_Number_of_Employees < 100',
-  'BETWEEN 100 AND 199':'Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200',
-  'BETWEEN 200 AND 299':'Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299',
-  'BETWEEN 300 AND 499':'Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499',
-  'BETWEEN 500 AND 1999':'Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999',
-  'GREATER THAN 2000':'Approximate_Number_of_Employees >= 2000',
+  'Less than 100':'Approximate_Number_of_Employees < 100',
+  'Between 100 and 199':'Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200',
+  'Between 200 and 299':'Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299',
+  'Between 300 and 499':'Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499',
+  'Between 500 and 1999':'Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999',
+  'Greater than 2000':'Approximate_Number_of_Employees >= 2000',
 }
 // TABLE COLUMN NAMES
 const tableDict = {
@@ -229,6 +236,7 @@ const tableDict = {
   "Duration Amount": {
     name: "Duration_Amount",
     type: "number",
+    filter: filterDuration,
   },
   "Duration Unit": {
     name: "Duration_Unit",
@@ -292,6 +300,16 @@ function filterNoOfEmp(params) {
       filterString += OR;
     }
     filterString += `(${NO_OF_EMPLOEES[empKey]})`;
+  });
+  return filterString?`(${filterString})`:'';
+}
+function filterDuration(params) {
+  let filterString = "";
+  params.duration.forEach((durationKey, index) => {
+    if (index !== 0) {
+      filterString += OR;
+    }
+    filterString += `(${DURATION_ARRAY[durationKey]})`;
   });
   return filterString?`(${filterString})`:'';
 }
@@ -505,9 +523,12 @@ window.addEventListener("load", async () => {
   const NoOfEmp = document.getElementById("NoOfEmp")
   // UNIT SIZE RANGE
   const unitSize = document.getElementById("unitSize");
+  // DURATION
+  const duration = document.getElementById("duration");
   // ADD OPTIONS FROM OPTIONS LIST
   selectCreator(Object.keys(UNIT_SIZE),unitSize)
   selectCreator(Object.keys(NO_OF_EMPLOEES),NoOfEmp)
+  selectCreator(Object.keys(DURATION_ARRAY),duration)
   selectCreator(WORKER_DEMAND,wDElement)
   selectCreator(INDUSTRY_LIST,industryElement)
   selectCreator(STATE_LIST,stateElement)
@@ -523,6 +544,9 @@ window.addEventListener("load", async () => {
   }))
   const unitSizeSelect = (new SlimSelect({
     select: '#unitSize'
+  }))
+  const durationSelect = (new SlimSelect({
+    select: '#duration'
   }))
   const NoOfEmpSelect = (new SlimSelect({
     select: '#NoOfEmp'
@@ -556,6 +580,7 @@ window.addEventListener("load", async () => {
       industryValue:industrySelect.selected(),
       NoOfEmp: NoOfEmpSelect.selected(),
       unitSize:unitSizeSelect.selected(),
+      duration:durationSelect.selected(),
       searchTextLO:searchLabourOrganization.value,
     }
     

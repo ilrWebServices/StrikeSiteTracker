@@ -49,7 +49,7 @@ nav{
   flex-direction: column;
   justify-content: space-between;
 }
-header {
+header { 
   height: 10vh;
   display: flex;
   flex-direction: row;

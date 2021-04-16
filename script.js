@@ -142,20 +142,27 @@ const WORKER_DEMAND = [
 ];
 // Bargaining Unit Size
 const UNIT_SIZE = {
-  'LESS THAN 100':'Bargaining_Unit_Size < 100',
-  'BETWEEN 100 AND 199':'Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200',
-  'BETWEEN 200 AND 299':'Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299',
-  'BETWEEN 300 AND 499':'Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499',
-  'BETWEEN 500 AND 1999':'Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999',
-  'GREATER THAN 2000':'Bargaining_Unit_Size >= 2000',
+  'Less than 100':'Bargaining_Unit_Size < 100',
+'Between 100 and 199':'Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200',
+'Between 200 and 299':'Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299',
+'Between 300 and 499':'Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499',
+'Between 500 and 1999':'Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999',
+'Greater than 2000':'Bargaining_Unit_Size >= 2000',
+}
+const DURATION_UNIT_DAY_CONDITION =  ` AND Duration_Unit LIKE '%Days%'`
+const DURATION_ARRAY = {
+'1 day or less':'Duration_Amount <= 1'+DURATION_UNIT_DAY_CONDITION,
+'2-7 days':'Duration_Amount >= 2 AND Duration_Amount < 8'+DURATION_UNIT_DAY_CONDITION,
+'8-30 days':'Duration_Amount >= 8 AND Duration_Amount <= 30'+DURATION_UNIT_DAY_CONDITION,
+'31+ days':'Duration_Amount >= 31'+DURATION_UNIT_DAY_CONDITION,
 }
 const NO_OF_EMPLOEES = {
-  'LESS THAN 100':'Approximate_Number_of_Employees < 100',
-  'BETWEEN 100 AND 199':'Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200',
-  'BETWEEN 200 AND 299':'Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299',
-  'BETWEEN 300 AND 499':'Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499',
-  'BETWEEN 500 AND 1999':'Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999',
-  'GREATER THAN 2000':'Approximate_Number_of_Employees >= 2000',
+  'Less than 100':'Approximate_Number_of_Employees < 100',
+  'Between 100 and 199':'Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200',
+  'Between 200 and 299':'Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299',
+  'Between 300 and 499':'Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499',
+  'Between 500 and 1999':'Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999',
+  'Greater than 2000':'Approximate_Number_of_Employees >= 2000',
 }
 // TABLE COLUMN NAMES
 const tableDict = {
@@ -229,6 +236,7 @@ const tableDict = {
   "Duration Amount": {
     name: "Duration_Amount",
     type: "number",
+    filter: filterDuration,
   },
   "Duration Unit": {
     name: "Duration_Unit",
@@ -256,6 +264,10 @@ const tableDict = {
     name: "positionId",
     type: "string",
   },
+  connectedRow:{
+    name: "connectedRow",
+    type: "string",
+  }
 };
 const OR = " OR ";
 
@@ -288,6 +300,16 @@ function filterNoOfEmp(params) {
       filterString += OR;
     }
     filterString += `(${NO_OF_EMPLOEES[empKey]})`;
+  });
+  return filterString?`(${filterString})`:'';
+}
+function filterDuration(params) {
+  let filterString = "";
+  params.duration.forEach((durationKey, index) => {
+    if (index !== 0) {
+      filterString += OR;
+    }
+    filterString += `(${DURATION_ARRAY[durationKey]})`;
   });
   return filterString?`(${filterString})`:'';
 }
@@ -342,6 +364,8 @@ function filterAuthorized(params) {
 }
 // CONVERT JSON INTO SQL DATABASE (PREPROCESSING DATA)
 async function createTableAndInsertValues() {
+
+  //  TABLE CREATION STING
   let createTableColStringAndType = "";
   let createTableColString = "";
   const tableDictArray = Object.keys(tableDict);
@@ -357,6 +381,7 @@ async function createTableAndInsertValues() {
   let valuesString = "";
   let queryString = `CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`;
   await alasql.promise(queryString);
+  // SANATIZING VALUES ADDING VALUES TO TABLE
   const geodatalen = window.geodata.length;
   console.log(geodatalen);
   window.geodata.forEach((obj, geoindex) => {
@@ -425,7 +450,9 @@ async function createTableAndInsertValues() {
         console.log("Length", obj);
         console.error("Mismatch");
       }
-    } else if (strikeNumber === 1) {
+    }
+    // IF SINGLE LOCATION STRIKE 
+    else if (strikeNumber === 1) {
       let singleValueString = "";
       tableDictArray.forEach((key, index) => {
         if (
@@ -496,9 +523,12 @@ window.addEventListener("load", async () => {
   const NoOfEmp = document.getElementById("NoOfEmp")
   // UNIT SIZE RANGE
   const unitSize = document.getElementById("unitSize");
+  // DURATION
+  const duration = document.getElementById("duration");
   // ADD OPTIONS FROM OPTIONS LIST
   selectCreator(Object.keys(UNIT_SIZE),unitSize)
   selectCreator(Object.keys(NO_OF_EMPLOEES),NoOfEmp)
+  selectCreator(Object.keys(DURATION_ARRAY),duration)
   selectCreator(WORKER_DEMAND,wDElement)
   selectCreator(INDUSTRY_LIST,industryElement)
   selectCreator(STATE_LIST,stateElement)
@@ -514,6 +544,9 @@ window.addEventListener("load", async () => {
   }))
   const unitSizeSelect = (new SlimSelect({
     select: '#unitSize'
+  }))
+  const durationSelect = (new SlimSelect({
+    select: '#duration'
   }))
   const NoOfEmpSelect = (new SlimSelect({
     select: '#NoOfEmp'
@@ -547,6 +580,7 @@ window.addEventListener("load", async () => {
       industryValue:industrySelect.selected(),
       NoOfEmp: NoOfEmpSelect.selected(),
       unitSize:unitSizeSelect.selected(),
+      duration:durationSelect.selected(),
       searchTextLO:searchLabourOrganization.value,
     }
     
@@ -634,9 +668,10 @@ function initMap(geodata) {
         const strikePosition = convertLatLngStringToObj(
           strike["Latitude_Longitude"]
         );
-        map.setZoom(15);
-        map.panTo(strikePosition);
+        // map.setZoom(15);
+        // map.panTo(strikePosition);
         createInfoWindow(strike, marker);
+        addBounceToMarkers(strike)
       }
     });
 
@@ -651,7 +686,6 @@ function initMap(geodata) {
         let sourceString = strike[colObj.name];
         if (sourceString.indexOf("1. ") === -1) {
           htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}" target="_blank" rel="noopener noreferrer" ">Source</a> </br>`;
-          console.log(strike['Employer'],htmlString)
         } else {
           let finalString = "";
           let sourceStringArray = sourceString.split("\\n");
@@ -686,7 +720,40 @@ function initMap(geodata) {
     // center: convertLatLngStringToObj(geodata[0]['Latitude_Longitude'])
     center: { lat: 39.7427825897816, lng: -101.69676383031963 },
   });
-  const markerArray = [];
+  window.markerArray = [];
+  window.sameLocationDictionary = {}
+  geodata.forEach((datum) => {
+    const { connectedRow,positionId } = datum;
+    if(connectedRow){
+      console.log(connectedRow)
+      if(window.sameLocationDictionary[connectedRow]){
+        window.sameLocationDictionary[connectedRow].array.push(positionId)
+      }else{
+        window.sameLocationDictionary[connectedRow] = {toggle:false,array:[positionId]}
+      }
+    }
+  })
+  function addBounceToMarkers(strike){
+    if(window.sameLocationDictionary[strike['connectedRow']]){
+      const bounds = new google.maps.LatLngBounds();
+      window.sameLocationDictionary[strike['connectedRow']].array.forEach((loc, locIndex) => {
+        window.markerArray.forEach((m,i) => {
+          if(m.get('id') === loc){
+            if(window.sameLocationDictionary[strike['connectedRow']].toggle){
+              m.setAnimation(null);
+            }else{
+              m.setAnimation(google.maps.Animation.BOUNCE);
+              bounds.extend(m.getPosition());
+            }
+              
+          }
+        })
+      })
+      map.fitBounds(bounds);
+      window.sameLocationDictionary[strike['connectedRow']].toggle = !window.sameLocationDictionary[strike['connectedRow']].toggle
+    }
+  }
+  console.log(window.sameLocationDictionary['23'])
   // The marker, positioned at Uluru
   geodata.forEach((strike, index) => {
     if (strike["Latitude_Longitude"]) {
@@ -698,15 +765,20 @@ function initMap(geodata) {
         map: map,
         title: strike.City,
       });
-      markerArray.push(marker);
+      marker.set("id", strike['positionId']);
+      window.markerArray.push(marker);
       const card = createCard(strike, marker);
       listDiv.append(card);
+      
       marker.addListener("click", () => {
         createInfoWindow(strike, marker);
+        // console.log(next,'<-----------------next')
+        console.log('In',window.sameLocationDictionary[strike['connectedRow']],strike['connectedRow'])
+        addBounceToMarkers(strike)
       });
     }
   });
-  new MarkerClusterer(map, markerArray, {
+  new MarkerClusterer(map, window.markerArray, {
     imagePath:
       "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
   });

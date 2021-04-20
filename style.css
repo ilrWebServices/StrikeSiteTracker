@@ -31,7 +31,7 @@ html, body {
 }
 #main {
   display: flex;
-  min-height: calc(100vh - 15vh);
+  min-height: calc(100vh - 13vh);
 }
 
 #main > article {
@@ -50,7 +50,7 @@ nav{
   justify-content: space-between;
 }
 header { 
-  height: 15vh;
+  height: 13vh;
   display: flex;
   flex-direction: column;
   justify-content: start;

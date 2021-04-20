@@ -700,22 +700,11 @@ function initMap(geodata) {
       const colObj = tableDict[keyName];
       if (colObj.name == "source") {
         let sourceString = strike[colObj.name];
-        if (sourceString.indexOf("1. ") === -1) {
-          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}" target="_blank" rel="noopener noreferrer" ">Source</a> </br>`;
-        } else {
-          let finalString = "";
-          let sourceStringArray = sourceString.split("\\n");
-          let count = 0;
-          sourceStringArray.forEach((string, index) => {
-            if (string) {
-              count = count + 1;
-              finalString += ` <a href="${string
-                .replace(`${count}.`, "")
-                .trim()}" target="_blank" rel="noopener noreferrer">Source ${count}</a> `;
-            }
-          });
-          htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`;
-        }
+        const sourceArray = sourceString.split(";");
+        const htmlSourceString = sourceArray.map((s, i) => {
+          return `<a href="${s.trim()}" target="_blank" rel="noopener noreferrer">Source ${i+1}</a> `;
+        });
+        htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
       } else if (
         strike[colObj.name] &&
         (colObj.name === "Start_Date" || colObj.name === "End_Date")

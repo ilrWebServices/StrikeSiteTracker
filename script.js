@@ -6,11 +6,11 @@ function convertLatLngStringToObj(LatLngString) {
     lng: Number(array[1]),
   };
 }
-function formatDateToMMDDYYYY(dateString){
-  const dateArray = dateString.split('-');
-  return `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`
+function formatDateToMMDDYYYY(dateString) {
+  const dateArray = dateString.split("-");
+  return `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`;
 }
-function selectCreator(ArrayOfOptions, element){
+function selectCreator(ArrayOfOptions, element) {
   ArrayOfOptions.forEach((val) => {
     var option = document.createElement("option");
     option.value = val;
@@ -45,6 +45,7 @@ function mysql_real_escape_string(str) {
   });
 }
 // CONSTANTS
+const reportFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform'
 // OPTION LISTS
 const STATE_LIST = [
   "Alabama",
@@ -108,62 +109,80 @@ const STATE_LIST = [
   "Wyoming",
 ];
 const INDUSTRY_LIST = [
-  "Agriculture, Forestry, Fishing & Hunting",
-  "Mining",
-  "Utilities",
-  "Construction",
-  "Manufacturing",
-  "Wholesale Trade",
-  "Retail Trade",
-  "Transportation and Warehousing",
-  "Real Estate and Rental and Leasing",
-  "Professional, Scientific and Technical Services",
-  "Management of Companies and Enterprises",
+  "Accommodation and Food Services",
   "Administrative and Support and Waste Management",
+  "Agriculture",
+  "Arts",
+  "Central Administrative Office Activity",
+  "Construction",
   "Educational Services",
-  "Information",
   "Finance and Insurance",
   "Health Care and Social Assistance",
-  "Arts, Entertainment and Recreation",
-  "Accommodation and Food Services",
+  "Information",
+  "Management of Companies and Enterprises",
+  "Manufacturing",
+  "Mining",
   "Other Services (except Public Administration)",
-  "Central Administrative Office Activity",
+  "Professional",
   "Public Administration",
+  "Real Estate and Rental and Leasing",
+  "Retail Trade",
+  "Transportation and Warehousing",
+  "Utilities",
+  "Wholesale Trade",
+  "Entertainment and Recreation",
+  "Fishing & Hunting",
+  "Forestry,Scientific and Technical Services",
 ];
 const WORKER_DEMAND = [
-  "Pay",
-  "Healthcare",
-  "COVID-19 protocols",
-  "Health and safety",
-  "First contract",
-  "Racial justice",
   "$15 minimum wage",
+  "COVID-19 protocols",
+  "First contract",
+  "Health and safety",
+  "Healthcare",
+  "Job Security",
+  "Pandemic Relief",
+  "Pay",
+  "Racial justice",
   "Staffing",
 ];
 // Bargaining Unit Size
 const UNIT_SIZE = {
-  'Less than 100':'Bargaining_Unit_Size < 100',
-'Between 100 and 199':'Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200',
-'Between 200 and 299':'Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299',
-'Between 300 and 499':'Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499',
-'Between 500 and 1999':'Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999',
-'Greater than 2000':'Bargaining_Unit_Size >= 2000',
-}
-const DURATION_UNIT_DAY_CONDITION =  ` AND Duration_Unit LIKE '%Days%'`
+  "Less than 100": "Bargaining_Unit_Size < 100",
+  "Between 100 and 199":
+    "Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200",
+  "Between 200 and 299":
+    "Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299",
+  "Between 300 and 499":
+    "Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499",
+  "Between 500 and 1999":
+    "Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999",
+  "Greater than 2000": "Bargaining_Unit_Size >= 2000",
+};
+const DURATION_UNIT_DAY_CONDITION = ` AND Duration_Unit LIKE '%Days%'`;
+const DURATION_UNIT_LESS_THAN_DAY_CONDITION = `(Duration_Amount <= 1 AND Duration_Unit LIKE '%Days%') OR ((Duration_Unit LIKE '%Hours%') OR (Duration_Unit LIKE '%Minutes%'))`;
 const DURATION_ARRAY = {
-'1 day or less':'Duration_Amount <= 1'+DURATION_UNIT_DAY_CONDITION,
-'2-7 days':'Duration_Amount >= 2 AND Duration_Amount < 8'+DURATION_UNIT_DAY_CONDITION,
-'8-30 days':'Duration_Amount >= 8 AND Duration_Amount <= 30'+DURATION_UNIT_DAY_CONDITION,
-'31+ days':'Duration_Amount >= 31'+DURATION_UNIT_DAY_CONDITION,
-}
+  "1 day or less": DURATION_UNIT_LESS_THAN_DAY_CONDITION,
+  "2-7 days":
+    "Duration_Amount >= 2 AND Duration_Amount < 8" +
+    DURATION_UNIT_DAY_CONDITION,
+  "8-30 days":
+    "Duration_Amount >= 8 AND Duration_Amount <= 30" +
+    DURATION_UNIT_DAY_CONDITION,
+  "31+ days": "Duration_Amount >= 31" + DURATION_UNIT_DAY_CONDITION,
+};
 const NO_OF_EMPLOEES = {
-  'Less than 100':'Approximate_Number_of_Employees < 100',
-  'Between 100 and 199':'Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200',
-  'Between 200 and 299':'Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299',
-  'Between 300 and 499':'Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499',
-  'Between 500 and 1999':'Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999',
-  'Greater than 2000':'Approximate_Number_of_Employees >= 2000',
-}
+  "Less than 100": "Approximate_Number_of_Employees < 100",
+  "Between 100 and 199":
+    "Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200",
+  "Between 200 and 299":
+    "Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299",
+  "Between 300 and 499":
+    "Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499",
+  "Between 500 and 1999":
+    "Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999",
+  "Greater than 2000": "Approximate_Number_of_Employees >= 2000",
+};
 // TABLE COLUMN NAMES
 const tableDict = {
   Employer: {
@@ -173,9 +192,9 @@ const tableDict = {
   "Labor Organization": {
     name: "Labor_Organization",
     type: "string",
-    "filter": filterLabourOrganization
+    filter: filterLabourOrganization,
   },
-  "Local": {
+  Local: {
     name: "Local",
     type: "string",
   },
@@ -264,10 +283,10 @@ const tableDict = {
     name: "positionId",
     type: "string",
   },
-  connectedRow:{
+  connectedRow: {
     name: "connectedRow",
     type: "string",
-  }
+  },
 };
 const OR = " OR ";
 
@@ -278,10 +297,10 @@ function filterDate(params) {
   else return "";
 }
 function filterLabourOrganization(params) {
-  console.log(params.searchTextLO)
-  if(params.searchTextLO)
-    return `Labor_Organization LIKE '%${params.searchTextLO}%'`
-  else return ''
+  console.log(params.searchTextLO);
+  if (params.searchTextLO)
+    return `Labor_Organization LIKE '%${params.searchTextLO}%'`;
+  else return "";
 }
 function filterUnitSize(params) {
   let filterString = "";
@@ -291,7 +310,7 @@ function filterUnitSize(params) {
     }
     filterString += `(${UNIT_SIZE[unitSizeKey]})`;
   });
-  return filterString?`(${filterString})`:'';
+  return filterString ? `(${filterString})` : "";
 }
 function filterNoOfEmp(params) {
   let filterString = "";
@@ -301,7 +320,7 @@ function filterNoOfEmp(params) {
     }
     filterString += `(${NO_OF_EMPLOEES[empKey]})`;
   });
-  return filterString?`(${filterString})`:'';
+  return filterString ? `(${filterString})` : "";
 }
 function filterDuration(params) {
   let filterString = "";
@@ -311,18 +330,18 @@ function filterDuration(params) {
     }
     filterString += `(${DURATION_ARRAY[durationKey]})`;
   });
-  return filterString?`(${filterString})`:'';
+  return filterString ? `(${filterString})` : "";
 }
 function filterType(params) {
   let filterString = "";
-  
+
   params.typeArray.forEach((type, index) => {
     if (index !== 0) {
       filterString += OR;
     }
     filterString += `Strike_or_Protest LIKE '%${type}%'`;
   });
-  return filterString?`(${filterString})`:'';
+  return filterString ? `(${filterString})` : "";
 }
 function filterIndustry(params) {
   let filterString = "";
@@ -332,8 +351,8 @@ function filterIndustry(params) {
     }
     filterString += `Industry LIKE '%${ind}%'`;
   });
-  return filterString?`(${filterString})`:'';
-  }
+  return filterString ? `(${filterString})` : "";
+}
 
 function filterStates(params) {
   let filterString = "";
@@ -343,7 +362,7 @@ function filterStates(params) {
     }
     filterString += `State LIKE '%${st}%'`;
   });
-  return filterString?`(${filterString})`:'';
+  return filterString ? `(${filterString})` : "";
 }
 function filterWorkerDemands(params) {
   let filterString = "";
@@ -353,7 +372,7 @@ function filterWorkerDemands(params) {
     }
     filterString += `Worker_Demands LIKE '%${wd}%'`;
   });
-  return filterString?`(${filterString})`:'';
+  return filterString ? `(${filterString})` : "";
 }
 function filterAuthorized(params) {
   let filterString = "";
@@ -364,7 +383,6 @@ function filterAuthorized(params) {
 }
 // CONVERT JSON INTO SQL DATABASE (PREPROCESSING DATA)
 async function createTableAndInsertValues() {
-
   //  TABLE CREATION STING
   let createTableColStringAndType = "";
   let createTableColString = "";
@@ -451,7 +469,7 @@ async function createTableAndInsertValues() {
         console.error("Mismatch");
       }
     }
-    // IF SINGLE LOCATION STRIKE 
+    // IF SINGLE LOCATION STRIKE
     else if (strikeNumber === 1) {
       let singleValueString = "";
       tableDictArray.forEach((key, index) => {
@@ -494,15 +512,14 @@ window.addEventListener("load", async () => {
   const approvedCheckBox = document.getElementById("approved");
   const strikeValueCheckBox = document.getElementById("strikeValue");
   const protestValueCheckBox = document.getElementById("protestValue");
-  const lockoutValueCheckBox = document.getElementById("lockoutValue");
-  const unitSizeRange = document.getElementById("unitSize");
-  const NoOfEmpRange = document.getElementById("NoOfEmp");
   const searchLabourOrganization = document.getElementById("labOrgSearch");
   const filterButton = document.getElementById("filterButton");
   const filterForm = document.getElementById("filterForm");
+  const reportButton = document.getElementById("reportButton");
+  reportButton.setAttribute("href",reportFormLink)
   filterForm.onsubmit = () => {
     return false;
-  }
+  };
   const minMaxDateObj = await alasql.promise(
     `SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`
   );
@@ -514,43 +531,43 @@ window.addEventListener("load", async () => {
   fromDate.value = minMaxDateObj[0].fromDate;
   endDate.value = minMaxDateObj[0].endDate;
   // STATES
-  const stateElement = document.getElementById("states")
+  const stateElement = document.getElementById("states");
   // INDUSTRY
-  const industryElement = document.getElementById("industry")
+  const industryElement = document.getElementById("industry");
   // WORKER DEMAND
-  const wDElement = document.getElementById("workerDemand")
+  const wDElement = document.getElementById("workerDemand");
   // NO OF EMPLOYEES
-  const NoOfEmp = document.getElementById("NoOfEmp")
+  const NoOfEmp = document.getElementById("NoOfEmp");
   // UNIT SIZE RANGE
   const unitSize = document.getElementById("unitSize");
   // DURATION
   const duration = document.getElementById("duration");
   // ADD OPTIONS FROM OPTIONS LIST
-  selectCreator(Object.keys(UNIT_SIZE),unitSize)
-  selectCreator(Object.keys(NO_OF_EMPLOEES),NoOfEmp)
-  selectCreator(Object.keys(DURATION_ARRAY),duration)
-  selectCreator(WORKER_DEMAND,wDElement)
-  selectCreator(INDUSTRY_LIST,industryElement)
-  selectCreator(STATE_LIST,stateElement)
+  selectCreator(Object.keys(UNIT_SIZE), unitSize);
+  selectCreator(Object.keys(NO_OF_EMPLOEES), NoOfEmp);
+  selectCreator(Object.keys(DURATION_ARRAY), duration);
+  selectCreator(WORKER_DEMAND, wDElement);
+  selectCreator(INDUSTRY_LIST, industryElement);
+  selectCreator(STATE_LIST, stateElement);
   // SET SLIM SELECT
-  const stateSelect = (new SlimSelect({
-    select: '#states'
-  }))
-  const industrySelect = (new SlimSelect({
-    select: '#industry'
-  }))
-  const workerDemandSelect = (new SlimSelect({
-    select: '#workerDemand'
-  }))
-  const unitSizeSelect = (new SlimSelect({
-    select: '#unitSize'
-  }))
-  const durationSelect = (new SlimSelect({
-    select: '#duration'
-  }))
-  const NoOfEmpSelect = (new SlimSelect({
-    select: '#NoOfEmp'
-  }))
+  const stateSelect = new SlimSelect({
+    select: "#states",
+  });
+  const industrySelect = new SlimSelect({
+    select: "#industry",
+  });
+  const workerDemandSelect = new SlimSelect({
+    select: "#workerDemand",
+  });
+  const unitSizeSelect = new SlimSelect({
+    select: "#unitSize",
+  });
+  const durationSelect = new SlimSelect({
+    select: "#duration",
+  });
+  const NoOfEmpSelect = new SlimSelect({
+    select: "#NoOfEmp",
+  });
   // ON SUMBIT OF FILTER FORM
   filterButton.onclick = async (event) => {
     console.log(fromDate.value, "<-----------------fromDate.value");
@@ -569,21 +586,20 @@ window.addEventListener("load", async () => {
       typeArray.push("Protest");
     }
 
-
     const paramValue = {
-      fromDate:fromDate.value,
+      fromDate: fromDate.value,
       endDate: endDate.value,
-      typeArray:typeArray,
+      typeArray: typeArray,
       Authorized: approvedCheckBox.checked,
-      workerDemandsValue:  workerDemandSelect.selected(),
+      workerDemandsValue: workerDemandSelect.selected(),
       stateValue: stateSelect.selected(),
-      industryValue:industrySelect.selected(),
+      industryValue: industrySelect.selected(),
       NoOfEmp: NoOfEmpSelect.selected(),
-      unitSize:unitSizeSelect.selected(),
-      duration:durationSelect.selected(),
-      searchTextLO:searchLabourOrganization.value,
-    }
-    
+      unitSize: unitSizeSelect.selected(),
+      duration: durationSelect.selected(),
+      searchTextLO: searchLabourOrganization.value,
+    };
+
     console.log(paramValue);
     let cString = "";
     let filterCount = 0;
@@ -608,14 +624,17 @@ window.addEventListener("load", async () => {
   };
 });
 
-
 // Initialize and add the map
 function initMap(geodata) {
   let infowindow = null;
   let currWindow = false;
   const listDiv = document.getElementById("list-box");
   const resultCountDiv = document.getElementById("resultCount");
-  resultCountDiv.innerHTML = `${geodata.length} Results Found`
+  if(geodata.length){
+    resultCountDiv.innerHTML = `${geodata.length} Results Found`;
+  }else{
+    resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest`
+  }
   listDiv.innerHTML = "";
   function createInfoWindow(strike, marker) {
     if (infowindow) {
@@ -639,7 +658,7 @@ function initMap(geodata) {
     chklabel.setAttribute("class", "tab-label");
     chklabel.setAttribute("for", strike.positionId);
     labelDiv.setAttribute("class", "labelDiv");
-    chklabel.append(labelDiv)
+    chklabel.append(labelDiv);
     chkinput.setAttribute("type", "checkbox");
     chkinput.setAttribute("id", strike.positionId);
     chkinput.setAttribute("class", "hidechk");
@@ -647,19 +666,26 @@ function initMap(geodata) {
     cardBody.setAttribute("class", "tab-content");
     dateDiv.setAttribute("class", "date-card");
     infoDiv.setAttribute("class", "info-card");
+    console.log('<-----------------next')
     cardBody.innerHTML = createContentString(strike);
     const startDate = document.createElement("div");
     const endDate = document.createElement("div");
-    startDate.innerHTML = `From: ${formatDateToMMDDYYYY(strike.Start_Date)}`;
-    endDate.innerHTML = strike.End_Date?`To: ${formatDateToMMDDYYYY(strike.End_Date)}`:'';
-    employerDiv.innerHTML = strike.Employer?`Employer: ${strike.Employer}`:'';
-    loDiv.innerHTML = strike.Labor_Organization?`Labor Organization: ${strike.Labor_Organization}`:'';
-    infoDiv.append(employerDiv)
-    infoDiv.append(loDiv)
-    dateDiv.append(startDate)
-    dateDiv.append(endDate)
-    labelDiv.append(dateDiv)
-    labelDiv.append(infoDiv)
+    startDate.innerHTML = `<strong>From</strong>: ${formatDateToMMDDYYYY(strike.Start_Date)}`;
+    endDate.innerHTML = strike.End_Date
+      ? `<strong>To</strong>: ${formatDateToMMDDYYYY(strike.End_Date)}`
+      : "";
+    employerDiv.innerHTML = strike.Employer
+      ? `<strong>Employer</strong>: ${strike.Employer}`
+      : "";
+    loDiv.innerHTML = strike.Labor_Organization
+      ? `<strong>Labor Organization</strong>: ${strike.Labor_Organization}`
+      : "";
+    infoDiv.append(employerDiv);
+    infoDiv.append(loDiv);
+    dateDiv.append(startDate);
+    dateDiv.append(endDate);
+    labelDiv.append(dateDiv);
+    labelDiv.append(infoDiv);
     card.append(chkinput);
     card.append(chklabel);
     card.append(cardBody);
@@ -671,7 +697,7 @@ function initMap(geodata) {
         // map.setZoom(15);
         // map.panTo(strikePosition);
         createInfoWindow(strike, marker);
-        addBounceToMarkers(strike)
+        // addBounceToMarkers(strike)
       }
     });
 
@@ -684,28 +710,69 @@ function initMap(geodata) {
       const colObj = tableDict[keyName];
       if (colObj.name == "source") {
         let sourceString = strike[colObj.name];
-        if (sourceString.indexOf("1. ") === -1) {
-          htmlString += `<strong>${keyName}</strong> : <a href="${sourceString}" target="_blank" rel="noopener noreferrer" ">Source</a> </br>`;
-        } else {
-          let finalString = "";
-          let sourceStringArray = sourceString.split("\\n");
-          let count = 0;
-          sourceStringArray.forEach((string, index) => {
-            if (string) {
-              count = count + 1;
-              finalString += ` <a href="${string
-                .replace(`${count}.`, "")
-                .trim()}" target="_blank" rel="noopener noreferrer">Source ${count}</a> `;
+        const sourceArray = sourceString.split(";");
+        const htmlSourceString = sourceArray.map((s, i) => {
+          return `<a href="${s.trim()}" target="_blank" rel="noopener noreferrer">Source ${
+            i + 1
+          }</a>`;
+        });
+        htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
+      } else if (
+        strike[colObj.name] &&
+        (colObj.name === "Start_Date" || colObj.name === "End_Date")
+      ) {
+        htmlString += `<strong>${keyName}</strong> : ${formatDateToMMDDYYYY(
+          strike[colObj.name]
+        )} </br>`;
+      } else if (strike[colObj.name] && colObj.name === "connectedRow") {
+        const connectedRowArray =
+          window.sameLocationDictionary[strike["connectedRow"]].array;
+          console.log(connectedRowArray,'<-----------------connectedRowArray')
+        const otherLocationsString = connectedRowArray
+          .map((loc, locIndex) => {
+            let tempMarker = null;
+            window.markerArray.forEach((m, i) => {
+              if (m.marker.get("id") === loc) {
+                tempMarker = m;
+              }
+            });
+            if (
+              tempMarker &&
+              tempMarker.strike["positionId"] !== strike["positionId"]
+            ) {
+              const strikePosition = convertLatLngStringToObj(
+                tempMarker.strike["Latitude_Longitude"]
+              );
+
+              setTimeout(() => {
+                document.getElementById(loc).onclick = () => {
+                  map.setZoom(15);
+                  map.panTo(strikePosition);
+                  createInfoWindow(tempMarker.strike, tempMarker.marker);
+                };
+              }, 1000);
+              return `<a href="#" id="${loc}">${
+                tempMarker.strike["Address"]
+                  ? tempMarker.strike["Address"] + ", "
+                  : ""
+              }${
+                tempMarker.strike["City"]
+                  ? tempMarker.strike["City"] + ", "
+                  : ""
+              }${
+                tempMarker.strike["State"] ? tempMarker.strike["State"] : ""
+              } </a><br/>`;
+            } else {
+              return "";
             }
-          });
-          htmlString += `<strong>${keyName}</strong> : ${finalString} </br>`;
-        }
-      }else if(strike[colObj.name] && (colObj.name === "Start_Date" || colObj.name === "End_Date")){
-        htmlString += `<strong>${keyName}</strong> : ${
-          formatDateToMMDDYYYY(strike[colObj.name])
-        } </br>`;
-      }
-      else if (strike[colObj.name] && colObj.name !== "positionId") {
+          })
+          .join("");
+          console.log(otherLocationsString,'<-----------------otherLocationsString')
+        htmlString += `<strong>These are the ${
+          connectedRowArray.length - 1
+        } labor actions that are connected to this labor action</strong><br>`;
+        htmlString += otherLocationsString;
+      } else if (strike[colObj.name] && colObj.name !== "positionId") {
         htmlString += `<strong>${keyName}</strong> : ${
           strike[colObj.name]
         } </br>`;
@@ -721,39 +788,45 @@ function initMap(geodata) {
     center: { lat: 39.7427825897816, lng: -101.69676383031963 },
   });
   window.markerArray = [];
-  window.sameLocationDictionary = {}
+  window.sameLocationDictionary = {};
   geodata.forEach((datum) => {
-    const { connectedRow,positionId } = datum;
-    if(connectedRow){
-      console.log(connectedRow)
-      if(window.sameLocationDictionary[connectedRow]){
-        window.sameLocationDictionary[connectedRow].array.push(positionId)
-      }else{
-        window.sameLocationDictionary[connectedRow] = {toggle:false,array:[positionId]}
+    const { connectedRow, positionId } = datum;
+    if (connectedRow) {
+      console.log(connectedRow);
+      if (window.sameLocationDictionary[connectedRow]) {
+        window.sameLocationDictionary[connectedRow].array.push(positionId);
+      } else {
+        window.sameLocationDictionary[connectedRow] = {
+          toggle: false,
+          array: [positionId],
+        };
       }
     }
-  })
-  function addBounceToMarkers(strike){
-    if(window.sameLocationDictionary[strike['connectedRow']]){
+  });
+  function addBounceToMarkers(strike) {
+    if (window.sameLocationDictionary[strike["connectedRow"]]) {
       const bounds = new google.maps.LatLngBounds();
-      window.sameLocationDictionary[strike['connectedRow']].array.forEach((loc, locIndex) => {
-        window.markerArray.forEach((m,i) => {
-          if(m.get('id') === loc){
-            if(window.sameLocationDictionary[strike['connectedRow']].toggle){
-              m.setAnimation(null);
-            }else{
-              m.setAnimation(google.maps.Animation.BOUNCE);
-              bounds.extend(m.getPosition());
+      window.sameLocationDictionary[strike["connectedRow"]].array.forEach(
+        (loc, locIndex) => {
+          window.markerArray.forEach((m, i) => {
+            if (m.get("id") === loc) {
+              if (
+                window.sameLocationDictionary[strike["connectedRow"]].toggle
+              ) {
+                m.setAnimation(null);
+              } else {
+                m.setAnimation(google.maps.Animation.BOUNCE);
+                bounds.extend(m.getPosition());
+              }
             }
-              
-          }
-        })
-      })
+          });
+        }
+      );
       map.fitBounds(bounds);
-      window.sameLocationDictionary[strike['connectedRow']].toggle = !window.sameLocationDictionary[strike['connectedRow']].toggle
+      window.sameLocationDictionary[strike["connectedRow"]].toggle = !window
+        .sameLocationDictionary[strike["connectedRow"]].toggle;
     }
   }
-  console.log(window.sameLocationDictionary['23'])
   // The marker, positioned at Uluru
   geodata.forEach((strike, index) => {
     if (strike["Latitude_Longitude"]) {
@@ -765,21 +838,32 @@ function initMap(geodata) {
         map: map,
         title: strike.City,
       });
-      marker.set("id", strike['positionId']);
-      window.markerArray.push(marker);
-      const card = createCard(strike, marker);
-      listDiv.append(card);
-      
+      marker.set("id", strike["positionId"]);
+      window.markerArray.push({ marker, strike });
       marker.addListener("click", () => {
         createInfoWindow(strike, marker);
         // console.log(next,'<-----------------next')
-        console.log('In',window.sameLocationDictionary[strike['connectedRow']],strike['connectedRow'])
-        addBounceToMarkers(strike)
+        console.log(
+          "In",
+          window.sameLocationDictionary[strike["connectedRow"]],
+          strike["connectedRow"]
+        );
+        // addBounceToMarkers(strike)
       });
     }
   });
-  new MarkerClusterer(map, window.markerArray, {
-    imagePath:
-      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-  });
+  window.markerArray.forEach((obj, index) => {
+          ///////
+      const card = createCard(obj.strike, obj.marker);
+      listDiv.append(card);
+      ///////
+  })
+  new MarkerClusterer(
+    map,
+    window.markerArray.map((m) => m.marker),
+    {
+      imagePath:
+        "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+    }
+  );
 }

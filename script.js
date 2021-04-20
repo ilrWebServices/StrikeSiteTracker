@@ -45,6 +45,7 @@ function mysql_real_escape_string(str) {
   });
 }
 // CONSTANTS
+const reportFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform'
 // OPTION LISTS
 const STATE_LIST = [
   "Alabama",
@@ -108,36 +109,41 @@ const STATE_LIST = [
   "Wyoming",
 ];
 const INDUSTRY_LIST = [
-  "Agriculture, Forestry, Fishing & Hunting",
-  "Mining",
-  "Utilities",
-  "Construction",
-  "Manufacturing",
-  "Wholesale Trade",
-  "Retail Trade",
-  "Transportation and Warehousing",
-  "Real Estate and Rental and Leasing",
-  "Professional, Scientific and Technical Services",
-  "Management of Companies and Enterprises",
+  "Accommodation and Food Services",
   "Administrative and Support and Waste Management",
+  "Agriculture",
+  "Arts",
+  "Central Administrative Office Activity",
+  "Construction",
   "Educational Services",
-  "Information",
   "Finance and Insurance",
   "Health Care and Social Assistance",
-  "Arts, Entertainment and Recreation",
-  "Accommodation and Food Services",
+  "Information",
+  "Management of Companies and Enterprises",
+  "Manufacturing",
+  "Mining",
   "Other Services (except Public Administration)",
-  "Central Administrative Office Activity",
+  "Professional",
   "Public Administration",
+  "Real Estate and Rental and Leasing",
+  "Retail Trade",
+  "Transportation and Warehousing",
+  "Utilities",
+  "Wholesale Trade",
+  "Entertainment and Recreation",
+  "Fishing & Hunting",
+  "Forestry,Scientific and Technical Services",
 ];
 const WORKER_DEMAND = [
-  "Pay",
-  "Healthcare",
-  "COVID-19 protocols",
-  "Health and safety",
-  "First contract",
-  "Racial justice",
   "$15 minimum wage",
+  "COVID-19 protocols",
+  "First contract",
+  "Health and safety",
+  "Healthcare",
+  "Job Security",
+  "Pandemic Relief",
+  "Pay",
+  "Racial justice",
   "Staffing",
 ];
 // Bargaining Unit Size
@@ -506,12 +512,11 @@ window.addEventListener("load", async () => {
   const approvedCheckBox = document.getElementById("approved");
   const strikeValueCheckBox = document.getElementById("strikeValue");
   const protestValueCheckBox = document.getElementById("protestValue");
-  const lockoutValueCheckBox = document.getElementById("lockoutValue");
-  const unitSizeRange = document.getElementById("unitSize");
-  const NoOfEmpRange = document.getElementById("NoOfEmp");
   const searchLabourOrganization = document.getElementById("labOrgSearch");
   const filterButton = document.getElementById("filterButton");
   const filterForm = document.getElementById("filterForm");
+  const reportButton = document.getElementById("reportButton");
+  reportButton.setAttribute("href",reportFormLink)
   filterForm.onsubmit = () => {
     return false;
   };
@@ -625,7 +630,11 @@ function initMap(geodata) {
   let currWindow = false;
   const listDiv = document.getElementById("list-box");
   const resultCountDiv = document.getElementById("resultCount");
-  resultCountDiv.innerHTML = `${geodata.length} Results Found`;
+  if(geodata.length){
+    resultCountDiv.innerHTML = `${geodata.length} Results Found`;
+  }else{
+    resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest`
+  }
   listDiv.innerHTML = "";
   function createInfoWindow(strike, marker) {
     if (infowindow) {
@@ -657,18 +666,19 @@ function initMap(geodata) {
     cardBody.setAttribute("class", "tab-content");
     dateDiv.setAttribute("class", "date-card");
     infoDiv.setAttribute("class", "info-card");
+    console.log('<-----------------next')
     cardBody.innerHTML = createContentString(strike);
     const startDate = document.createElement("div");
     const endDate = document.createElement("div");
-    startDate.innerHTML = `From: ${formatDateToMMDDYYYY(strike.Start_Date)}`;
+    startDate.innerHTML = `<strong>From</strong>: ${formatDateToMMDDYYYY(strike.Start_Date)}`;
     endDate.innerHTML = strike.End_Date
-      ? `To: ${formatDateToMMDDYYYY(strike.End_Date)}`
+      ? `<strong>To</strong>: ${formatDateToMMDDYYYY(strike.End_Date)}`
       : "";
     employerDiv.innerHTML = strike.Employer
-      ? `Employer: ${strike.Employer}`
+      ? `<strong>Employer</strong>: ${strike.Employer}`
       : "";
     loDiv.innerHTML = strike.Labor_Organization
-      ? `Labor Organization: ${strike.Labor_Organization}`
+      ? `<strong>Labor Organization</strong>: ${strike.Labor_Organization}`
       : "";
     infoDiv.append(employerDiv);
     infoDiv.append(loDiv);
@@ -702,7 +712,9 @@ function initMap(geodata) {
         let sourceString = strike[colObj.name];
         const sourceArray = sourceString.split(";");
         const htmlSourceString = sourceArray.map((s, i) => {
-          return `<a href="${s.trim()}" target="_blank" rel="noopener noreferrer">Source ${i+1}</a> `;
+          return `<a href="${s.trim()}" target="_blank" rel="noopener noreferrer">Source ${
+            i + 1
+          }</a>`;
         });
         htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
       } else if (
@@ -713,51 +725,52 @@ function initMap(geodata) {
           strike[colObj.name]
         )} </br>`;
       } else if (strike[colObj.name] && colObj.name === "connectedRow") {
-        const connectedRowArray = window.sameLocationDictionary[strike["connectedRow"]].array
-        const otherLocationsString =  connectedRowArray.map((loc, locIndex) => {
-                          let tempMarker = null;
-                          window.markerArray.forEach((m, i) => {
-                            if (m.marker.get("id") === loc) {
-                              tempMarker = m;
-                            }
-                          });
-                          if (
-                            tempMarker &&
-                            tempMarker.strike["positionId"] !==
-                              strike["positionId"]
-                          ) {
-                            const strikePosition = convertLatLngStringToObj(
-                              tempMarker.strike["Latitude_Longitude"]
-                            );
-  
-                            setTimeout(() => {
-                              document.getElementById(loc).onclick = () => {
-                                map.setZoom(15);
-                                map.panTo(strikePosition);
-                                createInfoWindow(
-                                  tempMarker.strike,
-                                  tempMarker.marker
-                                );
-                              };
-                            }, 1000);
-                            return `<a href="#" id="${loc}">${
-                              tempMarker.strike["Address"]
-                                ? tempMarker.strike["Address"] + ", "
-                                : ""
-                            }${
-                              tempMarker.strike["City"]
-                                ? tempMarker.strike["City"] + ", "
-                                : ""
-                            }${
-                              tempMarker.strike["State"]
-                                ? tempMarker.strike["State"]
-                                : ""
-                            } </a><br/>`
-                          }else{
-                            return ''
-                          }
-                        }).join('')
-        htmlString += `<strong>These are the ${connectedRowArray.length - 1} labour actions that are connected to this labour action</strong><br>`;
+        const connectedRowArray =
+          window.sameLocationDictionary[strike["connectedRow"]].array;
+          console.log(connectedRowArray,'<-----------------connectedRowArray')
+        const otherLocationsString = connectedRowArray
+          .map((loc, locIndex) => {
+            let tempMarker = null;
+            window.markerArray.forEach((m, i) => {
+              if (m.marker.get("id") === loc) {
+                tempMarker = m;
+              }
+            });
+            if (
+              tempMarker &&
+              tempMarker.strike["positionId"] !== strike["positionId"]
+            ) {
+              const strikePosition = convertLatLngStringToObj(
+                tempMarker.strike["Latitude_Longitude"]
+              );
+
+              setTimeout(() => {
+                document.getElementById(loc).onclick = () => {
+                  map.setZoom(15);
+                  map.panTo(strikePosition);
+                  createInfoWindow(tempMarker.strike, tempMarker.marker);
+                };
+              }, 1000);
+              return `<a href="#" id="${loc}">${
+                tempMarker.strike["Address"]
+                  ? tempMarker.strike["Address"] + ", "
+                  : ""
+              }${
+                tempMarker.strike["City"]
+                  ? tempMarker.strike["City"] + ", "
+                  : ""
+              }${
+                tempMarker.strike["State"] ? tempMarker.strike["State"] : ""
+              } </a><br/>`;
+            } else {
+              return "";
+            }
+          })
+          .join("");
+          console.log(otherLocationsString,'<-----------------otherLocationsString')
+        htmlString += `<strong>These are the ${
+          connectedRowArray.length - 1
+        } labor actions that are connected to this labor action</strong><br>`;
         htmlString += otherLocationsString;
       } else if (strike[colObj.name] && colObj.name !== "positionId") {
         htmlString += `<strong>${keyName}</strong> : ${
@@ -827,9 +840,6 @@ function initMap(geodata) {
       });
       marker.set("id", strike["positionId"]);
       window.markerArray.push({ marker, strike });
-      const card = createCard(strike, marker);
-      listDiv.append(card);
-
       marker.addListener("click", () => {
         createInfoWindow(strike, marker);
         // console.log(next,'<-----------------next')
@@ -842,6 +852,12 @@ function initMap(geodata) {
       });
     }
   });
+  window.markerArray.forEach((obj, index) => {
+          ///////
+      const card = createCard(obj.strike, obj.marker);
+      listDiv.append(card);
+      ///////
+  })
   new MarkerClusterer(
     map,
     window.markerArray.map((m) => m.marker),

@@ -39,7 +39,7 @@ html, body {
 }
 #main > nav, 
 #main > aside {
-  flex: 0 0 15vw;
+  flex: 0 0 30vw;
 }
 #main > nav {
   order: -1;
@@ -52,8 +52,25 @@ nav{
 header { 
   height: 10vh;
   display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+.topNav{
+  display: flex;
+  height: 75%;
   flex-direction: row;
   justify-content: space-between;
+}
+.navLinks{
+  color: #222;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+.bottomNav{
+  display: flex;
+  height: 25%;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 #map { 
     height: 100%;
@@ -63,7 +80,7 @@ header {
   }
   #ilr-logo{
     max-height: 100%;
-    margin: 1em;
+    margin: 2px;
   }
   .header-right{
     margin-right: 2em;
@@ -136,9 +153,7 @@ header {
   .filter-box{ 
     width: 100%;
     border: black 1px solid;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    display: block;
     overflow: scroll;
   }
   .from-box{

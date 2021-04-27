@@ -47,6 +47,7 @@ html{
 }
 .bodyClass{
     justify-content: flex-start;
+    position: relative!important;
 }
 .grid{
     display: grid;

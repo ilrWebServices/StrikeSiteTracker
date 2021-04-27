@@ -50,14 +50,14 @@ nav{
 }
 header { 
   height: 15vh;
-  min-height: 100px;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: start;
 }
 .topNav{
   display: flex;
-  height: 70%;
+  height: 65%;
   padding: 10px;
   flex-direction: row;
   justify-content: space-between;
@@ -92,9 +92,11 @@ transition: width ease-in .25s;
 .bottomNav{
   border-top: 1px solid #dedede;
   display: flex;
-  height: 30%;
+  height: 35%;
   flex-direction: row;
   justify-content: flex-end;
+  padding: 10px 0 10px 0;
+
 }
 #map { 
     height: 100%;
@@ -146,8 +148,12 @@ transition: width ease-in .25s;
   }
   #resultCount{
     text-align: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 5px;
+    margin-bottom: 5px;
+  }
+  .resultText{
+    border-bottom: #b31b1b 2px solid;
+
   }
   /* body{
     margin: 0%!important;

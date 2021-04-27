@@ -630,7 +630,7 @@ function initMap(geodata) {
   const resultCountDiv = document.getElementById("resultCount");
 
   if(geodata.length){
-    resultCountDiv.innerHTML = `<strong>${geodata.length}</strong> Results Found`;
+    resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> Results Found</span>`;
   }else{
     resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest`
   }

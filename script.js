@@ -632,7 +632,7 @@ function initMap(geodata) {
   if(geodata.length){
     resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> Results Found</span>`;
   }else{
-    resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest`
+    resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest?`
   }
   listDiv.innerHTML = "";
   function createInfoWindow(strike, marker) {
@@ -719,6 +719,8 @@ function initMap(geodata) {
           }</a>`;
         });
         htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
+      } else if (colObj.name == "Latitude_Longitude"){
+        htmlString+= ''
       } else if (
         strike[colObj.name] &&
         (colObj.name === "Start_Date" || colObj.name === "End_Date")

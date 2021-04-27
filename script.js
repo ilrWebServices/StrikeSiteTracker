@@ -287,6 +287,10 @@ const tableDict = {
     name: "connectedRow",
     type: "string",
   },
+  Notes: {
+    name: "Notes",
+    type: "string",
+  },
 };
 const OR = " OR ";
 

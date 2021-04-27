@@ -83,6 +83,12 @@ transition: width ease-in .25s;
   text-decoration: none;
   color: #222;
 }
+.ss-main .ss-multi-selected .ss-values .ss-value{
+  background-color: #b31b1b!important;
+}
+.ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
+  background-color:  #b31b1b!important;
+}
 .bottomNav{
   border-top: 1px solid #dedede;
   display: flex;

@@ -32,7 +32,7 @@
     <header>
  <div class="topNav">
   <img
-  src="./assets/LaborAction.svg"
+  src="./assets/ILRLA.png"
   alt=""
   loading="lazy"
   id="ilr-logo"
@@ -45,7 +45,7 @@ id="ilr-logo"
 />
  </div>
       <div class="bottomNav">
-      <a href="#" class="navLinks">About Us</a>
+      <a target="_blank" href="./about.html" class="navLinks">About Us</a>
       <a href="#" class="navLinks">Verification</a>
       <a href="#" id="reportButton" class="navLinks">Report a Strike or Protest</a>
       </div>
@@ -55,7 +55,7 @@ id="ilr-logo"
         <div id="map"></div>
       </article>
       <nav>
-        <div class="filter-box border">
+        <div class="no-box" id="filter-box-id">
           <table style="height: -webkit-fill-available">
             <form id="filterForm">
               <tr>
@@ -157,18 +157,14 @@ id="ilr-logo"
                   <input type="checkbox" name="approved" id="approved" />
                 </td>
               </tr>
-              <tr>
-                <td colspan="12">
-                  <div class="button-box">
-                    <button class="btn btn-primary btn-block" id="filterButton">
-                      Filter
-                    </button>
-                  </div>
-                </td>
-              </tr>
             </form>
           </table>
         </div>
+                  <div class="button-box">
+          <button class="linkButton" id="filterButton">
+                      Filter
+                    </button>
+                  </div>
         <div class="strikes-box">
           <div id="resultCount"></div>
           <div id="list-box"></div>

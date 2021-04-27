@@ -525,7 +525,7 @@ window.addEventListener("load", async () => {
   noBox.classList.add('filter-box');
   noBox.classList.remove('no-box');
   console.log(document.getElementById('filter-box-id'))
-  noBox.class = 
+  noBox.class =
   filterForm.onsubmit = () => {
     return false;
   };

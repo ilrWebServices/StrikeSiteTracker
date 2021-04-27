@@ -9,20 +9,19 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content:space-between;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 .linkButton{
-  padding: 4px;
-    max-width: 150px;
-    text-align: center;
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-    border-radius: 4px;
-}
-.linkButton:hover{
-  color: white;
+  border-radius: 2px;
+  border: 4px solid #b31b1b;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  width: auto;
+  display: inline-block;
   text-decoration: none;
-
+  background: #b31b1b;
+  min-height: 50px;
+  color: white;
 }
 .linkButton:visited{
   color: white;
@@ -31,7 +30,7 @@ html, body {
 }
 #main {
   display: flex;
-  min-height: calc(100vh - 10vh);
+  min-height: calc(100vh - 15vh);
 }
 
 #main > article {
@@ -39,7 +38,7 @@ html, body {
 }
 #main > nav, 
 #main > aside {
-  flex: 0 0 15vw;
+  flex: 0 0 30vw;
 }
 #main > nav {
   order: -1;
@@ -50,10 +49,54 @@ nav{
   justify-content: space-between;
 }
 header { 
-  height: 10vh;
+  height: 15vh;
+  min-height: 120px;
   display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+.topNav{
+  display: flex;
+  height: 65%;
+  padding: 10px;
   flex-direction: row;
   justify-content: space-between;
+}
+.navLinks{
+ text-decoration: none;
+  color: #222;
+  margin-left: 3px;
+  margin-right: 40px;
+}
+.navLinks:after{
+  content: '';
+display: block;
+width: 40%;
+max-width: 100%;
+ border-bottom: #b31b1b 2px solid;
+transition: width ease-in .25s;
+}
+.navLinks:hover:after{
+  width: 100%;
+}
+.navLinks:hover{
+  text-decoration: none;
+  color: #222;
+}
+.ss-main .ss-multi-selected .ss-values .ss-value{
+  background-color: #b31b1b!important;
+}
+.ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
+  background-color:  #b31b1b!important;
+}
+.bottomNav{
+  border-top: 1px solid #dedede;
+  display: flex;
+  height: 35%;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 10px 0 10px 0;
+
 }
 #map { 
     height: 100%;
@@ -63,7 +106,7 @@ header {
   }
   #ilr-logo{
     max-height: 100%;
-    margin: 1em;
+    margin: 2px;
   }
   .header-right{
     margin-right: 2em;
@@ -105,6 +148,12 @@ header {
   }
   #resultCount{
     text-align: center;
+    padding-top: 5px;
+    margin-bottom: 5px;
+  }
+  .resultText{
+    border-bottom: #b31b1b 2px solid;
+
   }
   /* body{
     margin: 0%!important;
@@ -120,13 +169,17 @@ header {
   table {     table-layout: fixed; 
     border-collapse: separate;
     border-spacing: 0 1em;
-    padding: 3%;
+    /* padding: 1%; */
    }
-  td { width: 33%; }
+  td { 
+    width: 33%;
+  
+  }
 .strikes-box{
   width: 100%;
   height: 47vh;
-  border: black 1px solid;
+  border-top: none;
+  /* border: 1px solid #dedede;  */
   padding: 2.5%;
   }
   #list-box{ 
@@ -134,11 +187,10 @@ header {
    overflow-y: scroll;
   }
   .filter-box{ 
+    border-bottom: none;
     width: 100%;
-    border: black 1px solid;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    /* border: black 1px solid; */
+    display: block;
     overflow: scroll;
   }
   .from-box{
@@ -192,9 +244,11 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    min-height: 5vh;
   }
   #filterButton{
     width: 80%;
+    border-radius: 5px;
   }
   .filter-placeholder{
     text-align: center;
@@ -217,19 +271,19 @@ header {
   margin-bottom: 3px;
   box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
   border-radius: .25rem;
+  border: 4px solid #b31b1b;
+
 }
 
 .tab-label {
   display: flex;
   justify-content: space-between;
   padding: 1em;
-  background:#f8f9fa;
   font-weight: bold;
   cursor: pointer;
   /* Icon */
 }
 .tab-label:hover {
-  background: #f8f9fa;
 }
 .tab-label::after {
   width: 1em;
@@ -241,29 +295,39 @@ header {
 .tab-content {
   max-height: 0;
   padding: 0 1em;
-  background: white;
+  /* background:#F7F7F7; */
   transition: all 0.35s;
 }
-
+.addressLink{
+  color: #007bff; ;
+  cursor: pointer;
+}
+.addressLink:hover{
+  text-decoration: underline;
+}
+.no-box{
+  opacity: 0;
+  max-height: 30vh;
+}
 .tab-close {
   display: flex;
   justify-content: flex-end;
   padding: 1em;
   font-size: 0.75em;
-  background:#f8f9fa;
+  /* background:#F7F7F7; */
   cursor: pointer;
 }
-.tab-close:hover {
-  background: #f8f9fa;
+/* .tab-close:hover {
+  background: #F7F7F7;
 }
 
 .tab-close:hover {
-  background: #f8f9fa;
+  background: #F7F7F7;
 }
 
-.hidechk:checked + .tab-label {
-  background: #f8f9fa;
-}
+.hidechk:checked {
+  background: #F7F7F7;
+} */
 
 .hidechk:checked + .tab-label::after {
   transform: rotate(90deg);

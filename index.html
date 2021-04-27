@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ILR Work Stoppage Tracker</title>
+    <title>ILR Labor Action Tracker</title>
     <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM-cBVP_9RKiB8hfXLod1fW0R1oGUPM2c&libraries=&v=weekly"
@@ -30,19 +30,24 @@
   </head>
   <body>
     <header>
-      <img
-        src="https://www.ilr.cornell.edu/sites/all/themes/ilr_theme/images/logos/ilr-cornell-lockup.svg"
-        alt=""
-        loading="lazy"
-        id="ilr-logo"
-      />
-      <div class="header-right">
-        <a
-          id="reportButton"
-          class="linkButton"
-          target="_blank"
-          >REPORT A STRIKE OR PROTEST</a
-        >
+ <div class="topNav">
+  <img
+  src="./assets/ILRLA.png"
+  alt=""
+  loading="lazy"
+  id="ilr-logo"
+/>
+<img
+src="./assets/logo.svg"
+alt=""
+loading="lazy"
+id="ilr-logo"
+/>
+ </div>
+      <div class="bottomNav">
+      <a target="_blank" href="./about.html" class="navLinks">About Us</a>
+      <a href="#" class="navLinks" target="_blank">Methodology</a>
+      <a href="#" id="reportButton" target="_blank" class="navLinks">Report a Strike or Protest</a>
       </div>
     </header>
     <div id="main">
@@ -50,12 +55,12 @@
         <div id="map"></div>
       </article>
       <nav>
-        <div class="filter-box border">
+        <div class="no-box" id="filter-box-id">
           <table style="height: -webkit-fill-available">
             <form id="filterForm">
               <tr>
-                <th colspan="3" class="first"><div>Type</div></th>
-                <td colspan="3">
+                <th colspan="4" class="first"><div>Type</div></th>
+                <td colspan="4">
                   <div class="from-box">
                     <div class="xstrike-label">Strikes</div>
                     <label class="xswitch" for="strikeValue">
@@ -63,9 +68,9 @@
                     </label>
                   </div>
                 </td>
-                <td colspan="3">
+                <td colspan="4">
                   <div class="from-box">
-                    <div class="xstrike-label">Protests</div>
+                    <div class="xstrike-label">Labor Protests</div>
                     <label class="xswitch" for="protestValue">
                       <input type="checkbox" id="protestValue" />
                     </label>
@@ -75,7 +80,7 @@
               <tr>
                 <th colspan="1" class="first"><div>Labor Organization</div></th>
                 <td colspan="11">
-                  <input type="text" class="form-control" id="labOrgSearch" />
+                  <input type="text" class="form-control" id="labOrgSearch" placeholder="Search by acronym for most inclusive results" />
                 </td>
               </tr>
               <tr>
@@ -117,7 +122,7 @@
                 </td>
               </tr>
               <tr>
-                <th colspan="1" class="first"><div>Work Demands</div></th>
+                <th colspan="1" class="first"><div>Worker Demands</div></th>
                 <td colspan="11">
                   <select
                     name="workerDemand"
@@ -140,7 +145,7 @@
               </tr>
               <tr>
                 <th colspan="1" class="first">
-                  <div>Number of Employees</div>
+                  <div>Number of Participants</div>
                 </th>
                 <td colspan="11">
                   <select name="NoOfEmp" id="NoOfEmp" multiple></select>
@@ -152,18 +157,14 @@
                   <input type="checkbox" name="approved" id="approved" />
                 </td>
               </tr>
-              <tr>
-                <td colspan="12">
-                  <div class="button-box">
-                    <button class="btn btn-primary btn-block" id="filterButton">
-                      Filter
-                    </button>
-                  </div>
-                </td>
-              </tr>
             </form>
           </table>
         </div>
+                  <div class="button-box">
+          <button class="linkButton" id="filterButton">
+                      Filter
+                    </button>
+                  </div>
         <div class="strikes-box">
           <div id="resultCount"></div>
           <div id="list-box"></div>

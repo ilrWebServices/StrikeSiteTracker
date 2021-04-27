@@ -297,7 +297,6 @@ function filterDate(params) {
   else return "";
 }
 function filterLabourOrganization(params) {
-  console.log(params.searchTextLO);
   if (params.searchTextLO)
     return `Labor_Organization LIKE '%${params.searchTextLO}%'`;
   else return "";
@@ -516,7 +515,13 @@ window.addEventListener("load", async () => {
   const filterButton = document.getElementById("filterButton");
   const filterForm = document.getElementById("filterForm");
   const reportButton = document.getElementById("reportButton");
-  reportButton.setAttribute("href",reportFormLink)
+  reportButton.setAttribute("href",reportFormLink);
+  const noBox = Array.prototype.slice.call(document.getElementsByClassName('no-box'))[0]
+  console.log(noBox)
+  noBox.classList.add('filter-box');
+  noBox.classList.remove('no-box');
+  console.log(document.getElementById('filter-box-id'))
+  noBox.class = 
   filterForm.onsubmit = () => {
     return false;
   };
@@ -570,15 +575,7 @@ window.addEventListener("load", async () => {
   });
   // ON SUMBIT OF FILTER FORM
   filterButton.onclick = async (event) => {
-    console.log(fromDate.value, "<-----------------fromDate.value");
-    console.log(endDate.value, "<-----------------endDate.value");
-    console.log(
-      approvedCheckBox.checked,
-      "<-----------------approvedCheckBox.value"
-    );
-    console.log(stateSelect.value, "<-----------------stateSelect.value");
     const typeArray = [];
-    console.log(protestValueCheckBox);
     if (strikeValueCheckBox.checked) {
       typeArray.push("Strike");
     }
@@ -620,6 +617,7 @@ window.addEventListener("load", async () => {
     console.log(queryString);
     const res = await alasql.promise(queryString);
     initMap(res);
+
     console.log(res);
   };
 });
@@ -630,8 +628,9 @@ function initMap(geodata) {
   let currWindow = false;
   const listDiv = document.getElementById("list-box");
   const resultCountDiv = document.getElementById("resultCount");
+
   if(geodata.length){
-    resultCountDiv.innerHTML = `${geodata.length} Results Found`;
+    resultCountDiv.innerHTML = `<strong>${geodata.length}</strong> Results Found`;
   }else{
     resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest`
   }
@@ -640,6 +639,7 @@ function initMap(geodata) {
     if (infowindow) {
       infowindow.close();
     }
+    console.log('Outside')
     infowindow = new google.maps.InfoWindow({
       content: createContentString(strike),
     });
@@ -654,19 +654,19 @@ function initMap(geodata) {
     const infoDiv = document.createElement("div");
     const employerDiv = document.createElement("div");
     const loDiv = document.createElement("div");
+    const chkId = `chkinput-${strike.positionId}`
     card.setAttribute("class", "tab");
     chklabel.setAttribute("class", "tab-label");
-    chklabel.setAttribute("for", strike.positionId);
+    chklabel.setAttribute("for", chkId);
     labelDiv.setAttribute("class", "labelDiv");
     chklabel.append(labelDiv);
     chkinput.setAttribute("type", "checkbox");
-    chkinput.setAttribute("id", strike.positionId);
+    chkinput.setAttribute("id",chkId );
     chkinput.setAttribute("class", "hidechk");
     const cardBody = document.createElement("div");
     cardBody.setAttribute("class", "tab-content");
     dateDiv.setAttribute("class", "date-card");
     infoDiv.setAttribute("class", "info-card");
-    console.log('<-----------------next')
     cardBody.innerHTML = createContentString(strike);
     const startDate = document.createElement("div");
     const endDate = document.createElement("div");
@@ -690,12 +690,13 @@ function initMap(geodata) {
     card.append(chklabel);
     card.append(cardBody);
     chkinput.addEventListener("change", (e) => {
+      console.log(e.target.checked,'<-----------------e.target.checked')
       if (e.target.checked) {
         const strikePosition = convertLatLngStringToObj(
           strike["Latitude_Longitude"]
         );
-        // map.setZoom(15);
-        // map.panTo(strikePosition);
+        map.setZoom(15);
+        map.panTo(strikePosition);
         createInfoWindow(strike, marker);
         // addBounceToMarkers(strike)
       }
@@ -705,6 +706,7 @@ function initMap(geodata) {
   }
   function createContentString(strike) {
     let htmlString = "";
+    console.log('hy')
     Object.keys(tableDict).forEach((keyName) => {
       // console.log(strike[keyName])
       const colObj = tableDict[keyName];
@@ -727,7 +729,6 @@ function initMap(geodata) {
       } else if (strike[colObj.name] && colObj.name === "connectedRow") {
         const connectedRowArray =
           window.sameLocationDictionary[strike["connectedRow"]].array;
-          console.log(connectedRowArray,'<-----------------connectedRowArray')
         const otherLocationsString = connectedRowArray
           .map((loc, locIndex) => {
             let tempMarker = null;
@@ -746,12 +747,13 @@ function initMap(geodata) {
 
               setTimeout(() => {
                 document.getElementById(loc).onclick = () => {
+                  console.log('sxaxsxs')
                   map.setZoom(15);
                   map.panTo(strikePosition);
                   createInfoWindow(tempMarker.strike, tempMarker.marker);
                 };
-              }, 1000);
-              return `<a href="#" id="${loc}">${
+              }, 2000);
+              return `<div class="addressLink" id="${loc}">${
                 tempMarker.strike["Address"]
                   ? tempMarker.strike["Address"] + ", "
                   : ""
@@ -761,13 +763,12 @@ function initMap(geodata) {
                   : ""
               }${
                 tempMarker.strike["State"] ? tempMarker.strike["State"] : ""
-              } </a><br/>`;
+              } </div><br/>`;
             } else {
               return "";
             }
           })
           .join("");
-          console.log(otherLocationsString,'<-----------------otherLocationsString')
         htmlString += `<strong>These are the ${
           connectedRowArray.length - 1
         } labor actions that are connected to this labor action</strong><br>`;
@@ -792,7 +793,6 @@ function initMap(geodata) {
   geodata.forEach((datum) => {
     const { connectedRow, positionId } = datum;
     if (connectedRow) {
-      console.log(connectedRow);
       if (window.sameLocationDictionary[connectedRow]) {
         window.sameLocationDictionary[connectedRow].array.push(positionId);
       } else {
@@ -842,12 +842,6 @@ function initMap(geodata) {
       window.markerArray.push({ marker, strike });
       marker.addListener("click", () => {
         createInfoWindow(strike, marker);
-        // console.log(next,'<-----------------next')
-        console.log(
-          "In",
-          window.sameLocationDictionary[strike["connectedRow"]],
-          strike["connectedRow"]
-        );
         // addBounceToMarkers(strike)
       });
     }

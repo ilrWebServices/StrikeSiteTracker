@@ -3,8 +3,8 @@ const readline = require("readline");
 const core = require("@actions/core");
 const { google } = require("googleapis");
 const convertRowsToJson = require("./convertRowsToJson");
-const console = {}
-console.log = () => {}
+// const console = {}
+// console.log = () => {}
 const findLatLng = require("./findLatLng");
 const updateLatLngInSheets = require("./updateLatLngInSheets");
 // If modifying these scopes, delete token.json.
@@ -116,6 +116,7 @@ function listMajors(auth) {
         //   spreadsheetId,
         //   auth
         // );
+        console.log('Creating File')
         fs.writeFileSync(
           "geodata.js",
           `window.geodata=${JSON.stringify(geoCodeArray)}`

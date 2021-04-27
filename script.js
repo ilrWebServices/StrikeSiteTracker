@@ -238,7 +238,7 @@ const tableDict = {
     type: "string",
     filter: filterType,
   },
-  "Approximate  Number of Employees": {
+  "Approximate Number of Participants": {
     name: "Approximate_Number_of_Employees",
     type: "number",
     filter: filterNoOfEmp,

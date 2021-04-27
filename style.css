@@ -248,6 +248,7 @@ transition: width ease-in .25s;
   }
   #filterButton{
     width: 80%;
+    border-radius: 5px;
   }
   .filter-placeholder{
     text-align: center;

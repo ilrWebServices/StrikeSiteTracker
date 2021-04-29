@@ -95,7 +95,8 @@ transition: width ease-in .25s;
   height: 35%;
   flex-direction: row;
   justify-content: space-between;
-
+  background: white;
+    z-index: 100;
 }
 .titleSection{
   margin-left: 10px;
@@ -197,7 +198,7 @@ transition: width ease-in .25s;
   .filter-box{ 
     border-bottom: none;
     width: 100%;
-    /* border: black 1px solid; */
+    padding: 0 10px 0 10px;
     display: block;
     overflow: scroll;
   }

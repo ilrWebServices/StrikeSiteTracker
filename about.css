@@ -51,7 +51,7 @@ html{
   left: calc(100% - 120px - 10px);
 }
 .section-heading--framed.section-heading--framed-right::after {
-  left: calc(100% - 10px);
+  left: calc(100% - 10px); 
 }
 .bodyClass{
     justify-content: flex-start;

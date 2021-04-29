@@ -30,7 +30,7 @@ html, body {
 }
 #main {
   display: flex;
-  min-height: calc(100vh - 17vh);
+  min-height: calc(100vh - 15vh);
 }
 
 #main > article {
@@ -49,7 +49,7 @@ nav{
   justify-content: space-between;
 }
 header { 
-  height: 17vh;
+  height: 15vh;
   min-height: 120px;
   display: flex;
   flex-direction: column;
@@ -61,51 +61,6 @@ header {
   padding: 10px;
   flex-direction: row;
   justify-content: space-between;
-}
-.navLinks{
- text-decoration: none;
-  color: #222;
-  margin-left: 3px;
-  margin-right: 40px;
-}
-.navLinks:after{
-  content: '';
-display: block;
-width: 40%;
-max-width: 100%;
- border-bottom: #b31b1b 2px solid;
-transition: width ease-in .25s;
-}
-.navLinks:hover:after{
-  width: 100%;
-}
-.navLinks:hover{
-  text-decoration: none;
-  color: #222;
-}
-.ss-main .ss-multi-selected .ss-values .ss-value{
-  background-color: #b31b1b!important;
-}
-.ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
-  background-color:  #b31b1b!important;
-}
-.bottomNav{
-  border-top: 1px solid #dedede;
-  display: flex;
-  height: 35%;
-  flex-direction: row;
-  justify-content: space-between;
-  background: white;
-    z-index: 100;
-}
-.titleSection{
-  margin-left: 10px;
-}
-.websiteTitle{
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 30px;
-  color: #b31b1b;
-  font-weight: bold;
 }
 .navLinks{
  text-decoration: none;
@@ -234,7 +189,7 @@ transition: width ease-in .25s;
   .filter-box{ 
     border-bottom: none;
     width: 100%;
-    padding: 0 10px 0 10px;
+    /* border: black 1px solid; */
     display: block;
     overflow: scroll;
   }
@@ -294,12 +249,6 @@ transition: width ease-in .25s;
   #filterButton{
     width: 80%;
     border-radius: 5px;
-  }
-  .linksSection{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    padding: 10px 0 10px 0;
   }
   .filter-placeholder{
     text-align: center;
@@ -450,91 +399,4 @@ input#togglechk:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}
-@media only screen and (max-width: 500px) {
-  .websiteTitle {
-    font-size: 15px;
-  }
-  .navLinks{
-    font-size: 10px;
-    margin-right: 8px;
-  }
-  #main > nav, #main > aside {
-    flex: 0 0 100vw;
-    width: auto;
-    overflow-x: scroll;
-}
-.filter-box{
-  font-size: 12px;
-}
-#labOrgSearch {
-  width: 100%;
-  font-size: 10px;
-}
-.ss-main{
-  width: 100%;
-  font-size: 10px;
-}
-.removetd{
-  display: none;
-}
-#fromDate{
-  font-size: 0.7rem;
-}
-#endDate{
-  font-size: 0.7rem;
-}
-#map{
-  display: none;
-}
-article{
-  display: none;
-}
-/* The snackbar - position it at the bottom and in the middle of the screen */
-#snackbar {
-  visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 250px; /* Set a default minimum width */
-  background-color: #b31b1b;; /* Black background color */
-  color: #fff; /* White text color */
-  text-align: center; /* Centered text */
-  border-radius: 10px; /* Rounded borders */
-  padding: 16px; /* Padding */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  bottom: 30px; /* 30px from the bottom */
-  margin: 0 20px 0 20px;
-}
-
-/* Show the snackbar when clicking on a button (class added with JavaScript) */
-#snackbar.show {
-  visibility: visible; /* Show the snackbar */
-  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
-  However, delay the fade out process for 2.5 seconds */
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
-/* Animations to fade the snackbar in and out */
-@-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
-}
-
-@keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
-}
-
-@-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
-}
-
-@keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
-}
-}
-#snackbar {
-  visibility: hidden; 
 }

@@ -458,7 +458,6 @@ article{
 #snackbar {
   visibility: hidden; /* Hidden by default. Visible on click */
   min-width: 250px; /* Set a default minimum width */
-  margin-left: -125px; /* Divide value of min-width by 2 */
   background-color: #b31b1b;; /* Black background color */
   color: #fff; /* White text color */
   text-align: center; /* Centered text */
@@ -466,8 +465,8 @@ article{
   padding: 16px; /* Padding */
   position: fixed; /* Sit on top of the screen */
   z-index: 1; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
   bottom: 30px; /* 30px from the bottom */
+  margin: 0 20px 0 20px;
 }
 
 /* Show the snackbar when clicking on a button (class added with JavaScript) */
@@ -501,5 +500,5 @@ article{
 }
 }
 #snackbar {
-  /* visibility: hidden;  */
+  visibility: hidden; 
 }

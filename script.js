@@ -510,19 +510,19 @@ async function createTableAndInsertValues() {
 window.addEventListener("load", async () => {
   function showSnackbar() {
     // Get the snackbar DIV
-    const shownsnack = false//localStorage.getItem('shownsnack')
-    if(!shownsnack){
+    const shownsnack = localStorage.getItem('shownsnack')
+    if(!shownsnack && window.innerWidth < 500){
       var x = document.getElementById("snackbar");
   
       // Add the "show" class to DIV
-      x.className = "show";
-    
+      x.classList.add('show')
+      console.log()
       // After 3 seconds, remove the show class from DIV
-      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+      setTimeout(function(){ x.classList.remove('show') }, 8000);
       localStorage.setItem('shownsnack', true);
     }
   }
-  showSnackbar()
+  setTimeout(showSnackbar)
   await createTableAndInsertValues();
   // DATES
   const fromDate = document.getElementById("fromDate");
@@ -536,11 +536,8 @@ window.addEventListener("load", async () => {
   const reportButton = document.getElementById("reportButton");
   reportButton.setAttribute("href",reportFormLink);
   const noBox = Array.prototype.slice.call(document.getElementsByClassName('no-box'))[0]
-  console.log(noBox)
   noBox.classList.add('filter-box');
   noBox.classList.remove('no-box');
-  console.log(document.getElementById('filter-box-id'))
-  noBox.class = 
   filterForm.onsubmit = () => {
     return false;
   };

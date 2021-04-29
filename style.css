@@ -30,7 +30,7 @@ html, body {
 }
 #main {
   display: flex;
-  min-height: calc(100vh - 15vh);
+  min-height: calc(100vh - 17vh);
 }
 
 #main > article {
@@ -49,7 +49,7 @@ nav{
   justify-content: space-between;
 }
 header { 
-  height: 15vh;
+  height: 17vh;
   min-height: 120px;
   display: flex;
   flex-direction: column;
@@ -94,9 +94,18 @@ transition: width ease-in .25s;
   display: flex;
   height: 35%;
   flex-direction: row;
-  justify-content: flex-end;
-  padding: 10px 0 10px 0;
-
+  justify-content: space-between;
+  background: white;
+    z-index: 100;
+}
+.titleSection{
+  margin-left: 10px;
+}
+.websiteTitle{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 30px;
+  color: #b31b1b;
+  font-weight: bold;
 }
 #map { 
     height: 100%;
@@ -189,7 +198,7 @@ transition: width ease-in .25s;
   .filter-box{ 
     border-bottom: none;
     width: 100%;
-    /* border: black 1px solid; */
+    padding: 0 10px 0 10px;
     display: block;
     overflow: scroll;
   }
@@ -249,6 +258,12 @@ transition: width ease-in .25s;
   #filterButton{
     width: 80%;
     border-radius: 5px;
+  }
+  .linksSection{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 10px 0 10px 0;
   }
   .filter-placeholder{
     text-align: center;
@@ -399,4 +414,44 @@ input#togglechk:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+@media only screen and (max-width: 500px) {
+  .websiteTitle {
+    font-size: 15px;
+  }
+  .navLinks{
+    font-size: 10px;
+    margin-right: 8px;
+  }
+  #main > nav, #main > aside {
+    flex: 0 0 100vw;
+    width: auto;
+    overflow-x: scroll;
+}
+.filter-box{
+  font-size: 12px;
+}
+#labOrgSearch {
+  width: 100%;
+  font-size: 10px;
+}
+.ss-main{
+  width: 100%;
+  font-size: 10px;
+}
+.removetd{
+  display: none;
+}
+#fromDate{
+  font-size: 0.7rem;
+}
+#endDate{
+  font-size: 0.7rem;
+}
+#map{
+  display: none;
+}
+article{
+  display: none;
+}
 }

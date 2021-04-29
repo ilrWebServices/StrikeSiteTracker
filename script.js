@@ -508,21 +508,6 @@ async function createTableAndInsertValues() {
 }
 // ON LOAD EVENT (INITIALIZATION)
 window.addEventListener("load", async () => {
-  function showSnackbar() {
-    // Get the snackbar DIV
-    const shownsnack = localStorage.getItem('shownsnack')
-    if(!shownsnack && window.innerWidth < 500){
-      var x = document.getElementById("snackbar");
-  
-      // Add the "show" class to DIV
-      x.classList.add('show')
-      console.log()
-      // After 3 seconds, remove the show class from DIV
-      setTimeout(function(){ x.classList.remove('show') }, 8000);
-      localStorage.setItem('shownsnack', true);
-    }
-  }
-  setTimeout(showSnackbar)
   await createTableAndInsertValues();
   // DATES
   const fromDate = document.getElementById("fromDate");
@@ -536,8 +521,11 @@ window.addEventListener("load", async () => {
   const reportButton = document.getElementById("reportButton");
   reportButton.setAttribute("href",reportFormLink);
   const noBox = Array.prototype.slice.call(document.getElementsByClassName('no-box'))[0]
+  console.log(noBox)
   noBox.classList.add('filter-box');
   noBox.classList.remove('no-box');
+  console.log(document.getElementById('filter-box-id'))
+  noBox.class =
   filterForm.onsubmit = () => {
     return false;
   };

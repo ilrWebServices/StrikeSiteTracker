@@ -30,7 +30,7 @@ html, body {
 }
 #main {
   display: flex;
-  min-height: calc(100vh - 15vh);
+  min-height: calc(100vh - 17vh);
 }
 
 #main > article {
@@ -49,7 +49,7 @@ nav{
   justify-content: space-between;
 }
 header { 
-  height: 15vh;
+  height: 17vh;
   min-height: 120px;
   display: flex;
   flex-direction: column;
@@ -94,9 +94,17 @@ transition: width ease-in .25s;
   display: flex;
   height: 35%;
   flex-direction: row;
-  justify-content: flex-end;
-  padding: 10px 0 10px 0;
+  justify-content: space-between;
 
+}
+.titleSection{
+  margin-left: 10px;
+}
+.websiteTitle{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 30px;
+  color: #b31b1b;
+  font-weight: bold;
 }
 #map { 
     height: 100%;
@@ -249,6 +257,12 @@ transition: width ease-in .25s;
   #filterButton{
     width: 80%;
     border-radius: 5px;
+  }
+  .linksSection{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 10px 0 10px 0;
   }
   .filter-placeholder{
     text-align: center;

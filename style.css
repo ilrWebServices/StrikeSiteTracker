@@ -107,6 +107,42 @@ transition: width ease-in .25s;
   color: #b31b1b;
   font-weight: bold;
 }
+.navLinks{
+ text-decoration: none;
+  color: #222;
+  margin-left: 3px;
+  margin-right: 40px;
+}
+.navLinks:after{
+  content: '';
+display: block;
+width: 40%;
+max-width: 100%;
+ border-bottom: #b31b1b 2px solid;
+transition: width ease-in .25s;
+}
+.navLinks:hover:after{
+  width: 100%;
+}
+.navLinks:hover{
+  text-decoration: none;
+  color: #222;
+}
+.ss-main .ss-multi-selected .ss-values .ss-value{
+  background-color: #b31b1b!important;
+}
+.ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
+  background-color:  #b31b1b!important;
+}
+.bottomNav{
+  border-top: 1px solid #dedede;
+  display: flex;
+  height: 35%;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 10px 0 10px 0;
+
+}
 #map { 
     height: 100%;
     /* The height is 400 pixels */

@@ -428,6 +428,26 @@ input#togglechk:checked + .slider:before {
     width: auto;
     overflow-x: scroll;
 }
+.filter-box{
+  font-size: 12px;
+}
+#labOrgSearch {
+  width: 100%;
+  font-size: 10px;
+}
+.ss-main{
+  width: 100%;
+  font-size: 10px;
+}
+.removetd{
+  display: none;
+}
+#fromDate{
+  font-size: 0.7rem;
+}
+#endDate{
+  font-size: 0.7rem;
+}
 #map{
   display: none;
 }

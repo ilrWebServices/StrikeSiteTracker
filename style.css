@@ -134,15 +134,6 @@ transition: width ease-in .25s;
 .ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
   background-color:  #b31b1b!important;
 }
-.bottomNav{
-  border-top: 1px solid #dedede;
-  display: flex;
-  height: 35%;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 10px 0 10px 0;
-
-}
 #map { 
     height: 100%;
     /* The height is 400 pixels */

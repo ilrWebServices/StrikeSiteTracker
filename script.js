@@ -508,6 +508,21 @@ async function createTableAndInsertValues() {
 }
 // ON LOAD EVENT (INITIALIZATION)
 window.addEventListener("load", async () => {
+  function showSnackbar() {
+    // Get the snackbar DIV
+    const shownsnack = false//localStorage.getItem('shownsnack')
+    if(!shownsnack){
+      var x = document.getElementById("snackbar");
+  
+      // Add the "show" class to DIV
+      x.className = "show";
+    
+      // After 3 seconds, remove the show class from DIV
+      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+      localStorage.setItem('shownsnack', true);
+    }
+  }
+  showSnackbar()
   await createTableAndInsertValues();
   // DATES
   const fromDate = document.getElementById("fromDate");

@@ -415,3 +415,23 @@ input#togglechk:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+@media only screen and (max-width: 500px) {
+  .websiteTitle {
+    font-size: 15px;
+  }
+  .navLinks{
+    font-size: 10px;
+    margin-right: 8px;
+  }
+  #main > nav, #main > aside {
+    flex: 0 0 100vw;
+    width: auto;
+    overflow-x: scroll;
+}
+#map{
+  display: none;
+}
+article{
+  display: none;
+}
+}

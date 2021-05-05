@@ -293,7 +293,23 @@ const tableDict = {
   },
 };
 const OR = " OR ";
+//
+// DOM FUNCTIZONS
+function showSnackbar() {
+  // Get the snackbar DIV
+  const shownsnack = localStorage.getItem('shownsnack')
+  // if(!shownsnack && window.innerWidth < 500){
+    var x = document.getElementById("snackbar");
 
+    // Add the "show" class to DIV
+    x.setAttribute('style',`visibility: visible;-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;`)
+    console.log()
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ x.setAttribute('style',`visibility: hidden`) }, 6000);
+    localStorage.setItem('shownsnack', true);
+  // }
+}
 //FILTER FUNCTIONS
 function filterDate(params) {
   if (params.fromDate && params.endDate)
@@ -508,20 +524,6 @@ async function createTableAndInsertValues() {
 }
 // ON LOAD EVENT (INITIALIZATION)
 window.addEventListener("load", async () => {
-  function showSnackbar() {
-    // Get the snackbar DIV
-    const shownsnack = localStorage.getItem('shownsnack')
-    if(!shownsnack && window.innerWidth < 500){
-      var x = document.getElementById("snackbar");
-  
-      // Add the "show" class to DIV
-      x.classList.add('show')
-      console.log()
-      // After 3 seconds, remove the show class from DIV
-      setTimeout(function(){ x.classList.remove('show') }, 8000);
-      localStorage.setItem('shownsnack', true);
-    }
-  }
   setTimeout(showSnackbar)
   await createTableAndInsertValues();
   // DATES

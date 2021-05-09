@@ -10,6 +10,15 @@ function formatDateToMMDDYYYY(dateString) {
   const dateArray = dateString.split("-");
   return `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`;
 }
+function todaysDate() {
+  const date = new Date();
+  const dayIndex = date.getDate()
+  const year = date.getFullYear()
+  const monthIndex = date.getMonth()
+  const month = String(monthIndex+1).length > 1?String(monthIndex+1):'0'+String(monthIndex+1)
+  const day = String(dayIndex).length > 1?String(dayIndex):'0'+String(dayIndex)
+  return `${year}/${month}/${day}`;
+}
 function selectCreator(ArrayOfOptions, element) {
   ArrayOfOptions.forEach((val) => {
     var option = document.createElement("option");
@@ -43,6 +52,17 @@ function mysql_real_escape_string(str) {
         return char;
     }
   });
+}
+function circlePointsFromCenter(steps,radius, {lat, lng}){
+  const coordinates = []
+  for (var i = 0; i < steps; i++) {
+    let degrees = (i/steps)*360
+    let radians = (Math.PI/180)*degrees
+    lat = lat + radius * Math.cos(radians)
+    lng = lng + radius * Math.sin(radians)
+    coordinates.push(`${lat}, ${lng}`);
+  }
+    return coordinates
 }
 // CONSTANTS
 const reportFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform'
@@ -169,8 +189,9 @@ const DURATION_ARRAY = {
   "8-30 days":
     "Duration_Amount >= 8 AND Duration_Amount <= 30" +
     DURATION_UNIT_DAY_CONDITION,
-  "31+ days": "Duration_Amount >= 31" + DURATION_UNIT_DAY_CONDITION,
+  "31+ days": `DATEDIFF(day, Start_Date , '${todaysDate()}') > 30 AND End_Date = "") || (Duration_Amount >= 31` + DURATION_UNIT_DAY_CONDITION,
 };
+
 const NO_OF_EMPLOEES = {
   "Less than 100": "Approximate_Number_of_Employees < 100",
   "Between 100 and 199":
@@ -343,6 +364,7 @@ function filterNoOfEmp(params) {
 }
 function filterDuration(params) {
   let filterString = "";
+  console.log(params.duration,'<-----------------params.duration')
   params.duration.forEach((durationKey, index) => {
     if (index !== 0) {
       filterString += OR;
@@ -517,10 +539,41 @@ async function createTableAndInsertValues() {
   await alasql.promise(
     `INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`
   );
+  await updateTableWithUniqueLatLong()
   const res = await alasql.promise(
     `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  `
   );
+
   initMap(res);
+}
+//UPDATE LAT LONG PLACES WITH SAME LAT LONG
+async function updateTableWithUniqueLatLong(){
+  const listofCommonLatLng = await alasql.promise(`SELECT Latitude_Longitude, COUNT(*) AS countVal, SUM(positionId+',') AS posString, SUM(Labor_Organization+',') AS me
+  FROM geodata
+  GROUP BY Latitude_Longitude
+  HAVING COUNT(*) > 1`)
+  console.log(listofCommonLatLng)
+  let countIndex = 0
+  const listLength = listofCommonLatLng.length;
+  while(countIndex < listLength){
+    const row  = listofCommonLatLng[countIndex]
+    if(row['Latitude_Longitude']){
+      const llObj = convertLatLngStringToObj(row['Latitude_Longitude'])
+      const posArray = row['posString'].split(',')
+      const cordinateList = circlePointsFromCenter(row['countVal'],0.0001,llObj)
+      let cIndex = 0
+      const corListLength = cordinateList.length;
+      while(cIndex < corListLength){
+        const cor = cordinateList[cIndex]
+       const val = await alasql.promise(`UPDATE geodata
+                SET Latitude_Longitude = "${cor}"
+                WHERE Latitude_Longitude = "${row['Latitude_Longitude']}" and positionId = "${posArray[cIndex]}"`)
+                console.log(val)
+                cIndex++
+      }
+    }
+    countIndex++;
+  }
 }
 // ON LOAD EVENT (INITIALIZATION)
 window.addEventListener("load", async () => {

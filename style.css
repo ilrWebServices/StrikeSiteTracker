@@ -3,13 +3,24 @@ html, body {
   top: 0;
   right: 0;
   height: 100%;
-  width: 100vw;
+  width: 100vw; 
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   justify-content:space-between;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.cornellLinks{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.ilrLink{
+  justify-content: flex-start;
+}
+.crnlLink{
+  justify-content: flex-end;
 }
 .linkButton{
   border-radius: 2px;
@@ -36,7 +47,7 @@ html, body {
 #main > article {
   flex: 1;
 }
-#main > nav,
+#main > nav, 
 #main > aside {
   flex: 0 0 30vw;
 }
@@ -48,7 +59,7 @@ nav{
   flex-direction: column;
   justify-content: space-between;
 }
-header {
+header { 
   height: 17vh;
   min-height: 120px;
   display: flex;
@@ -134,7 +145,7 @@ transition: width ease-in .25s;
 .ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
   background-color:  #b31b1b!important;
 }
-#map {
+#map { 
     height: 100%;
     /* The height is 400 pixels */
     width: 100%;
@@ -202,14 +213,14 @@ transition: width ease-in .25s;
   .padding-0{
     padding: 0%!important;
   }
-  table {     table-layout: fixed;
+  table {     table-layout: fixed; 
     border-collapse: separate;
     border-spacing: 0 1em;
     /* padding: 1%; */
    }
-  td {
+  td { 
     width: 33%;
-
+  
   }
 .strikes-box{
   width: 100%;
@@ -218,11 +229,11 @@ transition: width ease-in .25s;
   /* border: 1px solid #dedede;  */
   padding: 2.5%;
   }
-  #list-box{
+  #list-box{ 
    height: 100%;
    overflow-y: scroll;
   }
-  .filter-box{
+  .filter-box{ 
     border-bottom: none;
     width: 100%;
     padding: 0 10px 0 10px;
@@ -483,7 +494,7 @@ article{
 }
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
-  visibility: hidden; /* Hidden by default. Visible on click */
+   /* Hidden by default. Visible on click */
   min-width: 250px; /* Set a default minimum width */
   background-color: #b31b1b;; /* Black background color */
   color: #fff; /* White text color */
@@ -498,7 +509,7 @@ article{
 
 /* Show the snackbar when clicking on a button (class added with JavaScript) */
 #snackbar.show {
-  visibility: visible; /* Show the snackbar */
+   /* Show the snackbar */
   /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
   However, delay the fade out process for 2.5 seconds */
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -525,7 +536,4 @@ article{
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
-}
-#snackbar {
-  visibility: hidden;
 }

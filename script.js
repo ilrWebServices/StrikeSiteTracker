@@ -49,7 +49,7 @@ function mysql_real_escape_string(str) {
         return "\\" + char; // prepends a backslash to backslash, percent,
       // and double/single quotes
       default:
-        return char;
+        return char.trim();
     }
   });
 }
@@ -483,11 +483,13 @@ async function createTableAndInsertValues() {
               tableDict[key].type === "string" ||
               tableDict[key].type === "date"
             ) {
-              singleValueString += `'${
-                singleEvent[key]
-                  ? mysql_real_escape_string(String(singleEvent[key]))
-                  : ""
-              }'`;
+              const cellValue = singleEvent[key]
+              ? mysql_real_escape_string(String(singleEvent[key]))
+              : ""
+              if(cellValue === 'UAPD - AFSCME'){
+                console.log(latlngArray,'UAPD - AFSCME')
+              }
+              singleValueString += `'${cellValue}'`;
             } else if (tableDict[key].type === "number") {
               singleValueString +=
                 Number(singleEvent[key]) && !isNaN(Number(singleEvent[key]))
@@ -541,7 +543,7 @@ async function createTableAndInsertValues() {
   );
   await updateTableWithUniqueLatLong()
   const res = await alasql.promise(
-    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  `
+    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  DESC`
   );
 
   initMap(res);
@@ -645,7 +647,7 @@ window.addEventListener("load", async () => {
     select: "#NoOfEmp",
   });
   // ON SUMBIT OF FILTER FORM
-  filterButton.onclick = async (event) => {
+  const onFilterSubmit = async (event) => {
     const typeArray = [];
     if (strikeValueCheckBox.checked) {
       typeArray.push("Strike");
@@ -684,13 +686,15 @@ window.addEventListener("load", async () => {
       }
     });
     console.log(cString);
-    const queryString = `SELECT * from geodata WHERE ${cString} ORDER BY Start_Date`;
+    const queryString = `SELECT * from geodata WHERE ${cString} ORDER BY Start_Date DESC`;
     console.log(queryString);
     const res = await alasql.promise(queryString);
     initMap(res);
 
     console.log(res);
   };
+  filterButton.onclick = onFilterSubmit;
+  searchLabourOrganization.addEventListener('keypress', onFilterSubmit)
 });
 
 // Initialize and add the map
@@ -761,7 +765,6 @@ function initMap(geodata) {
     card.append(chklabel);
     card.append(cardBody);
     chkinput.addEventListener("change", (e) => {
-      console.log(e.target.checked,'<-----------------e.target.checked')
       if (e.target.checked) {
         const strikePosition = convertLatLngStringToObj(
           strike["Latitude_Longitude"]
@@ -777,7 +780,6 @@ function initMap(geodata) {
   }
   function createContentString(strike) {
     let htmlString = "";
-    console.log('hy')
     Object.keys(tableDict).forEach((keyName) => {
       // console.log(strike[keyName])
       const colObj = tableDict[keyName];
@@ -805,11 +807,13 @@ function initMap(geodata) {
         const otherLocationsString = connectedRowArray
           .map((loc, locIndex) => {
             let tempMarker = null;
+            // console.log(loc,window.markerArray,'<-----------------loc')
             window.markerArray.forEach((m, i) => {
               if (m.marker.get("id") === loc) {
                 tempMarker = m;
               }
             });
+            // console.log(locIndex, tempMarker,'<-----------------tempMarker')
             if (
               tempMarker &&
               tempMarker.strike["positionId"] !== strike["positionId"]
@@ -820,7 +824,6 @@ function initMap(geodata) {
 
               setTimeout(() => {
                 document.getElementById(loc).onclick = () => {
-                  console.log('sxaxsxs')
                   map.setZoom(15);
                   map.panTo(strikePosition);
                   createInfoWindow(tempMarker.strike, tempMarker.marker);

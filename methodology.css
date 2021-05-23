@@ -21,28 +21,30 @@
 
 
   .ft0 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     line-height: 19px;
   }
   .ft1 {
-    font: bold 16px "Calibri";
+    font: bold calc(1rem/0.80) "Calibri";
     line-height: 19px;
   }
   .ft2 {
-    font: bold 16px "Calibri";
+    font: bold calc(1rem/0.80) "Calibri";
     text-decoration: underline;
     line-height: 19px;
   }
   .ft3 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     line-height: 20px;
   }
   .ft4 {
-    font: italic 16px "Calibri";
+    font: italic calc(1rem/0.80) "Calibri";
     line-height: 20px;
   }
   .ft5 {
-    font: bold 16px "Calibri";
+    font: bold calc(1rem/0.80) "Calibri";
     line-height: 20px;
   }
   .ft6 {
@@ -58,7 +60,8 @@
     bottom: 5px;
   }
   .ft8 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     line-height: 21px;
   }
   .ft9 {
@@ -118,22 +121,24 @@
     line-height: 18px;
   }
   .ft21 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     margin-left: 4px;
     line-height: 20px;
   }
   .ft22 {
-    font: italic 16px "Calibri";
+    font: italic calc(1rem/0.80) "Calibri";
     color: #212121;
     line-height: 20px;
   }
   .ft23 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     color: #212121;
     line-height: 20px;
   }
   .ft24 {
-    font: italic 16px "Calibri";
+    font: italic calc(1rem/0.80) "Calibri";
     color: #212121;
     line-height: 21px;
   }
@@ -145,17 +150,19 @@
     bottom: 5px;
   }
   .ft26 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     color: #212121;
     line-height: 21px;
   }
   .ft27 {
-    font: italic 16px "Calibri";
+    font: italic calc(1rem/0.80) "Calibri";
     color: #212121;
     line-height: 19px;
   }
   .ft28 {
-    font: 16px "Calibri";
+    font-size: calc(1rem/0.80);
+    font-weight: 300;
     color: #212121;
     line-height: 19px;
   }

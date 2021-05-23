@@ -10,15 +10,6 @@ function formatDateToMMDDYYYY(dateString) {
   const dateArray = dateString.split("-");
   return `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`;
 }
-function todaysDate() {
-  const date = new Date();
-  const dayIndex = date.getDate()
-  const year = date.getFullYear()
-  const monthIndex = date.getMonth()
-  const month = String(monthIndex+1).length > 1?String(monthIndex+1):'0'+String(monthIndex+1)
-  const day = String(dayIndex).length > 1?String(dayIndex):'0'+String(dayIndex)
-  return `${year}/${month}/${day}`;
-}
 function selectCreator(ArrayOfOptions, element) {
   ArrayOfOptions.forEach((val) => {
     var option = document.createElement("option");
@@ -49,20 +40,9 @@ function mysql_real_escape_string(str) {
         return "\\" + char; // prepends a backslash to backslash, percent,
       // and double/single quotes
       default:
-        return char.trim();
+        return char;
     }
   });
-}
-function circlePointsFromCenter(steps,radius, {lat, lng}){
-  const coordinates = []
-  for (var i = 0; i < steps; i++) {
-    let degrees = (i/steps)*360
-    let radians = (Math.PI/180)*degrees
-    lat = lat + radius * Math.cos(radians)
-    lng = lng + radius * Math.sin(radians)
-    coordinates.push(`${lat}, ${lng}`);
-  }
-    return coordinates
 }
 // CONSTANTS
 const reportFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform'
@@ -189,9 +169,8 @@ const DURATION_ARRAY = {
   "8-30 days":
     "Duration_Amount >= 8 AND Duration_Amount <= 30" +
     DURATION_UNIT_DAY_CONDITION,
-  "31+ days": `DATEDIFF(day, Start_Date , '${todaysDate()}') > 30 AND End_Date = "") || (Duration_Amount >= 31` + DURATION_UNIT_DAY_CONDITION,
+  "31+ days": "Duration_Amount >= 31" + DURATION_UNIT_DAY_CONDITION,
 };
-
 const NO_OF_EMPLOEES = {
   "Less than 100": "Approximate_Number_of_Employees < 100",
   "Between 100 and 199":
@@ -314,23 +293,7 @@ const tableDict = {
   },
 };
 const OR = " OR ";
-//
-// DOM FUNCTIZONS
-function showSnackbar() {
-  // Get the snackbar DIV
-  const shownsnack = localStorage.getItem('shownsnack')
-  // if(!shownsnack && window.innerWidth < 500){
-    var x = document.getElementById("snackbar");
 
-    // Add the "show" class to DIV
-    x.setAttribute('style',`visibility: visible;-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;`)
-    console.log()
-    // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ x.setAttribute('style',`visibility: hidden`) }, 6000);
-    localStorage.setItem('shownsnack', true);
-  // }
-}
 //FILTER FUNCTIONS
 function filterDate(params) {
   if (params.fromDate && params.endDate)
@@ -364,7 +327,6 @@ function filterNoOfEmp(params) {
 }
 function filterDuration(params) {
   let filterString = "";
-  console.log(params.duration,'<-----------------params.duration')
   params.duration.forEach((durationKey, index) => {
     if (index !== 0) {
       filterString += OR;
@@ -483,13 +445,11 @@ async function createTableAndInsertValues() {
               tableDict[key].type === "string" ||
               tableDict[key].type === "date"
             ) {
-              const cellValue = singleEvent[key]
-              ? mysql_real_escape_string(String(singleEvent[key]))
-              : ""
-              if(cellValue === 'UAPD - AFSCME'){
-                console.log(latlngArray,'UAPD - AFSCME')
-              }
-              singleValueString += `'${cellValue}'`;
+              singleValueString += `'${
+                singleEvent[key]
+                  ? mysql_real_escape_string(String(singleEvent[key]))
+                  : ""
+              }'`;
             } else if (tableDict[key].type === "number") {
               singleValueString +=
                 Number(singleEvent[key]) && !isNaN(Number(singleEvent[key]))
@@ -541,44 +501,27 @@ async function createTableAndInsertValues() {
   await alasql.promise(
     `INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`
   );
-  await updateTableWithUniqueLatLong()
   const res = await alasql.promise(
-    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  DESC`
+    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  `
   );
-
   initMap(res);
-}
-//UPDATE LAT LONG PLACES WITH SAME LAT LONG
-async function updateTableWithUniqueLatLong(){
-  const listofCommonLatLng = await alasql.promise(`SELECT Latitude_Longitude, COUNT(*) AS countVal, SUM(positionId+',') AS posString, SUM(Labor_Organization+',') AS me
-  FROM geodata
-  GROUP BY Latitude_Longitude
-  HAVING COUNT(*) > 1`)
-  console.log(listofCommonLatLng)
-  let countIndex = 0
-  const listLength = listofCommonLatLng.length;
-  while(countIndex < listLength){
-    const row  = listofCommonLatLng[countIndex]
-    if(row['Latitude_Longitude']){
-      const llObj = convertLatLngStringToObj(row['Latitude_Longitude'])
-      const posArray = row['posString'].split(',')
-      const cordinateList = circlePointsFromCenter(row['countVal'],0.0001,llObj)
-      let cIndex = 0
-      const corListLength = cordinateList.length;
-      while(cIndex < corListLength){
-        const cor = cordinateList[cIndex]
-       const val = await alasql.promise(`UPDATE geodata
-                SET Latitude_Longitude = "${cor}"
-                WHERE Latitude_Longitude = "${row['Latitude_Longitude']}" and positionId = "${posArray[cIndex]}"`)
-                console.log(val)
-                cIndex++
-      }
-    }
-    countIndex++;
-  }
 }
 // ON LOAD EVENT (INITIALIZATION)
 window.addEventListener("load", async () => {
+  function showSnackbar() {
+    // Get the snackbar DIV
+    const shownsnack = localStorage.getItem('shownsnack')
+    if(!shownsnack && window.innerWidth < 500){
+      var x = document.getElementById("snackbar");
+  
+      // Add the "show" class to DIV
+      x.classList.add('show')
+      console.log()
+      // After 3 seconds, remove the show class from DIV
+      setTimeout(function(){ x.classList.remove('show') }, 8000);
+      localStorage.setItem('shownsnack', true);
+    }
+  }
   setTimeout(showSnackbar)
   await createTableAndInsertValues();
   // DATES
@@ -647,7 +590,7 @@ window.addEventListener("load", async () => {
     select: "#NoOfEmp",
   });
   // ON SUMBIT OF FILTER FORM
-  const onFilterSubmit = async (event) => {
+  filterButton.onclick = async (event) => {
     const typeArray = [];
     if (strikeValueCheckBox.checked) {
       typeArray.push("Strike");
@@ -686,15 +629,13 @@ window.addEventListener("load", async () => {
       }
     });
     console.log(cString);
-    const queryString = `SELECT * from geodata WHERE ${cString} ORDER BY Start_Date DESC`;
+    const queryString = `SELECT * from geodata WHERE ${cString} ORDER BY Start_Date`;
     console.log(queryString);
     const res = await alasql.promise(queryString);
     initMap(res);
 
     console.log(res);
   };
-  filterButton.onclick = onFilterSubmit;
-  searchLabourOrganization.addEventListener('keypress', onFilterSubmit)
 });
 
 // Initialize and add the map
@@ -765,6 +706,7 @@ function initMap(geodata) {
     card.append(chklabel);
     card.append(cardBody);
     chkinput.addEventListener("change", (e) => {
+      console.log(e.target.checked,'<-----------------e.target.checked')
       if (e.target.checked) {
         const strikePosition = convertLatLngStringToObj(
           strike["Latitude_Longitude"]
@@ -780,6 +722,7 @@ function initMap(geodata) {
   }
   function createContentString(strike) {
     let htmlString = "";
+    console.log('hy')
     Object.keys(tableDict).forEach((keyName) => {
       // console.log(strike[keyName])
       const colObj = tableDict[keyName];
@@ -807,13 +750,11 @@ function initMap(geodata) {
         const otherLocationsString = connectedRowArray
           .map((loc, locIndex) => {
             let tempMarker = null;
-            // console.log(loc,window.markerArray,'<-----------------loc')
             window.markerArray.forEach((m, i) => {
               if (m.marker.get("id") === loc) {
                 tempMarker = m;
               }
             });
-            // console.log(locIndex, tempMarker,'<-----------------tempMarker')
             if (
               tempMarker &&
               tempMarker.strike["positionId"] !== strike["positionId"]
@@ -824,6 +765,7 @@ function initMap(geodata) {
 
               setTimeout(() => {
                 document.getElementById(loc).onclick = () => {
+                  console.log('sxaxsxs')
                   map.setZoom(15);
                   map.panTo(strikePosition);
                   createInfoWindow(tempMarker.strike, tempMarker.marker);

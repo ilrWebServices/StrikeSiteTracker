@@ -5,7 +5,7 @@
     <title>ILR Labor Action Tracker</title>
     <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM-cBVP_9RKiB8hfXLod1fW0R1oGUPM2c&libraries=&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxTbQr8QmSeFfsyTxm2zY8TKHYRMrSWOo&libraries=&v=weekly"
       defer
     ></script>
     <link
@@ -30,28 +30,20 @@
   </head>
   <body>
     <header>
- <div class="topNav">
-  <img
-  src="./assets/ilrlogo.svg"
-  alt=""
-  loading="lazy"
-  id="ilr-logo"
-/>
-<img
-src="./assets/logo.svg"
-alt=""
-loading="lazy"
-id="ilr-logo"
-/>
- </div>
+      <div class="topNav">
+
+        <a class="cornellLinks ilrLink" href="https://www.ilr.cornell.edu/"><img src="./assets/ilrlogo.svg" alt="" loading="lazy" id="ilr-logo" /></a>
+       <a class="cornellLinks crnlLink" href="https://www.cornell.edu/"> <img src="./assets/logo.svg" alt="" loading="lazy" id="ilr-logo" /></a> 
+      </div>
       <div class="bottomNav">
         <div class="titleSection">
           <span class="websiteTitle">Labor Action Tracker</span>
         </div>
       <div class="linksSection">
-        <a target="_blank" href="./about.html" class="navLinks">About Us</a>
-      <a href="https://drive.google.com/file/d/1C8K_ELYGz4LB8Tqr5goV5wScdG95Cxqc/view?usp=sharing" class="navLinks" target="_blank">Methodology</a>
+        <a  href="./about.html" class="navLinks">About Us</a>
+      <a href="./methodology.html" class="navLinks" >Methodology</a>
       <a href="#" id="reportButton" target="_blank" class="navLinks">Report a Strike or Protest</a>
+      <a href="https://twitter.com/ILRLaborAction?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @ILRLaborAction</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
       </div>
     </header>
@@ -177,6 +169,6 @@ id="ilr-logo"
         </div>
       </nav>
     </div>
-    <div id="snackbar">You can view our interactive map by visiting our site on a larger screen device</div>
+    <div id="snackbar" style="visibility: hidden">You can view our interactive map by visiting our site on a larger screen device</div>
   </body>
 </html>

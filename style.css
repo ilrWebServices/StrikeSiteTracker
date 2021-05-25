@@ -3,7 +3,7 @@ html, body {
   top: 0;
   right: 0;
   height: 100%;
-  width: 100vw; 
+  width: 100vw;
   margin: 0;
   padding: 0;
   display: flex;
@@ -47,7 +47,7 @@ html, body {
 #main > article {
   flex: 1;
 }
-#main > nav, 
+#main > nav,
 #main > aside {
   flex: 0 0 30vw;
 }
@@ -59,7 +59,7 @@ nav{
   flex-direction: column;
   justify-content: space-between;
 }
-header { 
+header {
   height: 17vh;
   min-height: 120px;
   display: flex;
@@ -145,7 +145,7 @@ transition: width ease-in .25s;
 .ss-content .ss-list .ss-option.ss-highlighted, .ss-content .ss-list .ss-option:hover {
   background-color:  #b31b1b!important;
 }
-#map { 
+#map {
     height: 100%;
     /* The height is 400 pixels */
     width: 100%;
@@ -213,14 +213,14 @@ transition: width ease-in .25s;
   .padding-0{
     padding: 0%!important;
   }
-  table {     table-layout: fixed; 
+  table {     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0 1em;
     /* padding: 1%; */
    }
-  td { 
+  td {
     width: 33%;
-  
+
   }
 .strikes-box{
   width: 100%;
@@ -229,11 +229,11 @@ transition: width ease-in .25s;
   /* border: 1px solid #dedede;  */
   padding: 2.5%;
   }
-  #list-box{ 
+  #list-box{
    height: 100%;
    overflow-y: scroll;
   }
-  .filter-box{ 
+  .filter-box{
     border-bottom: none;
     width: 100%;
     padding: 0 10px 0 10px;

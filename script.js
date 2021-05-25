@@ -320,15 +320,17 @@ function showSnackbar() {
   // Get the snackbar DIV
   const shownsnack = localStorage.getItem('shownsnack')
   // if(!shownsnack && window.innerWidth < 500){
-    var x = document.getElementById("snackbar");
+    
 
-    // Add the "show" class to DIV
-    x.setAttribute('style',`visibility: visible;-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;`)
-    console.log()
+    if(!shownsnack){
+         // Add the "show" class to DIV
+         var x = document.getElementById("snackbar");
+    x.setAttribute('style',`visibility: visible;-webkit-animation: fadein 0.5s, fadeout 5.5s;
+    animation: fadein 0.5s, fadeout 5.5s;`)
     // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ x.setAttribute('style',`visibility: hidden`) }, 6000);
+    setTimeout(function(){ x.setAttribute('style',`visibility: hidden`) }, 5000);
     localStorage.setItem('shownsnack', true);
+    }
   // }
 }
 //FILTER FUNCTIONS

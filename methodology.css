@@ -338,7 +338,7 @@
   .p32 {
     text-align: left;
 margin: 0%;
-    
+
   }
   .p33 {
     text-align: justify;
@@ -445,3 +445,11 @@ margin: 0%;
     margin-top: 16px;
     margin-bottom: 0px;
   }
+
+.list-with-room {
+  line-height: 1.5em;
+}
+
+.list-with-room li {
+  margin-bottom: .75em;
+}

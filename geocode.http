@@ -1,0 +1,12 @@
+# @STREET = 631 S. Richland Avenue
+# @CITY = York
+# @STATE = Pennsylvania
+# @POSTALCODE = 17403
+
+@STREET = 1 University Plaza
+@CITY = Youngstown
+@STATE = Ohio
+@POSTALCODE = 44555
+
+###
+GET https://nominatim.openstreetmap.org/search?street={{STREET}}&city={{CITY}}&state={{STATE}}&postalcode={{POSTALCODE}}&format=json

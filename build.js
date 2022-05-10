@@ -102,7 +102,7 @@ function listMajors(auth) {
   sheets.spreadsheets.values.get(
     {
       spreadsheetId: spreadsheetId,
-      range: "A1:AZ1000",
+      range: "A1:AZ2000",
     },
     async (err, res) => {
       if (err) return console.log("The API returned an error: " + err);

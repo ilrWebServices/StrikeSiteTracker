@@ -166,19 +166,6 @@ const WORKER_DEMAND = [
   "Racial justice",
   "Staffing",
 ];
-// Bargaining Unit Size
-const UNIT_SIZE = {
-  "Less than 100": "Bargaining_Unit_Size < 100",
-  "Between 100 and 199":
-    "Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200",
-  "Between 200 and 299":
-    "Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299",
-  "Between 300 and 499":
-    "Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499",
-  "Between 500 and 1999":
-    "Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999",
-  "Greater than 2000": "Bargaining_Unit_Size >= 2000",
-};
 const DURATION_UNIT_DAY_CONDITION = ` AND Duration_Unit LIKE '%Days%'`;
 const DURATION_UNIT_LESS_THAN_DAY_CONDITION = `(Duration_Amount <= 1 AND Duration_Unit LIKE '%Days%') OR ((Duration_Unit LIKE '%Hours%') OR (Duration_Unit LIKE '%Minutes%'))`;
 const DURATION_ARRAY = {
@@ -227,7 +214,6 @@ const tableDict = {
   "Bargaining Unit Size": {
     name: "Bargaining_Unit_Size",
     type: "number",
-    filter: filterUnitSize,
   },
   "Number of Locations": {
     name: "Number_of_Locations",
@@ -347,16 +333,6 @@ function filterLabourOrganization(params) {
   if (params.searchTextLO)
     return `Labor_Organization LIKE '%${params.searchTextLO}%'`;
   else return "";
-}
-function filterUnitSize(params) {
-  let filterString = "";
-  params.unitSize.forEach((unitSizeKey, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `(${UNIT_SIZE[unitSizeKey]})`;
-  });
-  return filterString ? `(${filterString})` : "";
 }
 function filterNoOfEmp(params) {
   let filterString = "";
@@ -626,12 +602,9 @@ window.addEventListener("load", async () => {
   const wDElement = document.getElementById("workerDemand");
   // NO OF EMPLOYEES
   const NoOfEmp = document.getElementById("NoOfEmp");
-  // UNIT SIZE RANGE
-  const unitSize = document.getElementById("unitSize");
   // DURATION
   const duration = document.getElementById("duration");
   // ADD OPTIONS FROM OPTIONS LIST
-  selectCreator(Object.keys(UNIT_SIZE), unitSize);
   selectCreator(Object.keys(NO_OF_EMPLOEES), NoOfEmp);
   selectCreator(Object.keys(DURATION_ARRAY), duration);
   selectCreator(WORKER_DEMAND, wDElement);
@@ -646,9 +619,6 @@ window.addEventListener("load", async () => {
   });
   const workerDemandSelect = new SlimSelect({
     select: "#workerDemand",
-  });
-  const unitSizeSelect = new SlimSelect({
-    select: "#unitSize",
   });
   const durationSelect = new SlimSelect({
     select: "#duration",
@@ -675,7 +645,6 @@ window.addEventListener("load", async () => {
       stateValue: stateSelect.selected(),
       industryValue: industrySelect.selected(),
       NoOfEmp: NoOfEmpSelect.selected(),
-      unitSize: unitSizeSelect.selected(),
       duration: durationSelect.selected(),
       searchTextLO: searchLabourOrganization.value,
     };

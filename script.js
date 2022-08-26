@@ -304,6 +304,10 @@ const tableDict = {
     name: "positionId",
     type: "string",
   },
+  labor_action_id: {
+    name: "labor_action_id",
+    type: "number",
+  },
   connectedRow: {
     name: "connectedRow",
     type: "string",
@@ -446,6 +450,9 @@ async function createTableAndInsertValues() {
   const geodatalen = window.geodata.length;
   console.log(geodatalen);
   window.geodata.forEach((obj, geoindex) => {
+    // The geoindex, or row number, is the closest thing we have to a unique id
+    // to a labor action.
+    obj['labor_action_id'] = geoindex;
     const strikeNumber = Number(obj["Number of Locations"]) || 1;
     if (strikeNumber > 1) {
       const latlngArray = obj["Latitude, Longitude"].split(";");
@@ -705,9 +712,16 @@ function initMap(geodata) {
   let currWindow = false;
   const listDiv = document.getElementById("list-box");
   const resultCountDiv = document.getElementById("resultCount");
+  let labor_action_ids = [];
+
+  geodata.forEach(function(labor_action) {
+    labor_action_ids.push(labor_action.labor_action_id)
+  });
+
+  let unique_labor_action_ids = [...new Set(labor_action_ids)];
 
   if(geodata.length){
-    resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> Locations Found</span>`;
+    resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> locations found in ${unique_labor_action_ids.length} labor actions</span>`;
   }else{
     resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest?`
   }

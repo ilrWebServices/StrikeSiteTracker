@@ -464,6 +464,10 @@ async function createTableAndInsertValues() {
         singleEventArray.forEach((singleEvent, i) => {
           let singleValueString = "";
           tableDictArray.forEach((key, index) => {
+            if (key === 'Approximate Number of Participants' && !singleEvent[key]) {
+              singleEvent['Approximate Number of Participants'] = singleEvent['Bargaining Unit Size'];
+            }
+
             if (
               tableDict[key].type === "string" ||
               tableDict[key].type === "date"
@@ -501,6 +505,10 @@ async function createTableAndInsertValues() {
     else if (strikeNumber === 1) {
       let singleValueString = "";
       tableDictArray.forEach((key, index) => {
+        if (key === 'Approximate Number of Participants' && !obj[key]) {
+          obj['Approximate Number of Participants'] = obj['Bargaining Unit Size'];
+        }
+
         if (
           tableDict[key].type === "string" ||
           tableDict[key].type === "date"

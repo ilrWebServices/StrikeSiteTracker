@@ -413,7 +413,7 @@ function filterWorkerDemands(params) {
     if (index !== 0) {
       filterString += OR;
     }
-    filterString += `Worker_Demands LIKE '%${wd}%'`;
+    filterString += `Worker_Demands LIKE '%${wd.replace('$', '\\$')}%'`;
   });
   return filterString ? `(${filterString})` : "";
 }

@@ -605,6 +605,7 @@ window.addEventListener("load", async () => {
   noBox.classList.add('filter-box');
   noBox.classList.remove('no-box');
   filterForm.onsubmit = () => {
+    onFilterSubmit();
     return false;
   };
   const minMaxDateObj = await alasql.promise(
@@ -703,7 +704,6 @@ window.addEventListener("load", async () => {
     console.log(res);
   };
   filterButton.onclick = onFilterSubmit;
-  searchLabourOrganization.addEventListener('keypress', onFilterSubmit)
 });
 
 // Initialize and add the map

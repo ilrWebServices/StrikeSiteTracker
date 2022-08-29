@@ -30,6 +30,7 @@ It is primarily a single page app hosted on Github Pages, but the data is stored
 - Ensure that 'Google Sheets API' is enabled. (Jeff did this on 5/10/22).
 - Under 'Credentials', download the 'Build script' as JSON to `credentials.json`.
 - Run `node access-sheets.js`.
+- If you get an `invalid_grant` error, remove the `token.js` file.
 - Go to the URL shown after `Authorize this app by visiting this url:`
 - Authenticate as `ilrstriketracker@gmail.com` and continue even though we're in test mode.
 - Upon successful authentication, the returned page may be a 404. Copy the value of the `code` URL parameter and paste in the terminal at the `Enter the code from that page here:` prompt.

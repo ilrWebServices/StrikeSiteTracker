@@ -164,21 +164,10 @@ const WORKER_DEMAND = [
   "Pandemic Relief",
   "Pay",
   "Racial justice",
+  "Retirement benefits",
   "Staffing",
+  "Union recognition"
 ];
-// Bargaining Unit Size
-const UNIT_SIZE = {
-  "Less than 100": "Bargaining_Unit_Size < 100",
-  "Between 100 and 199":
-    "Bargaining_Unit_Size >= 100 AND Bargaining_Unit_Size < 200",
-  "Between 200 and 299":
-    "Bargaining_Unit_Size >= 200 AND Bargaining_Unit_Size <= 299",
-  "Between 300 and 499":
-    "Bargaining_Unit_Size >= 300 AND Bargaining_Unit_Size <= 499",
-  "Between 500 and 1999":
-    "Bargaining_Unit_Size >= 500 AND Bargaining_Unit_Size <= 1999",
-  "Greater than 2000": "Bargaining_Unit_Size >= 2000",
-};
 const DURATION_UNIT_DAY_CONDITION = ` AND Duration_Unit LIKE '%Days%'`;
 const DURATION_UNIT_LESS_THAN_DAY_CONDITION = `(Duration_Amount <= 1 AND Duration_Unit LIKE '%Days%') OR ((Duration_Unit LIKE '%Hours%') OR (Duration_Unit LIKE '%Minutes%'))`;
 const DURATION_ARRAY = {
@@ -227,7 +216,6 @@ const tableDict = {
   "Bargaining Unit Size": {
     name: "Bargaining_Unit_Size",
     type: "number",
-    filter: filterUnitSize,
   },
   "Number of Locations": {
     name: "Number_of_Locations",
@@ -304,6 +292,10 @@ const tableDict = {
     name: "positionId",
     type: "string",
   },
+  labor_action_id: {
+    name: "labor_action_id",
+    type: "number",
+  },
   connectedRow: {
     name: "connectedRow",
     type: "string",
@@ -343,16 +335,6 @@ function filterLabourOrganization(params) {
   if (params.searchTextLO)
     return `Labor_Organization LIKE '%${params.searchTextLO}%'`;
   else return "";
-}
-function filterUnitSize(params) {
-  let filterString = "";
-  params.unitSize.forEach((unitSizeKey, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `(${UNIT_SIZE[unitSizeKey]})`;
-  });
-  return filterString ? `(${filterString})` : "";
 }
 function filterNoOfEmp(params) {
   let filterString = "";
@@ -413,7 +395,7 @@ function filterWorkerDemands(params) {
     if (index !== 0) {
       filterString += OR;
     }
-    filterString += `Worker_Demands LIKE '%${wd}%'`;
+    filterString += `Worker_Demands LIKE '%${wd.replace('$', '\\$')}%'`;
   });
   return filterString ? `(${filterString})` : "";
 }
@@ -446,6 +428,9 @@ async function createTableAndInsertValues() {
   const geodatalen = window.geodata.length;
   console.log(geodatalen);
   window.geodata.forEach((obj, geoindex) => {
+    // The geoindex, or row number, is the closest thing we have to a unique id
+    // to a labor action.
+    obj['labor_action_id'] = geoindex;
     const strikeNumber = Number(obj["Number of Locations"]) || 1;
     if (strikeNumber > 1) {
       const latlngArray = obj["Latitude, Longitude"].split(";");
@@ -481,6 +466,10 @@ async function createTableAndInsertValues() {
         singleEventArray.forEach((singleEvent, i) => {
           let singleValueString = "";
           tableDictArray.forEach((key, index) => {
+            if (key === 'Approximate Number of Participants' && !singleEvent[key]) {
+              singleEvent['Approximate Number of Participants'] = singleEvent['Bargaining Unit Size'];
+            }
+
             if (
               tableDict[key].type === "string" ||
               tableDict[key].type === "date"
@@ -518,6 +507,10 @@ async function createTableAndInsertValues() {
     else if (strikeNumber === 1) {
       let singleValueString = "";
       tableDictArray.forEach((key, index) => {
+        if (key === 'Approximate Number of Participants' && !obj[key]) {
+          obj['Approximate Number of Participants'] = obj['Bargaining Unit Size'];
+        }
+
         if (
           tableDict[key].type === "string" ||
           tableDict[key].type === "date"
@@ -598,6 +591,7 @@ window.addEventListener("load", async () => {
   noBox.classList.add('filter-box');
   noBox.classList.remove('no-box');
   filterForm.onsubmit = () => {
+    onFilterSubmit();
     return false;
   };
   const minMaxDateObj = await alasql.promise(
@@ -618,12 +612,9 @@ window.addEventListener("load", async () => {
   const wDElement = document.getElementById("workerDemand");
   // NO OF EMPLOYEES
   const NoOfEmp = document.getElementById("NoOfEmp");
-  // UNIT SIZE RANGE
-  const unitSize = document.getElementById("unitSize");
   // DURATION
   const duration = document.getElementById("duration");
   // ADD OPTIONS FROM OPTIONS LIST
-  selectCreator(Object.keys(UNIT_SIZE), unitSize);
   selectCreator(Object.keys(NO_OF_EMPLOEES), NoOfEmp);
   selectCreator(Object.keys(DURATION_ARRAY), duration);
   selectCreator(WORKER_DEMAND, wDElement);
@@ -638,9 +629,6 @@ window.addEventListener("load", async () => {
   });
   const workerDemandSelect = new SlimSelect({
     select: "#workerDemand",
-  });
-  const unitSizeSelect = new SlimSelect({
-    select: "#unitSize",
   });
   const durationSelect = new SlimSelect({
     select: "#duration",
@@ -667,7 +655,6 @@ window.addEventListener("load", async () => {
       stateValue: stateSelect.selected(),
       industryValue: industrySelect.selected(),
       NoOfEmp: NoOfEmpSelect.selected(),
-      unitSize: unitSizeSelect.selected(),
       duration: durationSelect.selected(),
       searchTextLO: searchLabourOrganization.value,
     };
@@ -696,7 +683,6 @@ window.addEventListener("load", async () => {
     console.log(res);
   };
   filterButton.onclick = onFilterSubmit;
-  searchLabourOrganization.addEventListener('keypress', onFilterSubmit)
 });
 
 // Initialize and add the map
@@ -705,9 +691,16 @@ function initMap(geodata) {
   let currWindow = false;
   const listDiv = document.getElementById("list-box");
   const resultCountDiv = document.getElementById("resultCount");
+  let labor_action_ids = [];
+
+  geodata.forEach(function(labor_action) {
+    labor_action_ids.push(labor_action.labor_action_id)
+  });
+
+  let unique_labor_action_ids = [...new Set(labor_action_ids)];
 
   if(geodata.length){
-    resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> Locations Found</span>`;
+    resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> locations found in ${unique_labor_action_ids.length} labor actions</span>`;
   }else{
     resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest?`
   }
@@ -782,7 +775,11 @@ function initMap(geodata) {
   }
   function createContentString(strike) {
     let htmlString = "";
-    Object.keys(tableDict).forEach((keyName) => {
+
+    for (const keyName of Object.keys(tableDict)) {
+      if (['Latitude, Longitude', 'labor_action_id'].includes(keyName)) {
+        continue;
+      }
       // console.log(strike[keyName])
       const colObj = tableDict[keyName];
       if (colObj.name == "source") {
@@ -794,8 +791,6 @@ function initMap(geodata) {
           }</a>`;
         });
         htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
-      } else if (colObj.name == "Latitude_Longitude"){
-        htmlString+= ''
       } else if (
         strike[colObj.name] &&
         (colObj.name === "Start_Date" || colObj.name === "End_Date")
@@ -856,7 +851,7 @@ function initMap(geodata) {
           strike[colObj.name]
         } </br>`;
       }
-    });
+    };
     return htmlString;
   }
   // The location of Uluru

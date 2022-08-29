@@ -773,7 +773,11 @@ function initMap(geodata) {
   }
   function createContentString(strike) {
     let htmlString = "";
-    Object.keys(tableDict).forEach((keyName) => {
+
+    for (const keyName of Object.keys(tableDict)) {
+      if (['Latitude, Longitude', 'labor_action_id'].includes(keyName)) {
+        continue;
+      }
       // console.log(strike[keyName])
       const colObj = tableDict[keyName];
       if (colObj.name == "source") {
@@ -785,8 +789,6 @@ function initMap(geodata) {
           }</a>`;
         });
         htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
-      } else if (colObj.name == "Latitude_Longitude"){
-        htmlString+= ''
       } else if (
         strike[colObj.name] &&
         (colObj.name === "Start_Date" || colObj.name === "End_Date")
@@ -847,7 +849,7 @@ function initMap(geodata) {
           strike[colObj.name]
         } </br>`;
       }
-    });
+    };
     return htmlString;
   }
   // The location of Uluru

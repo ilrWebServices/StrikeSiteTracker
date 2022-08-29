@@ -164,7 +164,9 @@ const WORKER_DEMAND = [
   "Pandemic Relief",
   "Pay",
   "Racial justice",
+  "Retirement benefits",
   "Staffing",
+  "Union recognition"
 ];
 const DURATION_UNIT_DAY_CONDITION = ` AND Duration_Unit LIKE '%Days%'`;
 const DURATION_UNIT_LESS_THAN_DAY_CONDITION = `(Duration_Amount <= 1 AND Duration_Unit LIKE '%Days%') OR ((Duration_Unit LIKE '%Hours%') OR (Duration_Unit LIKE '%Minutes%'))`;

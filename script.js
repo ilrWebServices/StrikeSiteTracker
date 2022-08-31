@@ -64,6 +64,7 @@ function circlePointsFromCenter(steps,radius, {lat, lng}){
   }
     return coordinates
 }
+const pluralize = (count, noun, suffix = 's') => `${count} ${noun}${count !== 1 ? suffix : ''}`;
 // CONSTANTS
 const reportFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform'
 // OPTION LISTS
@@ -700,7 +701,7 @@ function initMap(geodata) {
   let unique_labor_action_ids = [...new Set(labor_action_ids)];
 
   if(geodata.length){
-    resultCountDiv.innerHTML = `<span class="resultText"><strong>${geodata.length}</strong> locations found in ${unique_labor_action_ids.length} labor actions</span>`;
+    resultCountDiv.innerHTML = `<span class="resultText"><strong>${pluralize(unique_labor_action_ids.length, 'labor action')}</strong> found in ${pluralize(geodata.length, 'location')}</span>`;
   }else{
     resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest?`
   }

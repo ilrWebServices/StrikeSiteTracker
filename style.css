@@ -26,7 +26,6 @@ html, body {
   border-radius: 2px;
   border: 4px solid #b31b1b;
   padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
   width: auto;
   display: inline-block;
   text-decoration: none;
@@ -227,7 +226,7 @@ transition: width ease-in .25s;
   height: 47vh;
   border-top: none;
   /* border: 1px solid #dedede;  */
-  padding: 2.5%;
+  padding: 0 .75em 2em .75em;
   }
   #list-box{
    height: 100%;
@@ -238,7 +237,7 @@ transition: width ease-in .25s;
     width: 100%;
     padding: 0 10px 0 10px;
     display: block;
-    overflow: scroll;
+    overflow: auto;
   }
   .from-box{
     display: flex;
@@ -291,7 +290,6 @@ transition: width ease-in .25s;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    min-height: 5vh;
   }
   #filterButton{
     width: 80%;

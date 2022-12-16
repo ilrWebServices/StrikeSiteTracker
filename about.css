@@ -80,22 +80,14 @@ html{
   border-radius: 100%;
 }
 
+.people {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
 .person{
-  width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-}
-.personRow{
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.affFaculty{
-display: flex;
-flex-direction: column;
-justify-content: center;
 }
 .socialList{
   display: flex;

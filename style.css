@@ -116,6 +116,8 @@ transition: width ease-in .25s;
   font-size: 30px;
   color: #b31b1b;
   font-weight: bold;
+  margin: 0;
+  line-height: 1.4;
 }
 .navLinks{
  text-decoration: none;

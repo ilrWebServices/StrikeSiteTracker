@@ -105,3 +105,9 @@ html{
   font-size: calc(1rem/0.80);
     font-weight: 300;
 }
+
+@media only screen and (max-width: 400px) {
+  .person {
+    flex-direction: column;
+  }
+}

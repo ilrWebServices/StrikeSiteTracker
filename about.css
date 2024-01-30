@@ -10,6 +10,7 @@ html{
   overflow-y: scroll;
   max-width:  1000px;
   margin:  30px auto 0 auto;
+  padding:  0 10px 0 10px;
 }
 .section-heading__heading {
   font-weight: 300;
@@ -110,5 +111,9 @@ html{
 @media only screen and (max-width: 400px) {
   .person {
     flex-direction: column;
+    border-bottom:  1px solid #ccc;
+  }
+  .person:last-of-type {
+    border-bottom:  none;
   }
 }

@@ -1,15 +1,14 @@
-html, body {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100%;
+body {
+  height: 100vh;
   width: 100vw;
   margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content:space-between;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+
+  --header-height: 180px;
+  --form-height: 30vh;
 }
 
 .cornellLinks{
@@ -52,19 +51,37 @@ h2.section-heading__heading {
   margin: -5px 20px 0 0;
 }
 #main {
-  display: flex;
-  min-height: calc(100vh - 17vh);
+  /* display: grid;
+  grid-template-columns: 1fr 2fr;
+  height: 83vh; */
 }
 
-#main > article {
-  flex: 1;
+#listing {
+  height: calc(100vh - var(--header-height));
+  padding-left: 1em;
+  display: flex;
+  flex-direction: column;
 }
-#main > nav,
-#main > aside {
-  flex: 0 0 30vw;
-}
-#main > nav {
+#listing .form {
+  height: var(--form-height);
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .25em;
   order: -1;
+}
+
+#listing .form label {
+  grid-column: 1;
+}
+
+#listing .form input {
+  grid-column: 2;
+}
+
+#listing .results {
+  height: calc(100vh - var(--header-height) - var(--form-height));
+  overflow-y: scroll;
 }
 nav{
   display: flex;
@@ -72,8 +89,9 @@ nav{
   justify-content: space-between;
 }
 header {
-  height: 17vh;
-  min-height: 180px;
+  grid-column: span 2;
+  min-height: var(--header-height);
+  /* min-height: 180px; */
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -160,7 +178,10 @@ transition: width ease-in .25s;
   background-color:  #073949!important;
 }
 #map {
-    height: 100%;
+  /* background: url(images/demonstration.png); */
+  /* grid-column: 2;
+  grid-row: 2; */
+  height: calc(100vh - var(--header-height));
     /* The height is 400 pixels */
     width: 100%;
     /* The width is the width of the web page */
@@ -237,8 +258,9 @@ transition: width ease-in .25s;
 
   }
 .strikes-box{
-  width: 100%;
-  height: 47vh;
+  /* width: 100%;
+  height: 47vh; */
+  height: cal;
   border-top: none;
   /* border: 1px solid #dedede;  */
   padding: 0 .75em 2em .75em;
@@ -745,7 +767,7 @@ article{
   padding: 0 7px;
 }
 
-@media only screen and (max-width: 1000px) {  
+@media only screen and (max-width: 1000px) {
   .field--field-components.people {
     grid-template-columns:  1fr;
   }
@@ -803,4 +825,23 @@ article{
   .person {
     flex-direction: column;
   }
+}
+
+.action-card {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .25em;
+  border: 2px solid gray;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.action-card__start-date,
+.action-card__end-date {
+  grid-column: span 2;
+}
+
+.action-card__employer,
+.action-card__labor-org {
+  grid-column: span 4;
 }

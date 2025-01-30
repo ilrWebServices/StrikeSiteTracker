@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ILR Labor Action Tracker</title>
+    <meta charset="utf-8" />
     <meta name="MobileOptimized" content="width"/>
     <meta name="HandheldFriendly" content="true"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -14,26 +14,27 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <script src='https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js'></script>
-    <link href='https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css' rel='stylesheet' />
-    <link href='https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css' rel='stylesheet' />
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/vanjs-org/van/public/van-1.5.3.nomodule.min.js"></script>
+    <!-- van.js -->
+    <script src="https://cdn.jsdelivr.net/gh/vanjs-org/van/public/van-1.5.3.nomodule.min.js" integrity="sha384-HP606SlLz2Y0kMiQc304dADxVFPcNy4c2J7LxXPvmLWf3ccso4u/Lm+g/Lm9euzg" crossorigin="anonymous"></script>
 
+    <!-- bootstrap css -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
       integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
       crossorigin="anonymous"
     />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" type="text/css" href="./style.css" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.0/slimselect.min.js"></script>
-    <script src="./script-new.js"></script>
+    <!-- Slim Select for multiple select inputs -->
+    <script src="https://unpkg.com/slim-select@2.10.0/dist/slimselect.min.js" integrity="sha384-WKsmo+vSs0gqrT+es6wFEojVFn4P0kNaHpHTIkn84iHY8T4rF2V2McZeSbLPLlHy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/slim-select@2.10.0/dist/slimselect.css" integrity="sha384-SGd+Jq1pTVPJ/zMxyDpM2aTTAvR/+91eDiQHsaMsJIXR4ejjJXLqvSACtiJICqhl" crossorigin="anonymous">
+
+    <script src="./script.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
   </head>
   <body>
     <header>

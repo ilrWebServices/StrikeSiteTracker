@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="./style.css">
-  <link rel="stylesheet" type="text/css" href="./methodology.css">
+  <link rel="stylesheet" type="text/css" href="/css/ui.css" />
+  <script src="/ui.js"></script>
   <title>ILR Labor Action Tracker</title>
   <meta name="MobileOptimized" content="width"/>
   <meta name="HandheldFriendly" content="true"/>
@@ -21,26 +21,12 @@
   <header>
     <div class="topNav">
       <a class="cornellLinks ilrLink" href="https://www.ilr.cornell.edu/"><img src="./assets/cornell-ilr-logo.svg" alt="Cornell ILR School"
-          loading="lazy" id="ilr-logo"></a>
+          loading="lazy"></a>
       <a class="cornellLinks slerLink" href="https://ler.illinois.edu"> <img src="./assets/labor_sler.png"
-          alt="School of Labor and Employment Relations" loading="lazy" id="cornell-logo"></a>
-    </div>
-    <div class="bottomNav">
-      <div class="titleSection">
-        <h1 class="websiteTitle">Methodology</h1>
-      </div>
-      <div class="linksSection">
-        <a href="./" class="navLinks">Labor Action Tracker</a>
-        <a href="./about.html" class="navLinks">About Us</a>
-        <a href="https://www.ilr.cornell.edu/faculty-and-research/labor-action-tracker" class="navLinks">Reports</a>
-        <a href="https://sheets.app.ilr.cornell.edu/o/docs/forms/rsqHwVCgH1vz7yqTauVXxw/21" class="navLinks">Report a Strike</a>
-        <a href="./suggested-citation.html" class="navLinks">How to cite</a>
-        <a id="follow-button" title="Follow @ILRLaborAction on Twitter"
-          href="https://twitter.com/intent/follow?ref_src=twsrc%5Etfw&amp;region=follow_link&amp;screen_name=ILRLaborAction&amp;tw_p=followbutton"><img src="assets/twitter-x.png" alt="Follow @ILRLaborAction on Twitter" /></a>
-      </div>
+        alt="School of Labor and Employment Relations" loading="lazy"></a>
     </div>
   </header>
-  <div id="page_1">
+  <div id="page_1" class="mainDiv">
     <div id="id1_1">
       <h2 class="p2 ft2">Introduction</h2>
       <p class="p3 ft3">
@@ -75,35 +61,35 @@
       <p class="p6 ft3">
         On our interactive map, users can filter based on whether we label an
         event a strike or a labor protest, which we define below. Users also
-        can search for both strikes <span class="ft4">and </span>labor
+        can search for both strikes and labor
         protests, which compiles our complete database of labor action across
         the United States.
       </p>
-      <p class="p7 ft5">
-        <span class="ft4">Strike</span><span class="ft3">: </span>“A temporary
-        stoppage of work by a group of workers in order to express a grievance
-        or to enforce a demand. Such a grievance or demand may or may not be
-        workplace-related.”
-      </p>
-      <p class="p8 ft0">
-        --The first sentence of this definition is heavily
-        influenced by Peterson (1937: 3),<span class="ft6">1 </span>also
-      </p>
-      <p class="p9 ft8">
-        used by Hyman (1989: 17).<span class="ft7">2 </span>The only
-        difference we make to the first part of this definition is by changing
-        “employees” to “workers.”
-      </p>
-      <p class="p10 ft5">
-        <span class="ft4">Labor Protest</span><span class="ft3">: </span>“Collective action by a group of people as
-        workers but without withdrawing their labor in order to express a
-        grievance or enforce a demand. Such a grievance or demand may or may
-        not be workplace-related. A labor protest may
-        <em>also</em> consist of a group of people not acting
-        in the protest as workers as long as the central demand is
-        workplace related.”
-      </p>
-    </div>
+
+      <dl>
+        <dt>Strike</dt>
+        <dd>“A temporary
+          stoppage of work by a group of workers in order to express a grievance
+          or to enforce a demand. Such a grievance or demand may or may not be
+          workplace-related.”<br/>
+          <br/>
+          --The first sentence of this definition is heavily
+          influenced by Peterson (1937: 3),<sup>1</sup> also
+          used by Hyman (1989: 17).<sup>2</sup> The only
+          difference we make to the first part of this definition is by changing
+          “employees” to “workers.”</dd>
+      </dl>
+
+      <dl>
+        <dt>Labor Protest</dt>
+        <dd>“Collective action by a group of people as
+          workers but without withdrawing their labor in order to express a
+          grievance or enforce a demand. Such a grievance or demand may or may
+          not be workplace-related. A labor protest may
+          <em>also</em> consist of a group of people not acting
+          in the protest as workers as long as the central demand is
+          workplace related.”</dd>
+      </dl>
 
     <p class="p13 ft3">
       We distinguish between strikes and labor protests as a core component of
@@ -119,7 +105,7 @@
     <p class="p6 ft3">
       We collect information on strikes and labor protests from a variety of
       sources, building on many of the protocols that the Bureau of Labor
-      Statistics (BLS) employ to search for work stoppages.<span class="ft16">3 </span>These sources include, but are
+      Statistics (BLS) employ to search for work stoppages.<sup>3</sup> These sources include, but are
       not limited to, the BLS strike report,
       the Federal Mediation and Conciliation Services (FMCS) work stoppage
       summary, Bloomberg Law’s work stoppage database, major media sources,
@@ -133,7 +119,7 @@
       categories of sources with corresponding protocols:
     </p>
     <p class="p18 ft3">
-      <span class="ft5">Tier I</span>) These are sources that have tracked
+      <strong>Tier I</strong>) These are sources that have tracked
       strike data for a considerable period of time. We can feel confident
       both that the event occurred, and the nature of the event was presented
       accurately.
@@ -143,7 +129,7 @@
       summary, and Bloomberg Law’s work stoppage database.
     </p>
     <p class="p20 ft3">
-      <span class="ft5">Tier II) </span>These are sources either connected to
+      <strong>Tier II) </strong>These are sources either connected to
       the labor movement or press coverage of the labor movement. We can feel
       confident that the event occurred, but we need to make sure that the
       event is labeled correctly according to our definitions and that we
@@ -160,7 +146,7 @@
       sources that cover specific industries.
     </p>
     <p class="p24 ft0">
-      <span class="ft1">Tier III</span>) These are nontraditional sources
+      <strong>Tier III</strong>) These are nontraditional sources
       that may capture activity not covered by Tier I or Tier II sources. These sources are more difficult to rely on if
       we want to
       feel confident that the event is labeled correctly according to our
@@ -196,14 +182,14 @@
       example, a single strike at five locations will count as five separate “results found” on our map.
     </p>
     <p class="p28 ft23">
-      <span class="ft22">Employer</span>: Name of the employer involved in
+      <em>Employer</em>: Name of the employer involved in
       the event, if applicable. We generally list the employer name
       referenced in our sources. In the event that workers are legally
       considered independent contractors, we try to list the company that
       organizes and manages their work.
     </p>
     <p class="p29 ft23">
-      <span class="ft22">*Labor organization</span>: Name of the labor
+      <em>*Labor organization</em>: Name of the labor
       organization(s) involved in the event, if applicable. This includes
       unions, worker centers, and/or other labor organizations. For unions,
       the name of the international union will generally go here. When
@@ -211,24 +197,24 @@
       IBT) for most inclusive results.
     </p>
     <p class="p30 ft23">
-      <span class="ft22">Local</span>: Name of the local labor organization
+      <em>Local</em>: Name of the local labor organization
       involved in the event, if applicable. This includes locals of unions
       or local associations of other labor organizations such as worker
       centers.
     </p>
     <p class="p31 ft26">
-      <span class="ft24">*Industry</span>: Industry of employer involved in
+      <em>*Industry</em>: Industry of employer involved in
       the event, if applicable. We generate our list of industries from the
-      2017 NAICS.<span class="ft25">4</span>
+      2017 NAICS.<sup>4</sup>
     </p>
     <p class="p33 ft23">
-      <span class="ft22">*Bargaining Unit Size</span>: The number of workers
+      <em>*Bargaining Unit Size</em>: The number of workers
       in the bargaining unit related to the event if we are able to determine
       this information. This is only applicable for events that feature
       unionized workers or workers in the middle of a unionization campaign. We stopped documenting bargaining unit size in early-2022.
     </p>
     <p class="p34 ft23">
-      <span class="ft22">Number of Locations</span>: The number of locations
+      <em>Number of Locations</em>: The number of locations
       for a given event. For example, a single strike at 12 locations would
       read 12 for this variable. Note that when this number is greater than
       one, link(s) to the other locations will appear after the last variable
@@ -237,44 +223,44 @@
       <span class="ft22">Notes </span>variable below.
     </p>
     <p class="p35 ft23">
-      <span class="ft22">Address (city, *state, zip code)</span>: The address
+      <em>Address (city, *state, zip code)</em>: The address
       of the event, which allows us to pinpoint the event on our interactive
       map. Note that users can filter by state, which includes all states and
       territories of the United States.
     </p>
     <p class="p36 ft26">
-      <span class="ft24">*Strike or Protest</span>: Whether we categorize the
+      <em>*Strike or Protest</em>: Whether we categorize the
       event as a strike or a labor protest according to our definitions in
       Section I.
     </p>
     <p class="p37 ft23">
-      <span class="ft22">*Approximate Number of Participants: </span>The number of participants in a given event, if we are able to determine this information. For strikes, this value refers to the approximate number of workers on strike. For protests, this value may also capture community members and other individuals, in addition to workers, participating in the action.
+      <em>*Approximate Number of Participants: </em>The number of participants in a given event, if we are able to determine this information. For strikes, this value refers to the approximate number of workers on strike. For protests, this value may also capture community members and other individuals, in addition to workers, participating in the action.
     </p>
     <p class="p38 ft26">
-      <span class="ft24">*Start Date: </span>The start date of the event.
+      <em>*Start Date: </em>The start date of the event.
     </p>
     <p class="p16 ft28">
-      <span class="ft27">End Date:</span> The end date of the event.
+      <em>End Date:</em> The end date of the event.
     </p>
     <p class="p39 ft23">
-      <span class="ft22">*Duration Amount: </span>The number of days, hours,
+      <em>*Duration Amount: </em>The number of days, hours,
       or minutes of an event. Note that we only capture duration for strikes
       and that this generally includes all calendar days that the strike
       covers.
     </p>
     <p class="p29 ft23">
-      <span class="ft22">Duration Unit: </span>Days, hours, or minutes of an
+      <em>Duration Unit: </em>Days, hours, or minutes of an
       event. Note that we only capture duration unit for strikes. Strikes are
       generally captured in days unless we can demonstrate the strike lasted a
       certain number of minutes or hours less than one day.
     </p>
     <p class="p40 ft23">
-      <span class="ft22">*Authorized:</span> Whether the local union or local union leadership actively supported the
+      <em>*Authorized:</em> Whether the local union or local union leadership actively supported the
       event. This variable only applies to unionized workplaces (after formal recognition of a union). Note that we only
       capture the authorized variable for strikes.
     </p>
     <p class="p41 ft23">
-      <span class="ft22">*Worker Demands:</span> The main demands associated with an event. We have developed a list of
+      <em>*Worker Demands:</em> The main demands associated with an event. We have developed a list of
       twelve demands (see below) that users can filter by based on some of the most frequently identified worker demands
       from our first approximately 1,000 entries.
     </p>
@@ -331,20 +317,20 @@
       <span class="ft27">Notes</span>: Used to provide additional
       information about an event, if necessary.
     </p>
-    <p class="p11 ft13"><span class="ft10">1</span><span class="ft11">Peterson, F. (1937). </span><span
+    <p class="p11 ft13"><sup class="ft10">1</sup><span class="ft11">Peterson, F. (1937). </span><span
         class="ft12">Strikes in the United States: </span>
       <span class="ft12">1880-1936</span>. Washington: United States Department of Labor.
     </p>
-    <p class="p12 ft13"><span class="ft14">2 </span>Hyman, R. (1989). <span class="ft12">Strikes: Fourth Edition</span>.
+    <p class="p12 ft13"><sup class="ft14">2 </sup>Hyman, R. (1989). <span class="ft12">Strikes: Fourth Edition</span>.
       London: Macmillan.</p>
     <p class="p12 ft13">
 
-      <span class="ft10">3</span><span class="ft17">See (2019). Work Stoppages. </span><span class="ft18">Bureau of
+      <sup class="ft10">3</sup><span class="ft17">See (2019). Work Stoppages. </span><span class="ft18">Bureau of
         Labor Statistics</span>. Retrieved from
       <span class="ft19">https://www.bls.gov/opub/hom/wsp/pdf/wsp.pdf.</span>
     </p>
     <p class="p12 ft13">
-      <span class="ft10">4</span><span class="ft17">See (2021). 2017 NAICS. </span><span class="ft18">United States
+      <sup class="ft10">4</sup><span class="ft17">See (2021). 2017 NAICS. </span><span class="ft18">United States
         Census Bureau</span>. Retrieved from
       https://www.census.gov/naics/?58967?yearbck=2017.
     </p>

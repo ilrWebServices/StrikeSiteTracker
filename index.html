@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+    <!-- https://github.com/Leaflet/Leaflet.markercluster -->
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
@@ -33,8 +34,10 @@
     <script src="https://unpkg.com/slim-select@2.10.0/dist/slimselect.min.js" integrity="sha384-WKsmo+vSs0gqrT+es6wFEojVFn4P0kNaHpHTIkn84iHY8T4rF2V2McZeSbLPLlHy" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/slim-select@2.10.0/dist/slimselect.css" integrity="sha384-SGd+Jq1pTVPJ/zMxyDpM2aTTAvR/+91eDiQHsaMsJIXR4ejjJXLqvSACtiJICqhl" crossorigin="anonymous">
 
-    <script src="./script.js"></script>
-    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script src="/script.js"></script>
+    <script src="/ui.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/ui.css" />
+    <link rel="stylesheet" type="text/css" href="/css/app.css" />
   </head>
   <body>
     <header>
@@ -43,27 +46,12 @@
       <!-- End Google Tag Manager (noscript) -->
       <div class="topNav">
         <a class="cornellLinks ilrLink" href="https://www.ilr.cornell.edu/"><img src="./assets/cornell-ilr-logo.svg" alt="Cornell ILR School"
-            loading="lazy" id="ilr-logo"></a>
+            loading="lazy"></a>
         <a class="cornellLinks slerLink" href="https://ler.illinois.edu"> <img src="./assets/labor_sler.png"
-          alt="School of Labor and Employment Relations" loading="lazy" id="cornell-logo"></a>
-      </div>
-      <div class="bottomNav">
-        <div class="titleSection">
-          <h1 class="websiteTitle">Labor Action Tracker</h1>
-        </div>
-      <div class="linksSection">
-        <a  href="./about.html" class="navLinks">About Us</a>
-        <a href="./methodology.html" class="navLinks" >Methodology</a>
-        <a href="https://www.ilr.cornell.edu/faculty-and-research/labor-action-tracker" class="navLinks">Reports</a>
-      <a href="https://sheets.app.ilr.cornell.edu/o/docs/forms/rsqHwVCgH1vz7yqTauVXxw/21" class="navLinks">Report a Strike</a>
-      <a href="./suggested-citation.html" class="navLinks">How to cite</a>
-      <a id="follow-button" title="Follow @ILRLaborAction on Twitter"
-        href="https://twitter.com/intent/follow?ref_src=twsrc%5Etfw&amp;region=follow_link&amp;screen_name=ILRLaborAction&amp;tw_p=followbutton"><img src="assets/twitter-x.png" alt="Follow @ILRLaborAction on Twitter" /></a>
-      </div>
+          alt="School of Labor and Employment Relations" loading="lazy"></a>
       </div>
     </header>
     <div id="listing"></div>
     <div id="map"></div>
-    <!-- <div id="snackbar" style="visibility: hidden">You can view our interactive map by visiting our site on a larger screen device.</div> -->
   </body>
 </html>

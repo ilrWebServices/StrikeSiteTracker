@@ -13,28 +13,43 @@ body {
 
 header {
   grid-column: span 2;
-  height: var(--header-height);
   display: flex;
   flex-direction: column;
   justify-content: start;
 }
 
+@media (min-width: 800px) {
+  header {
+    height: var(--header-height);
+  }
+}
+
 .topNav {
-  height: var(--header-top-height);
   padding: 10px;
-  display: flex;
-  gap: 1em;
-  justify-content: space-between;
   border-bottom: 1px solid lightgrey;
 }
 
+@media (min-width: 800px) {
+  .topNav {
+    height: var(--header-top-height);
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+  }
+}
+
 .bottomNav {
-  height: calc(var(--header-height) - var(--header-top-height));
   padding: 10px;
   display: flex;
   gap: 1em;
   justify-content: space-between;
   flex-flow: row nowrap;
+}
+
+@media (min-width: 800px) {
+  .bottomNav {
+    height: calc(var(--header-height) - var(--header-top-height));
+  }
 }
 
 .follow-button img{
@@ -43,18 +58,29 @@ header {
 
 .linksSection {
   display: flex;
-  gap: 2em;
-}
-
-.ilrLink,
-.slerLink {
-  display: block;
-  height: 100%;
+  flex-wrap: wrap;
+  column-gap: 2em;
+  row-gap: .75em;
+  align-items: end;
 }
 
 .ilrLink img,
 .slerLink img {
-  height: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 800px) {
+  .ilrLink,
+  .slerLink {
+    display: block;
+    height: var(--header-top-height);
+  }
+
+  .ilrLink img,
+  .slerLink img {
+    height: var(--header-top-height);
+    max-width: 100%;
+  }
 }
 
 .websiteTitle {
@@ -90,9 +116,10 @@ p {
 
 /* About */
 .mainDiv {
-  width: 1020px;
+  max-width: 1020px;
   margin: 2em auto;
   grid-column: span 2;
+  padding: 10px;
 }
 
 .mainDiv .section {
@@ -101,13 +128,25 @@ p {
 
 .field--field-components.people {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 3.5em;
 }
 
+@media (min-width: 800px) {
+  .field--field-components.people {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .field--field-components.people .imageClass {
-  max-width: 150px;
+  max-width: 100px;
   border-radius: 100%;
+}
+
+@media (min-width: 800px) {
+  .field--field-components.people .imageClass {
+    max-width: 150px;
+  }
 }
 
 .person {

@@ -95,12 +95,8 @@
         conditions.action_type = form_data.getAll('action-type').includes(action.Action_type);
       }
 
-      if (form_data.get('employer')) {
-        conditions.employer = action.Employer.toUpperCase().includes(form_data.get('employer').toUpperCase());
-      }
-
-      if (form_data.get('labor-org')) {
-        conditions.labor_org = action.Labor_Organization.toUpperCase().includes(form_data.get('labor-org').toUpperCase());
+      if (form_data.get('searchstr')) {
+        conditions.searchstr = action.Employer.toUpperCase().includes(form_data.get('searchstr').toUpperCase()) || action.Labor_Organization.toUpperCase().includes(form_data.get('searchstr').toUpperCase());
       }
 
       if (form_data.get('start-date-from')) {
@@ -355,11 +351,8 @@
           <label><input name="action-type" type="checkbox" value="Protest"> Protest</label>
         </div>
 
-        <label for="labor-org">Labor organization</label>
-        <input id="labor-org" name="labor-org" type="text">
-
-        <label for="employer">Employer</label>
-        <input id="employer" name="employer" type="text">
+        <label for="searchstr">Search</label>
+        <input id="searchstr" name="searchstr" type="text" placeholder="Labor organization or employer">
 
         <label>Start date range</label>
         <div class="date-options">
@@ -387,7 +380,7 @@
           ${form_opts.durations.map(duration => `<option value="${duration}">${duration}</option>`).join('')}
         </select>
 
-        <label for="participant-count">Number of participants</label>
+        <label for="participant-count">Participants</label>
         <select id="participant-count" name="participant-count">
           ${form_opts.participant_counts.map(duration => `<option value="${duration}">${duration}</option>`).join('')}
         </select>

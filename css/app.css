@@ -119,7 +119,7 @@ body {
 .filter-form {
   /* position: absolute; */
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  grid-template-columns: 1fr 2fr;
   align-items: center;
   gap: .75em;
   padding-right: 1em;
@@ -138,18 +138,27 @@ body {
 
 .filter-form .date-options {
   display: flex;
-  gap: 1em;
+  flex-direction: column;
+  gap: .25em;
   justify-content: space-between;
+}
+
+@media screen and (min-width: 1000px) {
+  .filter-form .date-options {
+    flex-direction: row;
+    gap: 1em;
+  }
 }
 
 .filter-form .authorized-option {
   justify-self: start;
 }
 
-.filter-form > label {
-  font-weight: bold;
+.filter-form  label {
+  font-weight: 500;
   grid-column: 1;
   margin: 0;
+  line-height: 1.2;
 }
 
 .filter-form > select {

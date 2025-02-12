@@ -18,7 +18,7 @@ header {
   justify-content: start;
 }
 
-@media (min-width: 800px) {
+@media screen and (min-width: 800px) {
   header {
     height: var(--header-height);
   }
@@ -29,7 +29,7 @@ header {
   border-bottom: 1px solid lightgrey;
 }
 
-@media (min-width: 800px) {
+@media screen and (min-width: 800px) {
   .topNav {
     height: var(--header-top-height);
     display: flex;
@@ -46,7 +46,7 @@ header {
   flex-flow: row nowrap;
 }
 
-@media (min-width: 800px) {
+@media screen and (min-width: 800px) {
   .bottomNav {
     height: calc(var(--header-height) - var(--header-top-height));
   }
@@ -69,7 +69,7 @@ header {
   max-width: 100%;
 }
 
-@media (min-width: 800px) {
+@media screen and (min-width: 800px) {
   .ilrLink,
   .slerLink {
     display: block;
@@ -132,7 +132,7 @@ p {
   gap: 3.5em;
 }
 
-@media (min-width: 800px) {
+@media screen and (min-width: 800px) {
   .field--field-components.people {
     grid-template-columns: 1fr 1fr;
   }
@@ -143,7 +143,7 @@ p {
   border-radius: 100%;
 }
 
-@media (min-width: 800px) {
+@media screen and (min-width: 800px) {
   .field--field-components.people .imageClass {
     max-width: 150px;
   }

@@ -23,3 +23,17 @@ It is primarily a single page app hosted on Github Pages, but the data is stored
 
 1. Run `npm run build` to create the `labor_actions.json` file.
 2. Open `index.html` in a web browser.
+
+## What's new in 2.0?
+
+- Site loading is much faster. This was done by:
+  - Rewriting the javascript
+  - Initially limiting the first page load to the labor actions of the last 12 months
+- The filter form has been simplified and now includes Employer
+- New non-google map with custom markers
+- Moved data from Google Sheets to self-hosted Grist instance
+  - No more Google Form for adding/editing existing labor actions
+  - Relational storage for locations and sources
+  - Built-in geocoder that doesn't rely on a paid Google project
+- Report a Labor Action form moved to Grist with results next to existing data
+  - This could be improved by changing the form and dropping the reports into the main data table

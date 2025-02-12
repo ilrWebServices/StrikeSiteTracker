@@ -17,7 +17,7 @@ async function main() {
   }
 
   const locations = await apiSql(`
-    select l.id, l.Action, l.Latitude, l.Longitude, l.Address, l.City, l.State,
+    select l.id, l.Action, l.Latitude, l.Longitude, l.Address, l.City, l.State, l.Zip,
       a.Employer, a.Labor_Organization, date(a.Start_date, 'unixepoch') as Start_date, date(a.End_date, 'unixepoch') as End_date, a.Authorized, a.Action_type, a.Industry, a.Worker_demands, a.Local, a.Duration, a.Approximate_Number_of_Participants, a.Bargaining_Unit_Size, a.Notes
     from Locations l inner join Actions a on a.id = l.Action
     where a.Display = 1
@@ -58,13 +58,14 @@ async function main() {
       Longitude: location.fields.Longitude,
       Address: location.fields.Address,
       City: location.fields.City,
-      State: location.fields.State
+      State: location.fields.State,
+      Zip: location.fields.Zip
     });
   }
 
   // Write the data to a json file.
   fs.writeFileSync('labor_actions.json', JSON.stringify(Object.fromEntries(data)));
-  console.log(`Wrote ${locations.length} locations in ${data.size} labor actions to locations.json`);
+  console.log(`Wrote ${locations.length} locations in ${data.size} labor actions to labor_actions.json`);
 }
 
 let apiSql = async function(sql, args = []) {

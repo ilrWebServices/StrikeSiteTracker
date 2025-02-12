@@ -3,7 +3,9 @@
   "version": "2.0.0",
   "description": "A map visualization of Strikes and other Labor Actions",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "@fast-csv/format": "^5.0.2"
+  },
   "devDependencies": {
     "dotenv": "^16.0.0"
   },

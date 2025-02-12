@@ -3,3 +3,4 @@ credentials.json
 token.json
 .env
 labor_actions.json
+labor_actions.csv

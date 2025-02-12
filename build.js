@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fs = require("fs");
+const csv = require('@fast-csv/format');
 
 async function main() {
   const data = new Map();
@@ -66,6 +67,64 @@ async function main() {
   // Write the data to a json file.
   fs.writeFileSync('labor_actions.json', JSON.stringify(Object.fromEntries(data)));
   console.log(`Wrote ${locations.length} locations in ${data.size} labor actions to labor_actions.json`);
+
+  // Generate a flat CSV file of actions and location data and save to `labor_actions.csv`.
+  const csvStream = csv.format({headers: [
+    'ID',
+    'Employer',
+    'Labor Organization',
+    'Local',
+    'Industry',
+    'Bargaining Unit Size',
+    'Number of Locations',
+    'Address',
+    'City',
+    'State',
+    'Zip Code',
+    'Latitude, Longitude',
+    'Approximate Number of Participants',
+    'Start Date',
+    'End Date',
+    'Duration Amount',
+    'Duration Unit', // Hard code to 'days'
+    'Strike or Protest',
+    'Authorized',
+    'Worker Demands',
+    'Source',
+    // 'Comments or Remarks',  // Skipping as these may be internal notes only.
+    // 'Display', // We only have displayed actions in this list.
+    'Notes'
+  ]});
+  csvStream.pipe(fs.createWriteStream('labor_actions.csv')).on('end', () => process.exit());
+
+  for (const [action_id, action] of data) {
+    csvStream.write([
+      action.id,
+      action.Employer,
+      action.Labor_Organization,
+      action.Local,
+      action.Industry.join(';'),
+      action.Bargaining_Unit_Size,
+      action.locations.length,
+      action.locations.map(i => i.Address).join(';'),
+      action.locations.map(i => i.City).join(';'),
+      action.locations.map(i => i.State).join(';'),
+      action.locations.map(i => i.Zip).join(';'),
+      action.locations.map(i => i.Latitude+','+i.Longitude).join(';'),
+      action.Approximate_Number_of_Participants,
+      action.Start_date,
+      action.End_date,
+      action.Duration,
+      'days',
+      action.Action_type,
+      action.Authorized,
+      action.Worker_demands.join(';'),
+      action.sources.join(';'),
+      action.Notes
+    ]);
+  }
+  csvStream.end();
+  console.log(`Wrote ${data.size} rows to labor_actions.csv`);
 }
 
 let apiSql = async function(sql, args = []) {

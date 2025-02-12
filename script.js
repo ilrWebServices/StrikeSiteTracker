@@ -18,17 +18,16 @@
     demands: [
       '',
       'Pay',
-      'Healthcare',
-      'COVID-19 protocols',
       'Health and safety',
-      'First contract',
-      'Racial justice',
-      '$15 minimum wage',
       'Staffing',
+      'Healthcare',
       'Job Security',
-      'Pandemic Relief',
+      'First contract',
+      'Union recognition',
       'Retirement benefits',
-      'Union recognition'
+      'Racial justice',
+      'Scheduling',
+      'End to anti-union retaliation',
     ],
     durations: [
       '',

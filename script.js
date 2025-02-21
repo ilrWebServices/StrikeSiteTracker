@@ -50,26 +50,6 @@
   const result_count = van.state(0);
   const results_wrapper = div({class: 'results'}, p(() => `${result_count.val} labor actions found.`));
 
-  // const debounce = (callback, wait) => {
-  //   let timeoutId = null;
-  //   return (...args) => {
-  //     window.clearTimeout(timeoutId);
-  //     timeoutId = window.setTimeout(() => {
-  //       callback(...args);
-  //     }, wait);
-  //   };
-  // }
-
-  // let processForm = function(e) {
-  //   debounce(() => console.log(e));
-  //   // console.log(e);
-  //   // markers.clearLayers()
-  // };
-
-  // const processForm = debounce((e) => {
-  //   console.log(e)
-  // }, 500);
-
   let processFormTimeoutId = null;
   const processForm = (e) => {
     let form = e.currentTarget;
@@ -242,6 +222,9 @@
     // the results listing and markers on the map.
     filter_form.dispatchEvent(new Event('input'));
 
+    const dialog_element = document.getElementById('reusable-dialog');
+    const dialog_content = dialog_element.querySelector('.content');
+
     // Add a global document body click handler for event delegation.
     document.body.addEventListener('click', async (event) => {
       if (event.target.matches('.action-card__location')) {
@@ -249,20 +232,38 @@
         let location = action.locations_map.get(Number(event.target.dataset.id));
         if (!location.marker.isPopupOpen()) {
           zoom(location.marker);
+
+          // Close the results drawer and if open.
+          document.querySelector('.menu-toggle input').checked = false;
+          document.querySelector('#listing-toggle').checked = false;
         }
       } else if (event.target.closest('.action-card')) {
         // TODO: Fix when viewing popup and clicking on source or selecting text.
         if (event.target.closest('#listing .results .action-card')) {
           event.target.closest('#listing .results .action-card').querySelector('.action-card__location').click();
         }
+      } else if (event.target.matches('.content-link')) {
+        event.preventDefault();
+        const resource = event.target.getAttribute('href');
+
+        const content = await fetchPage(resource);
+        console.log(content);
+
+        dialog_content.innerHTML = content;
+        dialog_element.showModal();
+      } else if (event.target.matches('#reusable-dialog button')) {
+        dialog_element.close();
       }
     });
 
     // Add a global listener for the escape key and use it to reset the filter
     // form to defaults and trigger an input event to populate the results.
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && !dialog_element.open) {
         filter_form.reset();
+        filter_form.dispatchEvent(new Event('input'));
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
         filter_form.dispatchEvent(new Event('input'));
       }
     });
@@ -405,8 +406,8 @@
         ${action.Industry ? `<div class="action-card__industry"><strong>Industry:</strong> ${action.Industry.join(' • ')}</div>` : ''}
         ${action.Approximate_Number_of_Participants ? `<div class="action-card__participant-count"><strong>Approximate number of participants:</strong> ${action.Approximate_Number_of_Participants}</div>` : ''}
         ${action.Bargaining_Unit_Size ? `<div class="action-card__bargaining-unit-size"><strong>Bargaining unit size:</strong> ${action.Bargaining_Unit_Size}</div>` : ''}
-        ${action.Start_date ? `<div class="action-card__start-date"><strong>Start date:</strong> ${action.Start_date}</div>` : ''}
-        ${action.End_date ? `<div class="action-card__end-date"><strong>End date:</strong> ${action.End_date}</div>` : ''}
+        ${action.Start_date ? `<div class="action-card__start-date"><strong>Start:</strong> ${action.Start_date}</div>` : ''}
+        ${action.End_date ? `<div class="action-card__end-date"><strong>End:</strong> ${action.End_date}</div>` : ''}
         ${action.Action_type ? `<div class="action-card__type"><strong>Action type:</strong> ${action.Action_type}</div>` : ''}
         ${action.Duration ? `<div class="action-card__duration"><strong>Duration:</strong> ${action.Duration} day${action.Duration > 1 ? 's' : ''}</div>` : ''}
         <div class="action-card__type"><strong>Authorized:</strong> ${action.Authorized ? 'Yes' : 'No'}</div>
@@ -439,6 +440,22 @@ data-action="${action.id}" data-current="${location.id === location_id}" title="
       }
 
       return await response.json();
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  const fetchPage = async (url) => {
+    try {
+      const parser = new DOMParser();
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const content = await response.text();
+      const page_dom = parser.parseFromString(content, 'text/html');
+      return page_dom.getElementById('main').innerHTML;
 
     } catch (error) {
       console.error(error.message);

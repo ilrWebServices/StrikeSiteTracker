@@ -1,0 +1,442 @@
+:root {
+  --logo-height: 73px;
+  --listing-drawer-width: 320px;
+}
+
+@media screen and (min-width: 450px) {
+  :root {
+    --listing-drawer-width: 420px;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.app {
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+#map {
+  height: 100%;
+  z-index: 1;
+}
+
+header {
+  display: flex;
+  gap: 2em;
+  justify-content: space-between;
+  padding: 10px;
+  z-index: 3;
+}
+
+header .menu {
+  order: -1;
+  position: absolute;
+  left: 20px;
+  right: 0;
+  background-color: white;
+  padding: 10px;
+  box-shadow: -10px 10px 10px rgba(0,0,0,.25);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+@media screen and (min-width: 600px) {
+  header .menu {
+    width: 18em;
+    left: unset;
+  }
+}
+
+.menu-wrapper {
+  align-self: center;
+}
+
+.menu-toggle {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.menu-toggle::before,
+.menu-toggle::after,
+.menu-toggle input {
+  content: '';
+  width: 22px;
+  height: 2px;
+  background-color: #222;
+  border-radius: 10px;
+}
+
+.menu-toggle input {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-toggle + .menu {
+  transition: all 200ms ease-in-out;
+  translate: 0;
+}
+
+.menu-toggle:not(:has(input:checked)) + .menu {
+  translate: 0 -135%;
+}
+
+header > .logos {
+  display: none;
+}
+
+@media screen and (min-width: 800px) {
+  header > .logos {
+    display: flex;
+    gap: 4em;
+  }
+
+  header .menu .ilrLink,
+  header .menu .slerLink {
+    display: none;
+  }
+}
+
+.page-title {
+  margin-bottom: 0;
+  container-type: inline-size;
+  flex-grow: 1;
+  min-width: 5em;
+  max-width: 12em;
+  line-height: 0;
+  align-self: center;
+  font-weight: 500;
+  font-size: 2.5rem;
+}
+
+.page-title span {
+  font-size: 10cqw;
+}
+
+.follow-button img{
+  width: 23px;
+}
+
+.ilrLink,
+.slerLink {
+  align-self: center;
+}
+
+.ilrLink img,
+.slerLink img {
+  max-width: 100%;
+  height: var(--logo-height);
+}
+
+a,
+a:visited,
+a:hover {
+  color: #222;
+  text-decoration: underline #b31b1b 2px;
+}
+
+a.action-card__source,
+a.action-card__source:visited,
+a.action-card__source:hover {
+  color: #222;
+  text-decoration: underline #b31b1b 1px;
+}
+
+p, dl, ol, blockquote {
+  line-height: 1.4;
+  font-weight: 300;
+  max-width: 600px;
+}
+
+.field--field-components.people {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3.5em;
+}
+
+@media screen and (min-width: 800px) {
+  .field--field-components.people {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field--field-components.people .imageClass {
+  max-width: 100px;
+  border-radius: 100%;
+}
+
+@media screen and (min-width: 800px) {
+  .field--field-components.people .imageClass {
+    max-width: 150px;
+  }
+}
+
+.person {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1em;
+}
+
+.person .infoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.person .nameInfo {
+  margin: 0;
+}
+
+.person .roleInfo {
+  font-weight: 300;
+}
+
+.person .descInfo {
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.report-form {
+  width: 90vw;
+  height: 90vh;
+}
+
+@media screen and (min-width: 1200px) {
+  .report-form {
+    width: 50vw;
+    height: 75vh;
+  }
+}
+
+#reusable-dialog {
+  position: relative;
+  border: none;
+  border-radius: 5px;
+  padding: 0;
+  box-shadow: -10px 10px 10px rgba(0,0,0,.25);
+}
+
+@media screen and (min-width: 800px) {
+  #reusable-dialog {
+    max-width: 80vw;
+  }
+}
+
+#reusable-dialog::backdrop {
+  background: rgb(0 0 0 / 50%);
+}
+
+#reusable-dialog .content {
+  padding: 1em;
+}
+
+#reusable-dialog h1,
+#main h1 {
+  font-size: 2.25rem;
+  margin-bottom: .5em;
+}
+
+#reusable-dialog .section {
+  margin-top: 2em;
+}
+
+#reusable-dialog > button {
+  position: sticky;
+  top: 0;
+  float: right;
+  border: none;
+  border-bottom-left-radius: 5px;
+  background-color: #b31b1b;
+  color: white;
+  padding: .25em 1em;
+}
+
+#listing {
+  width: var(--listing-drawer-width);
+  position: absolute;
+  isolation: isolate;
+  top: 100px;
+  left: calc(var(--listing-drawer-width) * -1 + 10px);
+  bottom: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  background-color: white;
+  transition: left .25s ease-in-out;
+  box-shadow: 10px 10px 10px rgba(0,0,0,.25);
+}
+
+#listing-toggle:checked + #listing {
+  left: 0;
+}
+
+#listing-toggle {
+  visibility: hidden;
+  position: absolute;
+}
+
+label[for="listing-toggle"] {
+  position: absolute;
+  top: 45%;
+  right: -40px;
+  width: 40px;
+  height: 60px;
+  z-index: 4;
+  margin: 0;
+  visibility: hidden;
+}
+
+label[for="listing-toggle"]::before {
+  visibility: visible;
+  content: '⟩';
+  font-weight: bold;
+  font-size: large;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0 0 0 0;
+  background-color: white;
+  border-radius: 0 5px 5px 0;
+  box-shadow: 10px 10px 10px rgba(0,0,0,.25);
+}
+
+#listing-toggle:checked + #listing label[for="listing-toggle"]::before {
+  content: '⟨';
+}
+
+#listing .results {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1em;
+}
+
+.action-card {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1em;
+  row-gap: .25em;
+  width: 100%;
+}
+
+#listing .results .action-card {
+  border: 2px solid gray;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+#listing .results .action-card__type,
+#listing .results .action-card__industry,
+#listing .results .action-card__local,
+#listing .results .action-card__duration,
+#listing .results .action-card__participant-count,
+#listing .results .action-card__bargaining-unit-size,
+#listing .results .action-card__source-label,
+#listing .results .action-card__source,
+#listing .results .action-card__demands,
+#listing .results .action-card__notes {
+  display: none;
+}
+
+.action-card__start-date,
+.action-card__end-date {
+  grid-column: span 2;
+}
+
+#listing .results .action-card__start-date,
+#listing .results .action-card__end-date {
+  grid-row: 1;
+}
+
+.action-card__employer,
+.action-card__labor-org,
+.action-card__type,
+.action-card__industry,
+.action-card__local,
+.action-card__duration,
+.action-card__participant-count,
+.action-card__bargaining-unit-size,
+.action-card__location-label,
+.action-card__source-label,
+.action-card__demands,
+.action-card__notes {
+  grid-column: span 4;
+}
+
+.action-card__location {
+  cursor: pointer;
+  /* If we keep this, we can switch to two cols */
+  grid-column: span 2;
+  align-content: center;
+}
+
+.action-card__location[data-current="true"] {
+  padding: .25em .5em;
+  border-radius: 5px;
+  background-color: #555;
+  color: white;
+}
+
+.filter-form {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  gap: .75em;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid gray;
+  background-color: white;
+}
+
+.filter-form .type-options {
+  display: flex;
+  gap: 2em;
+  align-items: stretch;
+}
+
+.filter-form .date-options {
+  display: flex;
+  flex-direction: column;
+  gap: .25em;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 300px) {
+  .filter-form .date-options {
+    display: none;
+  }
+}
+
+.filter-form .authorized-option {
+  justify-self: start;
+}
+
+.filter-form label {
+  font-weight: 500;
+  grid-column: 1;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.filter-form > input,
+.filter-form > select {
+  width: 100%;
+}

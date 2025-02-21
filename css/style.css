@@ -33,6 +33,8 @@ header {
   justify-content: space-between;
   padding: 10px;
   z-index: 3;
+  border-bottom: 4px solid;
+  border-image: linear-gradient(to right, #b31b1b 0%, #ff5f05 100%) 1;
 }
 
 header .menu {

@@ -24,6 +24,26 @@ It is primarily a single page app hosted on Github Pages, but the data is stored
 1. Run `npm run build` to create the `labor_actions.json` file.
 2. Open `index.html` in a web browser.
 
+## Static web server container
+
+A simple Docker container build file is included for testing purposes. It will run the node.js build script and can serve the site with a basic static web server:
+
+```
+docker build -t ilrweb/striketracker:latest
+```
+
+The resulting image can be pushed to Docker hub, where the ILR web team has an account:
+
+```
+docker push ilrweb/striketracker:latest
+```
+
+The image can be run with a command like the following:
+
+```
+docker run -it --rm --init -p 3000:3000 ilrweb/striketracker:latest
+```
+
 ## What's new in 2.0?
 
 - Site loading is much faster. This was done by:

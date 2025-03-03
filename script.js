@@ -357,7 +357,7 @@
 
         <label>Start date range</label>
         <div class="date-options">
-          <input type="date" aria-label="from" id="start-date-from" name="start-date-from" value="${date.toLocaleDateString('en-CA')}">
+          <input type="date" aria-label="from" id="start-date-from" name="start-date-from" value="${date.toLocaleDateString('en-CA')}" min="2021-01-01">
           <input type="date" aria-label="to" id="start-date-to" name="start-date-to">
         </div>
 

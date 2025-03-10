@@ -29,7 +29,7 @@ It is primarily a single page app hosted on Github Pages, but the data is stored
 A simple Docker container build file is included for testing purposes. It will run the node.js build script and can serve the site with a basic static web server:
 
 ```
-docker build -t ilrweb/striketracker:latest
+docker build -t ilrweb/striketracker:latest .
 ```
 
 The resulting image can be pushed to Docker hub, where the ILR web team has an account:

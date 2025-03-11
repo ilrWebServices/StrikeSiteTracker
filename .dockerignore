@@ -1,0 +1,7 @@
+node_modules
+.github
+.gitignore
+.nvmrc
+.tool-versions
+geodata.js
+labor_actions.*

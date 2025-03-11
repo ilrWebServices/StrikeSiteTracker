@@ -1,28 +1,25 @@
 {
-  "name": "strikesitetracker",
-  "version": "1.0.0",
-  "description": "A map visualization of Strikes",
+  "name": "striketracker",
+  "version": "2.0.0",
+  "description": "A map visualization of Strikes and other Labor Actions",
   "main": "index.js",
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
-    "axios": "^0.21.1",
-    "dotenv": "^10.0.0",
-    "googleapis": "^66.0.0",
-    "lodash.get": "^4.4.2"
+    "@fast-csv/format": "^5.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "dotenv": "^16.0.0"
+  },
   "scripts": {
     "build": "node build.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ankitmehta94/StrikeSiteTracker.git"
+    "url": "git+https://github.com/ilrWebServices/StrikeSiteTracker.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ankitmehta94/StrikeSiteTracker/issues"
+    "url": "https://github.com/ilrWebServices/StrikeSiteTracker/issues"
   },
-  "homepage": "https://github.com/ankitmehta94/StrikeSiteTracker#readme"
+  "homepage": "https://github.com/ilrWebServices/StrikeSiteTracker#readme"
 }

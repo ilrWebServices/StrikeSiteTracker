@@ -1,130 +1,160 @@
 require('dotenv').config();
 const fs = require("fs");
-const readline = require("readline");
-const core = require("@actions/core");
-const { google } = require("googleapis");
-const convertRowsToJson = require("./convertRowsToJson");
-// const console = {}
-// console.log = () => {}
-const findLatLng = require("./findLatLng");
-const updateLatLngInSheets = require("./updateLatLngInSheets");
-// If modifying these scopes, delete token.json.
-const SCOPES = [
-  "https://www.googleapis.com/auth/spreadsheets",
-  "https://www.googleapis.com/auth/drive",
-  "https://www.googleapis.com/auth/drive.file",
-];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const TOKEN_PATH = "token.json";
-const spreadsheetId = "1NuTrust5-tFaslvbiqoL4Xvr8Wvq4nyXYta3vo4-B4Y";
-// Load client secrets from a local file.
-fs.readFile("credentials.json", "utf8", (err, content) => {
-  if (err) {
-    try {
-      content = JSON.parse(process.env.SHEETS_CRED);
-    } catch (error) {
-      console.error(error);
+const csv = require('@fast-csv/format');
+
+async function main() {
+  const data = new Map();
+  const source_data = new Map();
+  const sources = await apiSql('select Action, Url from Sources');
+
+  for (let source of sources) {
+    const action_id = source.fields.Action;
+
+    if (!source_data.has(action_id)) {
+      source_data.set(action_id, []);
     }
-  }
-  if (typeof content === "string") {
-    content = JSON.parse(content);
+
+    source_data.get(action_id).push(source.fields.Url);
   }
 
-  // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(content, listMajors);
-});
+  const locations = await apiSql(`
+    select l.id, l.Action, l.Latitude, l.Longitude, l.Address, l.City, l.State, l.Zip,
+      a.Employer, a.Labor_Organization, date(a.Start_date, 'unixepoch') as Start_date, date(a.End_date, 'unixepoch') as End_date, a.Authorized, a.Action_type, a.Industry, a.Worker_demands, a.Local, a.Duration, a.Approximate_Number_of_Participants, a.Bargaining_Unit_Size, a.Notes
+    from Locations l inner join Actions a on a.id = l.Action
+    where a.Display = 1
+    order by a.Start_date desc
+    --limit 10
+  `);
 
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorize(credentials, callback) {
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, "utf8", (err, token) => {
-    if (err) {
-      token = JSON.parse(process.env.SHEETS_TOKEN);
-    }
-    if (typeof token === "string") {
-      token = JSON.parse(token);
-    }
-    oAuth2Client.setCredentials(token);
-    callback(oAuth2Client);
-  });
-}
+  // console.log(locations);
 
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
-function getNewToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: "offline",
-    scope: SCOPES,
-  });
-  console.log("Authorize this app by visiting this url:", authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question("Enter the code from that page here: ", (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err)
-        return console.error(
-          "Error while trying to retrieve access token",
-          err
-        );
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log("Token stored to", TOKEN_PATH);
+  // Store all locations, grouped into actions, in the actions map.
+  for (let location of locations) {
+    const action_id = location.fields.Action;
+
+    if (!data.has(action_id)) {
+      data.set(action_id, {
+        id: location.fields.Action,
+        Employer: location.fields.Employer,
+        Start_date: location.fields.Start_date,
+        End_date: location.fields.End_date,
+        Labor_Organization: location.fields.Labor_Organization,
+        Authorized: location.fields.Authorized,
+        Action_type: location.fields.Action_type,
+        Industry: location.fields.Industry ? JSON.parse(location.fields.Industry) : [],
+        Worker_demands: location.fields.Worker_demands ? JSON.parse(location.fields.Worker_demands) : [],
+        Local: location.fields.Local,
+        Duration: location.fields.Duration,
+        Approximate_Number_of_Participants: location.fields.Approximate_Number_of_Participants,
+        Bargaining_Unit_Size: location.fields.Bargaining_Unit_Size,
+        Notes: location.fields.Notes,
+        locations: [],
+        sources: source_data.has(action_id) ? source_data.get(action_id) : []
       });
-      callback(oAuth2Client);
+    }
+
+    data.get(action_id).locations.push({
+      id: location.fields.id,
+      Latitude: location.fields.Latitude,
+      Longitude: location.fields.Longitude,
+      Address: location.fields.Address,
+      City: location.fields.City,
+      State: location.fields.State,
+      Zip: location.fields.Zip
     });
-  });
+  }
+
+  // Write the data to a json file.
+  fs.writeFileSync('labor_actions.json', JSON.stringify(Object.fromEntries(data)));
+  console.log(`Wrote ${locations.length} locations in ${data.size} labor actions to labor_actions.json`);
+
+  // Generate a flat CSV file of actions and location data and save to `labor_actions.csv`.
+  const csvStream = csv.format({headers: [
+    'ID',
+    'Employer',
+    'Labor Organization',
+    'Local',
+    'Industry',
+    'Bargaining Unit Size',
+    'Number of Locations',
+    'Address',
+    'City',
+    'State',
+    'Zip Code',
+    'Latitude, Longitude',
+    'Approximate Number of Participants',
+    'Start Date',
+    'End Date',
+    'Duration Amount',
+    'Duration Unit', // Hard code to 'days'
+    'Strike or Protest',
+    'Authorized',
+    'Worker Demands',
+    'Source',
+    // 'Comments or Remarks',  // Skipping as these may be internal notes only.
+    // 'Display', // We only have displayed actions in this list.
+    'Notes'
+  ]});
+  csvStream.pipe(fs.createWriteStream('labor_actions.csv')).on('end', () => process.exit());
+
+  for (const [action_id, action] of data) {
+    csvStream.write([
+      action.id,
+      action.Employer,
+      action.Labor_Organization,
+      action.Local,
+      action.Industry.join(';'),
+      action.Bargaining_Unit_Size,
+      action.locations.length,
+      action.locations.map(i => i.Address).join(';'),
+      action.locations.map(i => i.City).join(';'),
+      action.locations.map(i => i.State).join(';'),
+      action.locations.map(i => i.Zip).join(';'),
+      action.locations.map(i => i.Latitude+','+i.Longitude).join(';'),
+      action.Approximate_Number_of_Participants,
+      action.Start_date,
+      action.End_date,
+      action.Duration,
+      'days',
+      action.Action_type,
+      action.Authorized,
+      action.Worker_demands.join(';'),
+      action.sources.join(';'),
+      action.Notes
+    ]);
+  }
+  csvStream.end();
+  console.log(`Wrote ${data.size} rows to labor_actions.csv`);
 }
 
-function listMajors(auth) {
-  const sheets = google.sheets({ version: "v4", auth });
-  sheets.spreadsheets.values.get(
-    {
-      spreadsheetId: spreadsheetId,
-      range: "A1:AZ4000",
+let apiSql = async function(sql, args = []) {
+  // const url = "https://api.striketracker.ilr.cornell.edu/docs/t55TDwkP4gQ31erxfQNkU1/sql";
+  const url = "https://sheets.app.ilr.cornell.edu/api/docs/t55TDwkP4gQ31erxfQNkU1/sql";
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + process.env.GRIST_API_TOKEN
     },
-    async (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
-      // console.log(res,'<---------------res')
-      const rows = res.data.values;
-      if (rows.length) {
-        const objectArray = convertRowsToJson(rows);
-        // console.log(objectArray.length,'<-------------------------objectArray.length')
-        const geoCodeArray = await findLatLng(objectArray);
-        // const updatedGeocodeArray = await updateLatLngInSheets(
-        //   geoCodeArray,
-        //   spreadsheetId,
-        //   auth
-        // );
-        console.log('Creating File')
-        fs.writeFileSync(
-          "geodata.js",
-          `window.geodata=${JSON.stringify(geoCodeArray)}`
-        );
-      } else {
-        console.log("No data found.");
-      }
+    body: JSON.stringify({
+      "sql": sql,
+      "args": args,
+      "timeout": 500
+    }),
+  }
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
     }
-  );
+
+    const json = await response.json();
+    return json.records;
+
+  } catch (error) {
+    console.error(error.message);
+  }
 }
+
+main();

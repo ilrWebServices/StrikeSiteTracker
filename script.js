@@ -1,937 +1,465 @@
-//UTILS
-function convertLatLngStringToObj(LatLngString) {
-  const array = LatLngString.split(",");
-  return {
-    lat: Number(array[0]),
-    lng: Number(array[1]),
+(function(document) {
+
+  let map = false;
+  const actions = new Map();
+  const markers = L.markerClusterGroup({ disableClusteringAtZoom: 17 });
+  const personIcon = L.icon({
+    iconUrl: 'images/person.png',
+    shadowUrl: 'images/person-shadow.png',
+    iconSize:     [30, 45], // size of the icon
+    shadowSize:   [65, 35], // size of the shadow
+    iconAnchor:   [10, 45], // point of the icon which will correspond to marker's location
+    shadowAnchor: [15, 30],  // the same for the shadow
+    popupAnchor:  [14, -23] // point from which the popup should open relative to the iconAnchor
+  });
+  const form_opts = {
+    states: [''],
+    industries: [''],
+    demands: [
+      '',
+      'Pay',
+      'Health and safety',
+      'Staffing',
+      'Healthcare',
+      'Job Security',
+      'First contract',
+      'Union recognition',
+      'Retirement benefits',
+      'Racial justice',
+      'Scheduling',
+      'End to anti-union retaliation',
+    ],
+    durations: [
+      '',
+      '1 day or less',
+      '2-7 days',
+      '8-30 days',
+      '31+ days',
+    ],
+    participant_counts: [
+      '',
+      'Less than 100',
+      'Between 100 and 199',
+      'Between 200 and 299',
+      'Between 300 and 499',
+      'Between 500 and 1999',
+      'Greater than 2000',
+    ],
   };
-}
-function formatDateToMMDDYYYY(dateString) {
-  const dateArray = dateString.split("-");
-  return `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`;
-}
-function todaysDate() {
-  const date = new Date();
-  const dayIndex = date.getDate()
-  const year = date.getFullYear()
-  const monthIndex = date.getMonth()
-  const month = String(monthIndex+1).length > 1?String(monthIndex+1):'0'+String(monthIndex+1)
-  const day = String(dayIndex).length > 1?String(dayIndex):'0'+String(dayIndex)
-  return `${year}/${month}/${day}`;
-}
-function selectCreator(ArrayOfOptions, element) {
-  ArrayOfOptions.forEach((val) => {
-    var option = document.createElement("option");
-    option.value = val;
-    option.text = val;
-    element.appendChild(option);
-  });
-}
-function mysql_real_escape_string(str) {
-  return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
-    switch (char) {
-      case "\0":
-        return "\\0";
-      case "\x08":
-        return "\\b";
-      case "\x09":
-        return "\\t";
-      case "\x1a":
-        return "\\z";
-      case "\n":
-        return "\\n";
-      case "\r":
-        return "\\r";
-      case '"':
-      case "'":
-      case "\\":
-      case "%":
-        return "\\" + char; // prepends a backslash to backslash, percent,
-      // and double/single quotes
-      default:
-        return char.trim();
-    }
-  });
-}
-function circlePointsFromCenter(steps,radius, {lat, lng}){
-  const coordinates = []
-  for (var i = 0; i < steps; i++) {
-    let degrees = (i/steps)*360
-    let radians = (Math.PI/180)*degrees
-    lat = lat + radius * Math.cos(radians)
-    lng = lng + radius * Math.sin(radians)
-    coordinates.push(`${lat}, ${lng}`);
-  }
-    return coordinates
-}
-const pluralize = (count, noun, suffix = 's') => `${count} ${noun}${count !== 1 ? suffix : ''}`;
-// CONSTANTS
-const reportFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSdNP8zfmUU7jcrFVAS4fuP-EUUD2J86P11YlFXd7dE7Nn21zQ/viewform'
-// OPTION LISTS
-const STATE_LIST = [
-  "Alabama",
-  "Alaska",
-  "American Samoa",
-  "Arizona",
-  "Arkansas",
-  "California",
-  "Colorado",
-  "Connecticut",
-  "Delaware",
-  "District Of Columbia",
-  "Federated States Of Micronesia",
-  "Florida",
-  "Georgia",
-  "Guam",
-  "Hawaii",
-  "Idaho",
-  "Illinois",
-  "Indiana",
-  "Iowa",
-  "Kansas",
-  "Kentucky",
-  "Louisiana",
-  "Maine",
-  "Marshall Islands",
-  "Maryland",
-  "Massachusetts",
-  "Michigan",
-  "Minnesota",
-  "Mississippi",
-  "Missouri",
-  "Montana",
-  "Nebraska",
-  "Nevada",
-  "New Hampshire",
-  "New Jersey",
-  "New Mexico",
-  "New York",
-  "North Carolina",
-  "North Dakota",
-  "Northern Mariana Islands",
-  "Ohio",
-  "Oklahoma",
-  "Oregon",
-  "Palau",
-  "Pennsylvania",
-  "Puerto Rico",
-  "Rhode Island",
-  "South Carolina",
-  "South Dakota",
-  "Tennessee",
-  "Texas",
-  "Utah",
-  "Vermont",
-  "Virgin Islands",
-  "Virginia",
-  "Washington",
-  "West Virginia",
-  "Wisconsin",
-  "Wyoming",
-];
-const INDUSTRY_LIST = [
-  "Accommodation and Food Services",
-  "Administrative and Support and Waste Management",
-  "Agriculture",
-  "Arts",
-  "Central Administrative Office Activity",
-  "Construction",
-  "Educational Services",
-  "Finance and Insurance",
-  "Health Care and Social Assistance",
-  "Information",
-  "Management of Companies and Enterprises",
-  "Manufacturing",
-  "Mining",
-  "Other Services (except Public Administration)",
-  "Professional",
-  "Public Administration",
-  "Real Estate and Rental and Leasing",
-  "Retail Trade",
-  "Transportation and Warehousing",
-  "Utilities",
-  "Wholesale Trade",
-  "Entertainment and Recreation",
-  "Fishing & Hunting",
-  "Forestry,Scientific and Technical Services",
-];
-const WORKER_DEMAND = [
-  "$15 minimum wage",
-  "COVID-19 protocols",
-  "First contract",
-  "Health and safety",
-  "Healthcare",
-  "Job Security",
-  "Pandemic Relief",
-  "Pay",
-  "Racial justice",
-  "Retirement benefits",
-  "Staffing",
-  "Union recognition"
-];
-const DURATION_UNIT_DAY_CONDITION = ` AND Duration_Unit LIKE '%Days%'`;
-const DURATION_UNIT_LESS_THAN_DAY_CONDITION = `(Duration_Amount <= 1 AND Duration_Unit LIKE '%Days%') OR ((Duration_Unit LIKE '%Hours%') OR (Duration_Unit LIKE '%Minutes%'))`;
-const DURATION_ARRAY = {
-  "1 day or less": DURATION_UNIT_LESS_THAN_DAY_CONDITION,
-  "2-7 days":
-    "Duration_Amount >= 2 AND Duration_Amount < 8" +
-    DURATION_UNIT_DAY_CONDITION,
-  "8-30 days":
-    "Duration_Amount >= 8 AND Duration_Amount <= 30" +
-    DURATION_UNIT_DAY_CONDITION,
-  "31+ days": `DATEDIFF(day, Start_Date , '${todaysDate()}') > 30 AND End_Date = "") || (Duration_Amount >= 31` + DURATION_UNIT_DAY_CONDITION,
-};
+  const {div, p} = van.tags
+  const result_count = van.state(0);
+  const results_wrapper = div({class: 'results'}, p(() => `${result_count.val} labor actions found.`));
 
-const NO_OF_EMPLOEES = {
-  "Less than 100": "Approximate_Number_of_Employees < 100",
-  "Between 100 and 199":
-    "Approximate_Number_of_Employees >= 100 AND Approximate_Number_of_Employees < 200",
-  "Between 200 and 299":
-    "Approximate_Number_of_Employees >= 200 AND Approximate_Number_of_Employees <= 299",
-  "Between 300 and 499":
-    "Approximate_Number_of_Employees >= 300 AND Approximate_Number_of_Employees <= 499",
-  "Between 500 and 1999":
-    "Approximate_Number_of_Employees >= 500 AND Approximate_Number_of_Employees <= 1999",
-  "Greater than 2000": "Approximate_Number_of_Employees >= 2000",
-};
-// TABLE COLUMN NAMES
-const tableDict = {
-  Employer: {
-    name: "Employer",
-    type: "string",
-  },
-  "Labor Organization": {
-    name: "Labor_Organization",
-    type: "string",
-    filter: filterLabourOrganization,
-  },
-  Local: {
-    name: "Local",
-    type: "string",
-  },
-  Industry: {
-    name: "Industry",
-    type: "string",
-    filter: filterIndustry,
-  },
-  "Bargaining Unit Size": {
-    name: "Bargaining_Unit_Size",
-    type: "number",
-  },
-  "Number of Locations": {
-    name: "Number_of_Locations",
-    type: "number",
-  },
-  "Latitude, Longitude": {
-    name: "Latitude_Longitude",
-    type: "string",
-  },
-  Address: {
-    name: "Address",
-    type: "string",
-  },
-  City: {
-    name: "City",
-    type: "string",
-  },
-  State: {
-    name: "State",
-    type: "string",
-    filter: filterStates,
-  },
-  "Zip Code": {
-    name: "Zip_Code",
-    type: "string",
-  },
-  "Strike or Protest": {
-    name: "Strike_or_Protest",
-    type: "string",
-    filter: filterType,
-  },
-  "Approximate Number of Participants": {
-    name: "Approximate_Number_of_Employees",
-    type: "number",
-    filter: filterNoOfEmp,
-  },
-  "Start Date": {
-    name: "Start_Date",
-    type: "date",
-    filter: filterDate,
-  },
-  "End Date": {
-    name: "End_Date",
-    type: "date",
-  },
-  "Duration Amount": {
-    name: "Duration_Amount",
-    type: "number",
-    filter: filterDuration,
-  },
-  "Duration Unit": {
-    name: "Duration_Unit",
-    type: "string",
-  },
-  Authorized: {
-    name: "Authorized",
-    type: "string",
-    filter: filterAuthorized,
-  },
-  Threat: {
-    name: "Threat",
-    type: "string",
-  },
-  "Worker Demands": {
-    name: "Worker_Demands",
-    type: "string",
-    filter: filterWorkerDemands,
-  },
-  Source: {
-    name: "source",
-    type: "string",
-  },
-  positionId: {
-    name: "positionId",
-    type: "string",
-  },
-  labor_action_id: {
-    name: "labor_action_id",
-    type: "number",
-  },
-  connectedRow: {
-    name: "connectedRow",
-    type: "string",
-  },
-  Notes: {
-    name: "Notes",
-    type: "string",
-  },
-};
-const OR = " OR ";
-//
-// DOM FUNCTIZONS
-function showSnackbar() {
-  // Get the snackbar DIV
-  const shownsnack = localStorage.getItem('shownsnack')
-  // if(!shownsnack && window.innerWidth < 500){
+  let processFormTimeoutId = null;
+  const processForm = (e) => {
+    let form = e.currentTarget;
 
+    if (e.target.type == 'text') {
+      window.clearTimeout(processFormTimeoutId);
+      processFormTimeoutId = window.setTimeout(() => {
+        search(new FormData(form))
+      }, 1000);
+    }
+    else {
+      search(new FormData(form))
+    }
+  };
 
-    if(!shownsnack){
-         // Add the "show" class to DIV
-         var x = document.getElementById("snackbar");
-    x.setAttribute('style',`visibility: visible;-webkit-animation: fadein 0.5s, fadeout 5.5s;
-    animation: fadein 0.5s, fadeout 5.5s;`)
-    // After 3 seconds, remove the show class from DIV
-    setTimeout(function(){ x.setAttribute('style',`visibility: hidden`) }, 5000);
-    localStorage.setItem('shownsnack', true);
-    }
-  // }
-}
-//FILTER FUNCTIONS
-function filterDate(params) {
-  if (params.fromDate && params.endDate)
-    return `Start_Date >= '${params.fromDate}' and Start_Date <= '${params.endDate}'`;
-  else return "";
-}
-function filterLabourOrganization(params) {
-  if (params.searchTextLO)
-    return `Labor_Organization LIKE '%${params.searchTextLO}%'`;
-  else return "";
-}
-function filterNoOfEmp(params) {
-  let filterString = "";
-  params.NoOfEmp.forEach((empKey, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `(${NO_OF_EMPLOEES[empKey]})`;
-  });
-  return filterString ? `(${filterString})` : "";
-}
-function filterDuration(params) {
-  let filterString = "";
-  console.log(params.duration,'<-----------------params.duration')
-  params.duration.forEach((durationKey, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `(${DURATION_ARRAY[durationKey]})`;
-  });
-  return filterString ? `(${filterString})` : "";
-}
-function filterType(params) {
-  let filterString = "";
+  const search = (form_data) => {
+    const results = new Map();
 
-  params.typeArray.forEach((type, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `Strike_or_Protest LIKE '%${type}%'`;
-  });
-  return filterString ? `(${filterString})` : "";
-}
-function filterIndustry(params) {
-  let filterString = "";
-  params.industryValue.forEach((ind, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `Industry LIKE '%${ind}%'`;
-  });
-  return filterString ? `(${filterString})` : "";
-}
+    for (const [action_id, action] of actions) {
+      let conditions = {};
 
-function filterStates(params) {
-  let filterString = "";
-  params.stateValue.forEach((st, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `State LIKE '%${st}%'`;
-  });
-  return filterString ? `(${filterString})` : "";
-}
-function filterWorkerDemands(params) {
-  let filterString = "";
-  params.workerDemandsValue.forEach((wd, index) => {
-    if (index !== 0) {
-      filterString += OR;
-    }
-    filterString += `Worker_Demands LIKE '%${wd.replace('$', '\\$')}%'`;
-  });
-  return filterString ? `(${filterString})` : "";
-}
-function filterAuthorized(params) {
-  let filterString = "";
-  if (params.Authorized) {
-    filterString = `Authorized='N'`;
-  }
-  return filterString;
-}
-// CONVERT JSON INTO SQL DATABASE (PREPROCESSING DATA)
-async function createTableAndInsertValues() {
-  //  TABLE CREATION STING
-  let createTableColStringAndType = "";
-  let createTableColString = "";
-  const tableDictArray = Object.keys(tableDict);
-  const tableDictArrayLength = tableDictArray.length;
-  tableDictArray.forEach((key, index) => {
-    createTableColString += `${tableDict[key].name} `;
-    createTableColStringAndType += `${tableDict[key].name} ${tableDict[key].type}`;
-    if (index !== tableDictArrayLength - 1) {
-      createTableColString += `, `;
-      createTableColStringAndType += ", ";
-    }
-  });
-  let valuesString = "";
-  let queryString = `CREATE TABLE geodata (${createTableColStringAndType},  PRIMARY KEY (positionId))`;
-  await alasql.promise(queryString);
-  // SANATIZING VALUES ADDING VALUES TO TABLE
-  const geodatalen = window.geodata.length;
-  console.log(geodatalen);
-  window.geodata.forEach((obj, geoindex) => {
-    // The geoindex, or row number, is the closest thing we have to a unique id
-    // to a labor action.
-    obj['labor_action_id'] = geoindex;
-    const strikeNumber = Number(obj["Number of Locations"]) || 1;
-    if (strikeNumber > 1) {
-      const latlngArray = obj["Latitude, Longitude"].split(";");
-      const addressArray = obj["Address"].split(";");
-      const cityArray = obj["City"].split(";");
-      const stateArray = obj["State"].split(";");
-      const zipCodeArray = obj["Zip Code"].split(";");
-      const latlngArrayLength = latlngArray.length - 1;
-      const addressArrayLength = addressArray.length;
-      const cityArrayLength = cityArray.length;
-      const stateArrayLength = stateArray.length;
-      const zipCodeArrayLength = zipCodeArray.length;
-      if (
-        latlngArrayLength === strikeNumber &&
-        addressArrayLength === strikeNumber &&
-        cityArrayLength === strikeNumber &&
-        stateArrayLength === stateArrayLength &&
-        strikeNumber === zipCodeArrayLength
-      ) {
-        const singleEventArray = [];
-        for (let index = 0; index < strikeNumber; index++) {
-          singleEventArray.push({
-            ...obj,
-            connectedRow: obj["positionId"],
-            positionId: obj["positionId"] + "." + index,
-            "Latitude, Longitude": latlngArray[index],
-            Address: addressArray[index],
-            City: cityArray[index],
-            State: stateArray[index],
-            "Zip Code": zipCodeArray[index],
-          });
-        }
-        singleEventArray.forEach((singleEvent, i) => {
-          let singleValueString = "";
-          tableDictArray.forEach((key, index) => {
-            if (key === 'Approximate Number of Participants' && !singleEvent[key]) {
-              singleEvent['Approximate Number of Participants'] = singleEvent['Bargaining Unit Size'];
-            }
+      if (form_data.getAll('action-type').length) {
+        conditions.action_type = form_data.getAll('action-type').includes(action.Action_type);
+      }
 
-            if (
-              tableDict[key].type === "string" ||
-              tableDict[key].type === "date"
-            ) {
-              const cellValue = singleEvent[key]
-              ? mysql_real_escape_string(String(singleEvent[key]))
-              : ""
-              if(cellValue === 'UAPD - AFSCME'){
-                console.log(latlngArray,'UAPD - AFSCME')
-              }
-              singleValueString += `'${cellValue}'`;
-            } else if (tableDict[key].type === "number") {
-              singleValueString +=
-                Number(singleEvent[key]) && !isNaN(Number(singleEvent[key]))
-                  ? Number(singleEvent[key])
-                  : 0;
-            }
-            if (index !== tableDictArrayLength - 1) {
-              singleValueString += `,  `;
-            }
-          });
+      if (form_data.get('searchstr')) {
+        conditions.searchstr = action.Employer.toUpperCase().includes(form_data.get('searchstr').toUpperCase()) || action.Labor_Organization.toUpperCase().includes(form_data.get('searchstr').toUpperCase());
+      }
 
-          valuesString += `(${singleValueString})`;
+      if (form_data.get('start-date-from')) {
+        conditions.state_date_from = action.Start_date > form_data.get('start-date-from');
+      }
 
-          if (!(i === strikeNumber - 1 && geoindex === geodatalen - 1)) {
-            valuesString += `,`;
+      if (form_data.get('start-date-to')) {
+        conditions.state_date_to = action.Start_date < form_data.get('start-date-to');
+      }
+
+      if (form_data.get('state')) {
+        conditions.state = false;
+
+        for (const location of action.locations) {
+          if (location.State.toUpperCase().includes(form_data.get('state').toUpperCase())) {
+            conditions.state = true;
+            break;
           }
-        });
-      } else {
-        console.log("Length", obj);
-        console.error("Mismatch");
-      }
-    }
-    // IF SINGLE LOCATION STRIKE
-    else if (strikeNumber === 1) {
-      let singleValueString = "";
-      tableDictArray.forEach((key, index) => {
-        if (key === 'Approximate Number of Participants' && !obj[key]) {
-          obj['Approximate Number of Participants'] = obj['Bargaining Unit Size'];
         }
-
-        if (
-          tableDict[key].type === "string" ||
-          tableDict[key].type === "date"
-        ) {
-          singleValueString += `'${
-            obj[key] ? mysql_real_escape_string(String(obj[key])) : ""
-          }'`;
-        } else if (tableDict[key].type === "number") {
-          singleValueString +=
-            Number(obj[key]) && !isNaN(Number(obj[key])) ? Number(obj[key]) : 0;
-        }
-        if (index !== tableDictArrayLength - 1) {
-          singleValueString += `,  `;
-        }
-      });
-
-      valuesString += `(${singleValueString})`;
-      if (geoindex !== geodatalen - 1) {
-        valuesString += `,`;
       }
-    }
-  });
-  await alasql.promise(
-    `INSERT INTO geodata (${createTableColString}) VALUES ${valuesString}`
-  );
-  await updateTableWithUniqueLatLong()
-  const res = await alasql.promise(
-    `SELECT * from geodata WHERE Start_Date != '' AND Strike_or_Protest LIKE '%Strike%' ORDER BY Start_Date  DESC`
-  );
 
-  initMap(res);
-}
-//UPDATE LAT LONG PLACES WITH SAME LAT LONG
-async function updateTableWithUniqueLatLong(){
-  const listofCommonLatLng = await alasql.promise(`SELECT Latitude_Longitude, COUNT(*) AS countVal, SUM(positionId+',') AS posString, SUM(Labor_Organization+',') AS me
-  FROM geodata
-  GROUP BY Latitude_Longitude
-  HAVING COUNT(*) > 1`)
-  console.log(listofCommonLatLng)
-  let countIndex = 0
-  const listLength = listofCommonLatLng.length;
-  while(countIndex < listLength){
-    const row  = listofCommonLatLng[countIndex]
-    if(row['Latitude_Longitude']){
-      const llObj = convertLatLngStringToObj(row['Latitude_Longitude'])
-      const posArray = row['posString'].split(',')
-      const cordinateList = circlePointsFromCenter(row['countVal'],0.0001,llObj)
-      let cIndex = 0
-      const corListLength = cordinateList.length;
-      while(cIndex < corListLength){
-        const cor = cordinateList[cIndex]
-       const val = await alasql.promise(`UPDATE geodata
-                SET Latitude_Longitude = "${cor}"
-                WHERE Latitude_Longitude = "${row['Latitude_Longitude']}" and positionId = "${posArray[cIndex]}"`)
-                console.log(val)
-                cIndex++
+      if (form_data.get('industry')) {
+        conditions.industry = action.Industry.includes(form_data.get('industry'));
       }
-    }
-    countIndex++;
-  }
-}
-// ON LOAD EVENT (INITIALIZATION)
-window.addEventListener("load", async () => {
-  setTimeout(showSnackbar)
-  await createTableAndInsertValues();
-  // DATES
-  const fromDate = document.getElementById("fromDate");
-  const endDate = document.getElementById("endDate");
-  const approvedCheckBox = document.getElementById("approved");
-  const strikeValueCheckBox = document.getElementById("strikeValue");
-  const protestValueCheckBox = document.getElementById("protestValue");
-  const searchLabourOrganization = document.getElementById("labOrgSearch");
-  const filterButton = document.getElementById("filterButton");
-  const filterForm = document.getElementById("filterForm");
-  const reportButton = document.getElementById("reportButton");
-  reportButton.setAttribute("href",reportFormLink);
-  const noBox = Array.prototype.slice.call(document.getElementsByClassName('no-box'))[0]
-  noBox.classList.add('filter-box');
-  noBox.classList.remove('no-box');
-  filterForm.onsubmit = () => {
-    onFilterSubmit();
-    return false;
-  };
-  const minMaxDateObj = await alasql.promise(
-    `SELECT MIN(Start_Date) as fromDate, MAX(Start_Date) as endDate from geodata where Start_Date != ''`
-  );
-  // TYPE
-  // lockoutValueCheckBox.checked = true;
-  // protestValueCheckBox.checked = true;
-  strikeValueCheckBox.checked = true;
-  // DATE
-  fromDate.value = minMaxDateObj[0].fromDate;
-  endDate.value = minMaxDateObj[0].endDate;
-  // STATES
-  const stateElement = document.getElementById("states");
-  // INDUSTRY
-  const industryElement = document.getElementById("industry");
-  // WORKER DEMAND
-  const wDElement = document.getElementById("workerDemand");
-  // NO OF EMPLOYEES
-  const NoOfEmp = document.getElementById("NoOfEmp");
-  // DURATION
-  const duration = document.getElementById("duration");
-  // ADD OPTIONS FROM OPTIONS LIST
-  selectCreator(Object.keys(NO_OF_EMPLOEES), NoOfEmp);
-  selectCreator(Object.keys(DURATION_ARRAY), duration);
-  selectCreator(WORKER_DEMAND, wDElement);
-  selectCreator(INDUSTRY_LIST, industryElement);
-  selectCreator(STATE_LIST, stateElement);
-  // SET SLIM SELECT
-  const stateSelect = new SlimSelect({
-    select: "#states",
-  });
-  const industrySelect = new SlimSelect({
-    select: "#industry",
-  });
-  const workerDemandSelect = new SlimSelect({
-    select: "#workerDemand",
-  });
-  const durationSelect = new SlimSelect({
-    select: "#duration",
-  });
-  const NoOfEmpSelect = new SlimSelect({
-    select: "#NoOfEmp",
-  });
-  // ON SUMBIT OF FILTER FORM
-  const onFilterSubmit = async (event) => {
-    const typeArray = [];
-    if (strikeValueCheckBox.checked) {
-      typeArray.push("Strike");
-    }
-    if (protestValueCheckBox.checked) {
-      typeArray.push("Protest");
-    }
 
-    const paramValue = {
-      fromDate: fromDate.value,
-      endDate: endDate.value,
-      typeArray: typeArray,
-      Authorized: approvedCheckBox.checked,
-      workerDemandsValue: workerDemandSelect.selected(),
-      stateValue: stateSelect.selected(),
-      industryValue: industrySelect.selected(),
-      NoOfEmp: NoOfEmpSelect.selected(),
-      duration: durationSelect.selected(),
-      searchTextLO: searchLabourOrganization.value,
-    };
+      if (form_data.getAll('worker-demands').length) {
+        // if (action.Worker_demands.some(item => form_data.getAll('worker-demands').includes(item))) {
+        //   console.log(form_data.getAll('worker-demands'));
+        //   console.log(action.Worker_demands);
+        // }
+        // This checks to see if the action has _any_ of the selected demands,
+        // not all.
+        conditions.demands = action.Worker_demands.some(item => form_data.getAll('worker-demands').includes(item));
+      }
 
-    console.log(paramValue);
-    let cString = "";
-    let filterCount = 0;
-    Object.keys(tableDict).forEach((key, index) => {
-      if (typeof tableDict[key].filter === "function") {
-        const stringValue = tableDict[key].filter(paramValue);
-        if (stringValue) {
-          if (filterCount !== 0) {
-            cString += " AND ";
+      if (form_data.get('duration')) {
+        conditions.duration = (() => {
+          switch (form_data.get('duration')) {
+            case '1 day or less':
+              return action.Duration <= 1;
+            case '2-7 days':
+              return action.Duration >= 2 && action.Duration <= 7;
+            case '8-30 days':
+              return action.Duration >= 8 && action.Duration <= 30;
+            case '31+ days':
+              return action.Duration >= 31;
+            default:
+              return false;
           }
-          filterCount += 1;
-          cString += stringValue;
+        })();
+      }
+
+      if (form_data.get('participant-count')) {
+        conditions.participant_count = (() => {
+          switch (form_data.get('participant-count')) {
+            case 'Less than 100':
+              return action.Approximate_Number_of_Participants < 100;
+            case 'Between 100 and 199':
+              return action.Approximate_Number_of_Participants >= 100 && action.Approximate_Number_of_Participants < 200;
+            case 'Between 200 and 299':
+              return action.Approximate_Number_of_Participants >= 200 && action.Approximate_Number_of_Participants < 300;
+            case 'Between 300 and 499':
+              return action.Approximate_Number_of_Participants >= 300 && action.Approximate_Number_of_Participants < 500;
+            case 'Between 500 and 1999':
+              return action.Approximate_Number_of_Participants >= 500 && action.Approximate_Number_of_Participants < 2000;
+            case 'Greater than 2000':
+              return action.Approximate_Number_of_Participants >= 2000;
+            default:
+              return false;
+          }
+        })();
+      }
+
+      if (form_data.get('authorized')) {
+        conditions.authorized = Boolean(action.Authorized);
+      }
+
+      // Is every condition true?
+      if (Object.values(conditions).every(Boolean)) {
+        // console.log(conditions);
+        results.set(action_id, action);
+      }
+    }
+
+    markers.clearLayers();
+    map.setView([38, -97], 4);
+
+    // Hide all cards.
+    for (const [action_id, action] of actions) {
+      // action.card.style.display = 'none';
+      if (results_wrapper.contains(action.card)) {
+        results_wrapper.removeChild(action.card)
+      }
+    }
+
+    result_count.val = results.size;
+
+    if (results.size) {
+      // Scroll to top of results.
+      results_wrapper.scrollIntoView();
+
+      for (const [id, result] of results) {
+        // Show the action card if it's in the results.
+        // result.card.style.display = 'block';
+        results_wrapper.appendChild(result.card)
+
+        for (const location of result.locations) {
+          // console.log(location.marker);
+          markers.addLayer(location.marker);
         }
       }
-    });
-    console.log(cString);
-    const queryString = `SELECT * from geodata WHERE ${cString} ORDER BY Start_Date DESC`;
-    console.log(queryString);
-    const res = await alasql.promise(queryString);
-    initMap(res);
+    }
 
-    console.log(res);
+    return results;
   };
-  filterButton.onclick = onFilterSubmit;
-});
 
-// Initialize and add the map
-function initMap(geodata) {
-  let infowindow = null;
-  let currWindow = false;
-  const listDiv = document.getElementById("list-box");
-  const resultCountDiv = document.getElementById("resultCount");
-  let labor_action_ids = [];
+  document.addEventListener('DOMContentLoaded', async (event) => {
+    await init();
+    const listing_wrapper = document.querySelector('#listing');
 
-  geodata.forEach(function(labor_action) {
-    labor_action_ids.push(labor_action.labor_action_id)
-  });
+    let filter_form = createElementFromTemplate(renderSearchForm());
+    filter_form.addEventListener('input', processForm);
 
-  let unique_labor_action_ids = [...new Set(labor_action_ids)];
+    van.add(listing_wrapper, filter_form);
+    van.add(listing_wrapper, results_wrapper);
 
-  if(geodata.length){
-    resultCountDiv.innerHTML = `<span class="resultText"><strong>${pluralize(unique_labor_action_ids.length, 'labor action')}</strong> found in ${pluralize(geodata.length, 'location')}</span>`;
-  }else{
-    resultCountDiv.innerHTML = `It looks like you've requested information we haven't accounted for yet. Would you like to <a target="_blank" href="${reportFormLink}">report</a> a new strike or protest?`
-  }
-  listDiv.innerHTML = "";
-  function createInfoWindow(strike, marker) {
-    if (infowindow) {
-      infowindow.close();
-    }
-    console.log('Outside')
-    infowindow = new google.maps.InfoWindow({
-      content: createContentString(strike),
-    });
-    infowindow.open(map, marker);
-  }
-  function createCard(strike, marker) {
-    const card = document.createElement("div");
-    const chkinput = document.createElement("input");
-    const chklabel = document.createElement("label");
-    const labelDiv = document.createElement("div");
-    const dateDiv = document.createElement("div");
-    const infoDiv = document.createElement("div");
-    const employerDiv = document.createElement("div");
-    const loDiv = document.createElement("div");
-    const chkId = `chkinput-${strike.positionId}`
-    card.setAttribute("class", "tab");
-    chklabel.setAttribute("class", "tab-label");
-    chklabel.setAttribute("for", chkId);
-    labelDiv.setAttribute("class", "labelDiv");
-    chklabel.append(labelDiv);
-    chkinput.setAttribute("type", "checkbox");
-    chkinput.setAttribute("id",chkId );
-    chkinput.setAttribute("class", "hidechk");
-    const cardBody = document.createElement("div");
-    cardBody.setAttribute("class", "tab-content");
-    dateDiv.setAttribute("class", "date-card");
-    infoDiv.setAttribute("class", "info-card");
-    cardBody.innerHTML = createContentString(strike);
-    const startDate = document.createElement("div");
-    const endDate = document.createElement("div");
-    startDate.innerHTML = `<strong>From</strong>: ${formatDateToMMDDYYYY(strike.Start_Date)}`;
-    endDate.innerHTML = strike.End_Date
-      ? `<strong>To</strong>: ${formatDateToMMDDYYYY(strike.End_Date)}`
-      : "";
-    employerDiv.innerHTML = strike.Employer
-      ? `<strong>Employer</strong>: ${strike.Employer}`
-      : "";
-    loDiv.innerHTML = strike.Labor_Organization
-      ? `<strong>Labor Organization</strong>: ${strike.Labor_Organization}`
-      : "";
-    infoDiv.append(employerDiv);
-    infoDiv.append(loDiv);
-    dateDiv.append(startDate);
-    dateDiv.append(endDate);
-    labelDiv.append(dateDiv);
-    labelDiv.append(infoDiv);
-    card.append(chkinput);
-    card.append(chklabel);
-    card.append(cardBody);
-    chkinput.addEventListener("change", (e) => {
-      if (e.target.checked) {
-        const strikePosition = convertLatLngStringToObj(
-          strike["Latitude_Longitude"]
-        );
-        map.setZoom(15);
-        map.panTo(strikePosition);
-        createInfoWindow(strike, marker);
-        // addBounceToMarkers(strike)
-      }
-    });
-
-    return card;
-  }
-  function createContentString(strike) {
-    let htmlString = "";
-
-    for (const keyName of Object.keys(tableDict)) {
-      if (['Latitude, Longitude', 'labor_action_id'].includes(keyName)) {
-        continue;
-      }
-      // console.log(strike[keyName])
-      const colObj = tableDict[keyName];
-      if (colObj.name == "source") {
-        let sourceString = strike[colObj.name];
-        const sourceArray = sourceString.split(";");
-        const htmlSourceString = sourceArray.map((s, i) => {
-          return `<a href="${s.trim()}" target="_blank" rel="noopener noreferrer">Source ${
-            i + 1
-          }</a>`;
-        });
-        htmlString += `<strong>${keyName}</strong> : ${htmlSourceString} </br>`;
-      } else if (
-        strike[colObj.name] &&
-        (colObj.name === "Start_Date" || colObj.name === "End_Date")
-      ) {
-        htmlString += `<strong>${keyName}</strong> : ${formatDateToMMDDYYYY(
-          strike[colObj.name]
-        )} </br>`;
-      } else if (strike[colObj.name] && colObj.name === "connectedRow") {
-        const connectedRowArray =
-          window.sameLocationDictionary[strike["connectedRow"]].array;
-        const otherLocationsString = connectedRowArray
-          .map((loc, locIndex) => {
-            let tempMarker = null;
-            // console.log(loc,window.markerArray,'<-----------------loc')
-            window.markerArray.forEach((m, i) => {
-              if (m.marker.get("id") === loc) {
-                tempMarker = m;
-              }
-            });
-            // console.log(locIndex, tempMarker,'<-----------------tempMarker')
-            if (
-              tempMarker &&
-              tempMarker.strike["positionId"] !== strike["positionId"]
-            ) {
-              const strikePosition = convertLatLngStringToObj(
-                tempMarker.strike["Latitude_Longitude"]
-              );
-
-              setTimeout(() => {
-                document.getElementById(loc).onclick = () => {
-                  map.setZoom(15);
-                  map.panTo(strikePosition);
-                  createInfoWindow(tempMarker.strike, tempMarker.marker);
-                };
-              }, 2000);
-              return `<div class="addressLink" id="${loc}">${
-                tempMarker.strike["Address"]
-                  ? tempMarker.strike["Address"] + ", "
-                  : ""
-              }${
-                tempMarker.strike["City"]
-                  ? tempMarker.strike["City"] + ", "
-                  : ""
-              }${
-                tempMarker.strike["State"] ? tempMarker.strike["State"] : ""
-              } </div><br/>`;
-            } else {
-              return "";
-            }
-          })
-          .join("");
-        htmlString += `<strong>These are the ${
-          connectedRowArray.length - 1
-        } labor actions that are connected to this labor action</strong><br>`;
-        htmlString += otherLocationsString;
-      } else if (strike[colObj.name] && colObj.name !== "positionId") {
-        htmlString += `<strong>${keyName}</strong> : ${
-          strike[colObj.name]
-        } </br>`;
-      }
-    };
-    return htmlString;
-  }
-  // The location of Uluru
-  // The map, centered at Uluru
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 4,
-    // center: convertLatLngStringToObj(geodata[0]['Latitude_Longitude'])
-    center: { lat: 39.7427825897816, lng: -101.69676383031963 },
-  });
-  window.markerArray = [];
-  window.sameLocationDictionary = {};
-  geodata.forEach((datum) => {
-    const { connectedRow, positionId } = datum;
-    if (connectedRow) {
-      if (window.sameLocationDictionary[connectedRow]) {
-        window.sameLocationDictionary[connectedRow].array.push(positionId);
-      } else {
-        window.sameLocationDictionary[connectedRow] = {
-          toggle: false,
-          array: [positionId],
-        };
-      }
-    }
-  });
-  function addBounceToMarkers(strike) {
-    if (window.sameLocationDictionary[strike["connectedRow"]]) {
-      const bounds = new google.maps.LatLngBounds();
-      window.sameLocationDictionary[strike["connectedRow"]].array.forEach(
-        (loc, locIndex) => {
-          window.markerArray.forEach((m, i) => {
-            if (m.get("id") === loc) {
-              if (
-                window.sameLocationDictionary[strike["connectedRow"]].toggle
-              ) {
-                m.setAnimation(null);
-              } else {
-                m.setAnimation(google.maps.Animation.BOUNCE);
-                bounds.extend(m.getPosition());
-              }
-            }
-          });
+    // Enhance the worker demands multiple select input.
+    const enh_select_demands = new SlimSelect({
+      select: '#worker-demands',
+      events: {
+        afterChange: () => {
+          filter_form.dispatchEvent(new Event('input'));
         }
-      );
-      map.fitBounds(bounds);
-      window.sameLocationDictionary[strike["connectedRow"]].toggle = !window
-        .sameLocationDictionary[strike["connectedRow"]].toggle;
+      }
+    });
+
+    // Reset the enhanced worker demands multple select input when the form is reset.
+    filter_form.addEventListener('reset', (event) => {
+      enh_select_demands.setSelected();
+    });
+
+    // Trigger the input event on the filter form, which will put the cards in
+    // the results listing and markers on the map.
+    filter_form.dispatchEvent(new Event('input'));
+
+    const dialog_element = document.getElementById('reusable-dialog');
+    const dialog_content = dialog_element.querySelector('.content');
+
+    // Add a global document body click handler for event delegation.
+    document.body.addEventListener('click', async (event) => {
+      if (event.target.matches('.action-card__location')) {
+        let action = actions.get(event.target.dataset.action);
+        let location = action.locations_map.get(Number(event.target.dataset.id));
+        if (!location.marker.isPopupOpen()) {
+          zoom(location.marker);
+
+          // Close the results drawer and if open.
+          document.querySelector('.menu-toggle input').checked = false;
+          document.querySelector('#listing-toggle').checked = false;
+        }
+      } else if (event.target.closest('.action-card')) {
+        // TODO: Fix when viewing popup and clicking on source or selecting text.
+        if (event.target.closest('#listing .results .action-card')) {
+          event.target.closest('#listing .results .action-card').querySelector('.action-card__location').click();
+        }
+      } else if (event.target.matches('.content-link')) {
+        event.preventDefault();
+        const resource = event.target.getAttribute('href');
+
+        const content = await fetchPage(resource);
+        console.log(content);
+
+        dialog_content.innerHTML = content;
+        dialog_element.showModal();
+      } else if (event.target.matches('#reusable-dialog button')) {
+        dialog_element.close();
+      }
+    });
+
+    // Add a global listener for the escape key and use it to reset the filter
+    // form to defaults and trigger an input event to populate the results.
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !dialog_element.open) {
+        filter_form.reset();
+        filter_form.dispatchEvent(new Event('input'));
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        filter_form.dispatchEvent(new Event('input'));
+      }
+    });
+  });
+
+  const init = async () => {
+    map = L.map('map').setView([38, -97], 4);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    // Add the markers to the map.
+    map.addLayer(markers);
+
+    // Amazingly, we can use the Google Maps tile layer if we want to!
+    // L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
+    //   maxZoom: 19,
+    //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    //   subdomains: ['mt0','mt1','mt2','mt3']
+    // }).addTo(map);
+
+    const action_data = await fetchActions();
+    let order = Object.keys(action_data).length;
+
+    // Store all actions in our global actions map.
+    for (const [action_id, action] of Object.entries(action_data)) {
+      action._order = order;
+      order--;
+
+      // Make a DOM element for the card and store it alongside the data.
+      const action_card = renderActionCard(action);
+      action.card = createElementFromTemplate(action_card);
+
+      // action.locations is an array. Make a Map for the locations for easy lookup.
+      action.locations_map = new Map();
+      actions.set(action_id, action);
+
+      for (const location of action.locations) {
+        // Store a marker with the location for easy reference.
+        location.marker = L.marker([location.Latitude, location.Longitude], { title: location.City, action: action_id, location: location.id, icon: personIcon });
+
+        // We don't put `action.card` here because it would be the same DOM node
+        // and can only be placed in the DOM once.
+        location.marker.bindPopup((layer) => renderActionCard(action, location.id), {
+          minWidth: 300
+        });
+
+        action.locations_map.set(location.id, location);
+
+        form_opts.states.indexOf(location.State) === -1 ? form_opts.states.push(location.State) : null;
+        form_opts.states.sort();
+      }
+
+      for (const industry of action.Industry) {
+        !form_opts.industries.includes(industry) ? form_opts.industries.push(industry) : null;
+      }
+      form_opts.industries.sort();
+
+      // The worker demands are hardcoded until data cleanup can happen.
+      // for (const demand of action.Worker_demands) {
+      //   form_opts.demands.indexOf(demand) === -1 ? form_opts.demands.push(demand) : null;
+      // }
+      // form_opts.demands.sort();
+    }
+
+    // console.log(form_opts);
+  };
+
+  const zoom = (marker) => {
+    map.flyTo(marker.getLatLng(), 17, {duration: 1})
+      .on('zoomend', () => {
+        marker.openPopup();
+      });
+  };
+
+  const renderSearchForm = () => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 1);
+
+    return `
+      <form class="filter-form">
+        <label>Action type</label>
+        <div class="type-options">
+          <label><input name="action-type" type="checkbox" value="Strike" checked> Strike</label>
+          <label><input name="action-type" type="checkbox" value="Protest"> Protest</label>
+        </div>
+
+        <label for="searchstr">Search</label>
+        <input id="searchstr" name="searchstr" type="text" placeholder="Labor organization or employer">
+
+        <label>Start date range</label>
+        <div class="date-options">
+          <input type="date" aria-label="from" id="start-date-from" name="start-date-from" value="${date.toLocaleDateString('en-CA')}" min="2021-01-01">
+          <input type="date" aria-label="to" id="start-date-to" name="start-date-to">
+        </div>
+
+        <label for="state">State</label>
+        <select id="state" name="state">
+          ${form_opts.states.map(state => `<option value="${state}">${state}</option>`).join('')}
+        </select>
+
+        <label for="industry">Industry</label>
+        <select id="industry" name="industry">
+          ${form_opts.industries.map(industry => `<option value="${industry}">${industry}</option>`).join('')}
+        </select>
+
+        <label for="worker-demands">Worker demands</label>
+        <select id="worker-demands" name="worker-demands" multiple>
+          ${form_opts.demands.map(demand => `<option value="${demand}">${demand}</option>`).join('')}
+        </select>
+
+        <label for="duration">Duration</label>
+        <select id="duration" name="duration">
+          ${form_opts.durations.map(duration => `<option value="${duration}">${duration}</option>`).join('')}
+        </select>
+
+        <label for="participant-count">Participants</label>
+        <select id="participant-count" name="participant-count">
+          ${form_opts.participant_counts.map(duration => `<option value="${duration}">${duration}</option>`).join('')}
+        </select>
+
+        <label for="authorized">Authorized?</label>
+        <input type="checkbox" id="authorized" name="authorized" class="authorized-option"/>
+      </form>
+    `;
+  };
+
+  const renderActionCard = (action, location_id = null) => {
+    // let start_date = new Date(action.Start_date);
+    // let order = Math.floor(start_date.getTime() / 1000) * -1;
+    // console.log(location_id);
+
+    // data-type="${action.Action_type}" data-labor-org="${action.Labor_Organization}" data-start="${action.Start_date}" data-end="${action.End_date}" data-states="" data-industry="" data-worker-demands="" data-duration="" data-participant-count="" data-duration="" data-authorized="${action.Authorized}"
+    let template = `
+      <div class="action-card" style="order: ${action._order}">
+        ${action.Employer ? `<div class="action-card__employer"><strong>Employer:</strong> ${action.Employer}</div>` : ''}
+        ${action.Labor_Organization ? `<div class="action-card__labor-org"><strong>Labor Organization:</strong> ${action.Labor_Organization}</div>` : ''}
+        ${action.Local ? `<div class="action-card__local"><strong>Local:</strong> ${action.Local}</div>` : ''}
+        ${action.Industry ? `<div class="action-card__industry"><strong>Industry:</strong> ${action.Industry.join(' • ')}</div>` : ''}
+        ${action.Approximate_Number_of_Participants ? `<div class="action-card__participant-count"><strong>Approximate number of participants:</strong> ${action.Approximate_Number_of_Participants}</div>` : ''}
+        ${action.Bargaining_Unit_Size ? `<div class="action-card__bargaining-unit-size"><strong>Bargaining unit size:</strong> ${action.Bargaining_Unit_Size}</div>` : ''}
+        ${action.Start_date ? `<div class="action-card__start-date"><strong>Start:</strong> ${action.Start_date}</div>` : ''}
+        ${action.End_date ? `<div class="action-card__end-date"><strong>End:</strong> ${action.End_date}</div>` : ''}
+        ${action.Action_type ? `<div class="action-card__type"><strong>Action type:</strong> ${action.Action_type}</div>` : ''}
+        ${action.Duration ? `<div class="action-card__duration"><strong>Duration:</strong> ${action.Duration} day${action.Duration > 1 ? 's' : ''}</div>` : ''}
+        <div class="action-card__type"><strong>Authorized:</strong> ${action.Authorized ? 'Yes' : 'No'}</div>
+        <div class="action-card__demands"><strong>Worker demands:</strong> ${action.Worker_demands.map(demand => `<span class="action-card__demand">${demand}</span>`).join(' • ')}</div>
+
+        <div class="action-card__location-label"><strong>Location${action.locations.length > 1 ? 's' : ''}:</strong></div>
+        ${action.locations.map(location => `<div class="action-card__location" data-id="${location.id}"
+data-action="${action.id}" data-current="${location.id === location_id}" title="${location.Address}">${location.City}, ${location.State}</div>`).join('')}
+
+        <div class="action-card__source-label"><strong>Source${action.sources.length > 1 ? 's' : ''}:</strong></div>
+        ${action.sources.map((source, index) => `<a href="${source}" target="_blank" title="${source} " class="action-card__source">Source ${index+1}</a>`).join('')}
+        ${action.Notes ? `<div class="action-card__notes"><strong>Notes:</strong> ${action.Notes}</div>` : ''}
+      </div>
+    `;
+
+    return template;
+  };
+
+  const createElementFromTemplate = (html) => {
+    const template = document.createElement('template');
+    template.innerHTML = html.trim();
+    return template.content.firstChild;
+  }
+
+  const fetchActions = async () => {
+    try {
+      const response = await fetch('labor_actions.json');
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      return await response.json();
+
+    } catch (error) {
+      console.error(error.message);
     }
   }
-  // The marker, positioned at Uluru
-  geodata.forEach((strike, index) => {
-    if (strike["Latitude_Longitude"]) {
-      const strikePosition = convertLatLngStringToObj(
-        strike["Latitude_Longitude"]
-      );
-      const marker = new google.maps.Marker({
-        position: strikePosition,
-        map: map,
-        title: strike.City,
-      });
-      marker.set("id", strike["positionId"]);
-      window.markerArray.push({ marker, strike });
-      marker.addListener("click", () => {
-        createInfoWindow(strike, marker);
-        // addBounceToMarkers(strike)
-      });
+
+  const fetchPage = async (url) => {
+    try {
+      const parser = new DOMParser();
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const content = await response.text();
+      const page_dom = parser.parseFromString(content, 'text/html');
+      return page_dom.getElementById('main').innerHTML;
+
+    } catch (error) {
+      console.error(error.message);
     }
-  });
-  window.markerArray.forEach((obj, index) => {
-          ///////
-      const card = createCard(obj.strike, obj.marker);
-      listDiv.append(card);
-      ///////
-  })
-  new MarkerClusterer(
-    map,
-    window.markerArray.map((m) => m.marker),
-    {
-      imagePath:
-        "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-    }
-  );
-}
+  }
+
+})(document);

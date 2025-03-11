@@ -22,6 +22,10 @@ jobs:
       env:
         CI: true
         GRIST_API_TOKEN: ${{ secrets.GRIST_API_TOKEN }}
+    - name: Un-ignore data files
+      run: |
+        sed -i -e 's/^labor_actions.json/# labor_actions.json/g' .gitignore
+        sed -i -e 's/^labor_actions.csv/# labor_actions.csv/g' .gitignore
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
       with:

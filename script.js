@@ -410,7 +410,7 @@
         ${action.End_date ? `<div class="action-card__end-date"><strong>End:</strong> ${action.End_date}</div>` : ''}
         ${action.Action_type ? `<div class="action-card__type"><strong>Action type:</strong> ${action.Action_type}</div>` : ''}
         ${action.Duration ? `<div class="action-card__duration"><strong>Duration:</strong> ${action.Duration} day${action.Duration > 1 ? 's' : ''}</div>` : ''}
-        <div class="action-card__type"><strong>Authorized:</strong> ${action.Authorized ? 'Yes' : 'No'}</div>
+        <div class="action-card__type"><strong>Authorized:</strong> ${action.Authorized}</div>
         <div class="action-card__demands"><strong>Worker demands:</strong> ${action.Worker_demands.map(demand => `<span class="action-card__demand">${demand}</span>`).join(' • ')}</div>
 
         <div class="action-card__location-label"><strong>Location${action.locations.length > 1 ? 's' : ''}:</strong></div>

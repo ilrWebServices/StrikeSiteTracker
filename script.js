@@ -151,7 +151,7 @@
       }
 
       if (form_data.get('authorized')) {
-        conditions.authorized = Boolean(action.Authorized);
+        conditions.authorized = action.Authorized === 'Yes';
       }
 
       // Is every condition true?

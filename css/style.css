@@ -346,6 +346,7 @@ label[for="listing-toggle"]::before {
 }
 
 #listing .results .action-card__type,
+#listing .results .action-card__authorized,
 #listing .results .action-card__industry,
 #listing .results .action-card__local,
 #listing .results .action-card__duration,
@@ -371,6 +372,7 @@ label[for="listing-toggle"]::before {
 .action-card__employer,
 .action-card__labor-org,
 .action-card__type,
+.action-card__authorized,
 .action-card__industry,
 .action-card__local,
 .action-card__duration,

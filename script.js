@@ -150,8 +150,8 @@
         })();
       }
 
-      if (form_data.get('authorized')) {
-        conditions.authorized = action.Authorized === 'Yes';
+      if (form_data.get('unauthorized')) {
+        conditions.authorized = action.Authorized === 'N';
       }
 
       // Is every condition true?
@@ -386,8 +386,8 @@
           ${form_opts.participant_counts.map(duration => `<option value="${duration}">${duration}</option>`).join('')}
         </select>
 
-        <label for="authorized">Authorized?</label>
-        <input type="checkbox" id="authorized" name="authorized" class="authorized-option"/>
+        <label for="unauthorized">Unauthorized?</label>
+        <input type="checkbox" id="unauthorized" name="unauthorized" class="authorized-option"/>
       </form>
     `;
   };
@@ -410,7 +410,7 @@
         ${action.End_date ? `<div class="action-card__end-date"><strong>End:</strong> ${action.End_date}</div>` : ''}
         ${action.Action_type ? `<div class="action-card__type"><strong>Action type:</strong> ${action.Action_type}</div>` : ''}
         ${action.Duration ? `<div class="action-card__duration"><strong>Duration:</strong> ${action.Duration} day${action.Duration > 1 ? 's' : ''}</div>` : ''}
-        ${action.Authorized ? `<div class="action-card__authorized"><strong>Authorized:</strong> ${action.Authorized}</div>` : ''}
+        ${action.Authorized ? `<div class="action-card__authorized"><strong>Authorized:</strong> ${action.Authorized === 'Y' ? 'Yes' : 'No'}</div>` : ''}
         <div class="action-card__demands"><strong>Worker demands:</strong> ${action.Worker_demands.map(demand => `<span class="action-card__demand">${demand}</span>`).join(' • ')}</div>
 
         <div class="action-card__location-label"><strong>Location${action.locations.length > 1 ? 's' : ''}:</strong></div>

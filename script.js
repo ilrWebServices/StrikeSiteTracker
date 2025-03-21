@@ -287,13 +287,9 @@
     // }).addTo(map);
 
     const action_data = await fetchActions();
-    let order = Object.keys(action_data).length;
 
     // Store all actions in our global actions map.
     for (const [action_id, action] of Object.entries(action_data)) {
-      action._order = order;
-      order--;
-
       // Make a DOM element for the card and store it alongside the data.
       const action_card = renderActionCard(action);
       action.card = createElementFromTemplate(action_card);

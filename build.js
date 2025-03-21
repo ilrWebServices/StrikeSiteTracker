@@ -27,6 +27,7 @@ async function main() {
   `);
 
   // console.log(locations);
+  let order = 0;
 
   // Store all locations, grouped into actions, in the actions map.
   for (let location of locations) {
@@ -49,8 +50,11 @@ async function main() {
         Bargaining_Unit_Size: location.fields.Bargaining_Unit_Size,
         Notes: location.fields.Notes,
         locations: [],
-        sources: source_data.has(action_id) ? source_data.get(action_id) : []
+        sources: source_data.has(action_id) ? source_data.get(action_id) : [],
+        _order: order,
       });
+
+      order++;
     }
 
     data.get(action_id).locations.push({

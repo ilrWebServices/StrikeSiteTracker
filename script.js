@@ -80,11 +80,11 @@
       }
 
       if (form_data.get('start-date-from')) {
-        conditions.state_date_from = action.Start_date > form_data.get('start-date-from');
+        conditions.state_date_from = action.Start_date >= form_data.get('start-date-from');
       }
 
       if (form_data.get('start-date-to')) {
-        conditions.state_date_to = action.Start_date < form_data.get('start-date-to');
+        conditions.state_date_to = action.Start_date <= form_data.get('start-date-to');
       }
 
       if (form_data.get('state')) {

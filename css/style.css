@@ -339,6 +339,10 @@ label[for="listing-toggle"]::before {
   width: 100%;
 }
 
+#map .leaflet-popup-content {
+  margin-right: 0;
+}
+
 #map .action-card {
   overflow-y: auto;
   max-height: 80vh;

@@ -116,7 +116,7 @@
         conditions.duration = (() => {
           switch (form_data.get('duration')) {
             case '1 day or less':
-              return action.Duration <= 1;
+              return action.Duration && action.Duration <= 1;
             case '2-7 days':
               return action.Duration >= 2 && action.Duration <= 7;
             case '8-30 days':

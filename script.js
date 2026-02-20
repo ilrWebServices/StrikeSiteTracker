@@ -245,10 +245,7 @@
       } else if (event.target.matches('.content-link')) {
         event.preventDefault();
         const resource = event.target.getAttribute('href');
-
         const content = await fetchPage(resource);
-        console.log(content);
-
         dialog_content.innerHTML = content;
         dialog_element.showModal();
       } else if (event.target.matches('#reusable-dialog button')) {

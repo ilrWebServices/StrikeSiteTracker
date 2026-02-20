@@ -184,8 +184,11 @@
         results_wrapper.appendChild(result.card)
 
         for (const location of result.locations) {
-          // console.log(location.marker);
-          markers.addLayer(location.marker);
+          try {
+            markers.addLayer(location.marker);
+          } catch (error) {
+            console.error(error.message + ' for Action ID ' + result.id);
+          }
         }
       }
     }

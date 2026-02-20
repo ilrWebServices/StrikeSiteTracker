@@ -22,6 +22,7 @@ async function main() {
       a.Employer, a.Labor_Organization, date(a.Start_date, 'unixepoch') as Start_date, date(a.End_date, 'unixepoch') as End_date, a.Authorized, a.Action_type, a.Industry, a.Worker_demands, a.Local, a.Duration, a.Approximate_Number_of_Participants, a.Bargaining_Unit_Size, a.Notes
     from Locations l inner join Actions a on a.id = l.Action
     where a.Display = 1
+      and (l.Latitude != '' and l.Longitude != '')
     order by a.Start_date desc
     --limit 10
   `);

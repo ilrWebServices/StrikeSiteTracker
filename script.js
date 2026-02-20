@@ -423,7 +423,7 @@ data-action="${action.id}" data-current="${location.id === location_id}" title="
     const template = document.createElement('template');
     template.innerHTML = html.trim();
     return template.content.firstChild;
-  }
+  };
 
   const fetchActions = async () => {
     try {
@@ -437,7 +437,7 @@ data-action="${action.id}" data-current="${location.id === location_id}" title="
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
   const fetchPage = async (url) => {
     try {
@@ -453,6 +453,6 @@ data-action="${action.id}" data-current="${location.id === location_id}" title="
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
 })(document);

@@ -264,6 +264,16 @@
         filter_form.dispatchEvent(new Event('input'));
       }
     });
+
+    window.addEventListener('hashchange', () => {
+      triggerDialogViaHash();
+    });
+
+    // If there's an initial. fragment URL, see of there is a content-link that
+    // matches and click it.
+    if (window.location.hash) {
+      triggerDialogViaHash();
+    }
   });
 
   const init = async () => {
@@ -452,6 +462,15 @@ data-action="${action.id}" data-current="${location.id === location_id}" title="
 
     } catch (error) {
       console.error(error.message);
+    }
+  };
+
+  const triggerDialogViaHash = () => {
+    const dialog_link = document.querySelector('.content-link[href^="/' + window.location.hash.substring(1) +'"]');
+
+    if (dialog_link) {
+      dialog_link.click();
+      history.replaceState('', document.title, window.location.pathname + window.location.search);
     }
   };
 
